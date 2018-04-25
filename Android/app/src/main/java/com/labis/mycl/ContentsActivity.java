@@ -17,8 +17,8 @@ public class ContentsActivity extends AppCompatActivity {
 
         // Initializing the TabLayout
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("Tab One"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tab Two"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Contents"));
+        tabLayout.addTab(tabLayout.newTab().setText("Contents List"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // Initializing ViewPager
