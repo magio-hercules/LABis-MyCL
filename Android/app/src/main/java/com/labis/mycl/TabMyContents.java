@@ -10,9 +10,10 @@ import android.view.ViewGroup;
  * Created by Junyoung on 2016-06-23.
  */
 
-public class TabFragment2 extends Fragment {
+public class TabMyContents extends Fragment {
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.tab_fragment_2, container, false);
+        return inflater.inflate(R.layout.tab_fragment_mycontents, container, false);
     }
 }
