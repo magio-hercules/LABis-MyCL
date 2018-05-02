@@ -4,6 +4,7 @@ public class Item {
 
     String index;
     String name;
+    String imgUrl;
 
     public String getIndex() {
         return index;
@@ -13,8 +14,13 @@ public class Item {
         return name;
     }
 
-    public Item(String index, String name) {
+    public String getImageUrl() {
+        return imgUrl;
+    }
+
+    public Item(String index, String name, String imgUrl) {
         this.index = index;
         this.name = name;
+        this.imgUrl = imgUrl;
     }
 }

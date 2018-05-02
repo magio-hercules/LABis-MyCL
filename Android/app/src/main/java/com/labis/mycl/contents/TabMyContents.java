@@ -32,21 +32,21 @@ public class TabMyContents extends Fragment {
 
         // ArrayList 에 Item 객체(데이터) 넣기
         ArrayList<Item> items = new ArrayList();
-        items.add(new Item("1", "하나"));
-        items.add(new Item("2", "둘"));
-        items.add(new Item("3", "셋"));
-        items.add(new Item("4", "넷"));
-        items.add(new Item("5", "다섯"));
-        items.add(new Item("1", "하나"));
-        items.add(new Item("2", "둘"));
-        items.add(new Item("3", "셋"));
-        items.add(new Item("4", "넷"));
-        items.add(new Item("5", "다섯"));
-        items.add(new Item("1", "하나"));
-        items.add(new Item("2", "둘"));
-        items.add(new Item("3", "셋"));
-        items.add(new Item("4", "넷"));
-        items.add(new Item("5", "다섯"));
+        items.add(new Item("1", "하나","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("2", "둘","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("3", "셋","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("4", "넷","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("5", "다섯","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("1", "하나","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("2", "둘","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("3", "셋","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("4", "넷","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("5", "다섯","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("1", "하나","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("2", "둘","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("3", "셋","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("4", "넷","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("5", "다섯","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
         // LinearLayout으로 설정
         mRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -54,7 +54,7 @@ public class TabMyContents extends Fragment {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         // Decoration 설정
-        mRecyclerView.addItemDecoration(new RecyclerViewDecoration(this.getContext(), RecyclerViewDecoration.VERTICAL_LIST));
+        //mRecyclerView.addItemDecoration(new RecyclerViewDecoration(this.getContext(), RecyclerViewDecoration.VERTICAL_LIST));
 
         // Adapter 생성
         mAdapter = new RecyclerViewAdapter(items);
