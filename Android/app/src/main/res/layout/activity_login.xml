@@ -1,0 +1,74 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e9e8dd"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <TextView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#5ba4e5"
+        android:gravity="center"
+        android:text="Login"
+        android:textSize="35dp" />
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30px"
+        android:hint="example@mail.com" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="******"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/loginbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_back"
+        android:text="Login"
+        android:textAlignment="center"
+        android:textColor="#ffffff" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10px"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_blue_back"
+            android:text="Register"
+            android:textAlignment="center"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/forgotpass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
+            android:background="@drawable/btn_red_back"
+            android:text="Forgot Password"
+            android:textAlignment="center"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+
+</LinearLayout>
