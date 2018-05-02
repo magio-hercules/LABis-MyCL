@@ -54,7 +54,7 @@ public class TabMyContents extends Fragment {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         // Decoration 설정
-        //mRecyclerView.addItemDecoration(new RecyclerViewDecoration(this.getContext(), RecyclerViewDecoration.VERTICAL_LIST));
+        mRecyclerView.addItemDecoration(new RecyclerViewDecoration(this.getContext(), RecyclerViewDecoration.VERTICAL_LIST));
 
         // Adapter 생성
         mAdapter = new RecyclerViewAdapter(items);
