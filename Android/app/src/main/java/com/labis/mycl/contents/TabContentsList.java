@@ -1,4 +1,4 @@
-package com.labis.mycl;
+package com.labis.mycl.contents;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.labis.mycl.R;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.rest.models.User;

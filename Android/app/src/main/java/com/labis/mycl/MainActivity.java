@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.labis.mycl.contents.ContentsActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -18,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        findViewById(R.id.loginbutton).setOnClickListener(loginButtonClickListener);
+        //findViewById(R.id.loginbutton).setOnClickListener(loginButtonClickListener);
         findViewById(R.id.linkbutton).setOnClickListener(linkButtonClickListener);
     }
 

@@ -1,10 +1,12 @@
-package com.labis.mycl;
+package com.labis.mycl.contents;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.labis.mycl.R;
 
 /**
  * Created by Junyoung on 2016-06-23.

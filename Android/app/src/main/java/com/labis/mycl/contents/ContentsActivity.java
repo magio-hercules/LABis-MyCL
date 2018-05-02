@@ -1,10 +1,12 @@
-package com.labis.mycl;
+package com.labis.mycl.contents;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import com.labis.mycl.R;
 
 public class ContentsActivity extends AppCompatActivity {
 

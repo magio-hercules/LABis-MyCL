@@ -1,8 +1,11 @@
-package com.labis.mycl;
+package com.labis.mycl.contents;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import com.labis.mycl.contents.TabContentsList;
+import com.labis.mycl.contents.TabMyContents;
 
 /**
  * Created by Junyoung on 2016-06-23.
