@@ -1,5 +1,4 @@
 BackEnd/node_modules
 *.ser
 Android/.idea
-Android/.idea/caches/build_file_checksums.ser
-*.ser
+Android/.idea/caches
