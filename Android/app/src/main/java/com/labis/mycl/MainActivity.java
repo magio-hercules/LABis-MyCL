@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.labis.mycl.contents.ContentsActivity;
+import com.labis.mycl.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //findViewById(R.id.loginbutton).setOnClickListener(loginButtonClickListener);
+        findViewById(R.id.loginbutton).setOnClickListener(loginButtonClickListener);
         findViewById(R.id.linkbutton).setOnClickListener(linkButtonClickListener);
     }
 

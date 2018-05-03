@@ -1,19 +1,28 @@
 module.exports = function () {
     return {
+        // POST
+        postLogin: function () {
+            return 'SELECT * FROM User WHERE `id`=?';
+        },
+        postRegister: function () {
+            return 'INSERT INTO User SET ?';
+        },
+
+        // GET
         getUser: function () {
-            return 'select * from User where `id`=?';
+            return 'SELECT * FROM User WHERE `id`=?';
         },
         getContents: function () {
-            return 'select * from Contents where id=? and gen_id=?';
+            return 'SELECT * FROM Contents WHERE `id`=? AND `gen_id`=?';
         },
         getGenre: function () {
-            return 'select * from Genre where `id`=?';
+            return 'SELECT * FROM Genre WHERE `id`=?';
         },
         getFavorite: function () {
-            return 'select * from Favorite where `id`=?';
+            return 'SELECT * FROM Favorite WHERE `id`=?';
         },
         getPrefer: function () {
-            return 'select * from Prefer where `id`=?';
+            return 'SELECT * FROM Prefer WHERE `id`=?';
         }
     }
 };

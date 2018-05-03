@@ -3,20 +3,57 @@ var connection = mysql_dbc.init();
 
 module.exports = function () {
     return {
-        doQuery : function(req, res, query, obj) {
+        doQuery : function(req, res, query, obj, callback) {
             console.log("query :" + query);
             console.log("obj :" + JSON.stringify(obj));
         
-            connection.query(query, [obj.id, obj.gen_id], function (err, result) {
+            connection.query(query, [obj.id, obj.gen_id], function (error, result) {
                 console.log(result);
             
-                if (err) {
-                    console.log('err :' + err);
+                if (error) {
+                    console.log('error :' + error);
                 } else {
-                    var jsonData = JSON.stringify(result);
+                    if (callback != undefined) {
+                        console.log('[DEBUG] callback');
+                        console.log(error);
+                        console.log('------');
+                        console.log(result);
+                        console.log('------');
+                        console.log(obj);
+    
+                        console.log('callback');
+                        callback(req, res, obj, error, result);
+                    } else {
+                        // res.writeHead(200, {'Content-Type':'text/html'});
+                        res.writeHead(200, {'Content-Type': 'application/json'});
+                        
+                        var jsonData = JSON.stringify(result);
+                        res.end(jsonData);
+                    }
+                    
+                }
+                
+                
+            });
+        },
+        doRegister : function(req, res, query, user) {
+            console.log("query :" + query);
+            console.log("user :" + JSON.stringify(user));
+        
+            connection.query(query, user, function (error, result) {
+                // console.log(result);
             
-                    // res.writeHead(200, {'Content-Type':'text/html'});
+                if (error) {
+                    console.log("error ocurred",error);
+                    res.send({
+                        "code":400,
+                        "failed":"error ocurred"
+                    })
+                } else {
+                    console.log('The solution is: ', result);
                     res.writeHead(200, {'Content-Type': 'application/json'});
+                    
+                    var jsonData = JSON.stringify(result);
                     res.end(jsonData);
                 }
             });
