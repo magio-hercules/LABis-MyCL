@@ -31,6 +31,15 @@
         tools:layout_editor_absoluteY="0dp">
 
         <Button
+            android:id="@+id/loginbutton"
+            android:layout_width="159dp"
+            android:layout_height="111dp"
+            android:layout_gravity="center"
+            android:text="Login"
+            tools:layout_editor_absoluteX="79dp"
+            tools:layout_editor_absoluteY="40dp" />
+
+        <Button
             android:id="@+id/linkbutton"
             android:layout_width="159dp"
             android:layout_height="111dp"
