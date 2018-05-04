@@ -1,56 +1,26 @@
-<LinearLayout
-    android:id="@+id/main_layout"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".contents.ContentsActivity">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <include
+        layout="@layout/app_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="117dp"
-            android:layout_height="wrap_content"
-            android:text="getUser" />
-
-        <TextView
-            android:id="@+id/contentlistView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="This is Tab 2"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/myContentsView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:background="#FFFFFF" />
-    </LinearLayout>
-
-</LinearLayout>
+</android.support.v4.widget.DrawerLayout>
