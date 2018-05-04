@@ -5,6 +5,7 @@ import android.content.Context;
 
 import java.util.List;
 
+import com.labis.mycl.rest.models.Register;
 import com.labis.mycl.rest.models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -89,6 +90,25 @@ public class RetroClient {
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void postRegister(String id, String pw, String age, String gender,
+                               String nickname, String phone, final RetroCallback callback) {
+        apiService.postRegister(id, pw, age, gender, nickname, phone).enqueue(new Callback<Register>() {
+            @Override
+            public void onResponse(Call<Register> call, Response<Register> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Register> call, Throwable t) {
                 callback.onError(t);
             }
         });

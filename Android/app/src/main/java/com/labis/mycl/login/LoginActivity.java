@@ -29,9 +29,11 @@ import butterknife.OnClick;
 
 
 public class LoginActivity extends Activity {
-    private static final String LOG = "[Login]";
+    private static final String LOG = "[LOGIN]";
 
     RetroClient retroClient;
+
+    Intent intent;
 
     @BindView(R.id.login_email)
     EditText edit_email;
@@ -39,7 +41,8 @@ public class LoginActivity extends Activity {
     EditText edit_password;
     @BindView(R.id.login_loginbtn)
     Button btn_login;
-
+    @BindView(R.id.login_registerbtn)
+    Button btn_register;
 
 
     @Override
@@ -50,6 +53,13 @@ public class LoginActivity extends Activity {
         ButterKnife.bind(this);
 
         retroClient = RetroClient.getInstance(this).createBaseApi();
+
+        intent = getIntent();
+        String id = intent.getStringExtra("id");
+        if (id != null) {
+            edit_email.setText(id);
+            edit_password.requestFocus();
+        }
     }
 
 
@@ -82,8 +92,12 @@ public class LoginActivity extends Activity {
                 Toast.makeText(LoginActivity.this, "Login Fail", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
+    @OnClick(R.id.login_registerbtn)
+    void onClick_register(){
+        Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(i);
+    }
 
 }

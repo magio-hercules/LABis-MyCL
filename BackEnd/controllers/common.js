@@ -24,6 +24,7 @@ module.exports = function () {
                         console.log('callback');
                         callback(req, res, obj, error, result);
                     } else {
+                        console.log('[QUERY] result : ', result);
                         // res.writeHead(200, {'Content-Type':'text/html'});
                         res.writeHead(200, {'Content-Type': 'application/json'});
                         
@@ -41,7 +42,7 @@ module.exports = function () {
             console.log("user :" + JSON.stringify(user));
         
             connection.query(query, user, function (error, result) {
-                // console.log(result);
+                console.log("req.body : " + JSON.stringify(req.body));
             
                 if (error) {
                     console.log("error ocurred",error);
@@ -50,11 +51,14 @@ module.exports = function () {
                         "failed":"error ocurred"
                     })
                 } else {
-                    console.log('The solution is: ', result);
+                    console.log('[REGISTER] result : ', result);
                     res.writeHead(200, {'Content-Type': 'application/json'});
                     
-                    var jsonData = JSON.stringify(result);
-                    res.end(jsonData);
+                    // var jsonData = JSON.stringify(result);
+                    // res.end(jsonData);
+                    var response = {"result":"OK", "reason":"Register Success", "id":req.body.id};
+                    console.log('[REGISTER] TEST : ', response);
+                    res.end(JSON.stringify(response));
                 }
             });
         }

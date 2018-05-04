@@ -6,48 +6,136 @@
     tools:context=".login.RegisterActivity" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/register_image"
         android:layout_width="fill_parent"
         android:layout_height="100px"
         android:layout_gravity="center"
         android:background="#5ba4e5" />
 
-    <EditText
-        android:layout_width="440px"
-        android:layout_height="80px"
-        android:layout_gravity="center"
-        android:id="@+id/email"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginTop="30px"
-        android:hint="example@mail.com"/>
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_gravity="center"
-        android:layout_width="440px"
-        android:layout_height="80px"
-        android:inputType="textPassword"
-        android:hint="******"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="right"
+                    android:text="email : "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                <TextView
+                    android:id="@+id/textView_pw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="right"
+                    android:text="password : "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                <TextView
+                    android:id="@+id/textView_age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="right"
+                    android:text="나이 : "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                <TextView
+                    android:id="@+id/textView_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="right"
+                    android:text="성별 : "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                <TextView
+                    android:id="@+id/textView_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="right"
+                    android:text="별명 : "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                <TextView
+                    android:id="@+id/textView_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="right"
+                    android:text="전화번호 : "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/register_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:hint="example@mail.com" />
+                <EditText
+                    android:id="@+id/register_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:hint="******"
+                    android:inputType="textPassword" />
+                <EditText
+                    android:id="@+id/register_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:hint="20" />
+                <EditText
+                    android:id="@+id/register_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:hint="남자" />
+                <EditText
+                    android:id="@+id/register_nickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:hint="홍길동" />
+                <EditText
+                    android:id="@+id/register_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:hint="01012345678" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--android:layout_gravity="center_horizontal"-->
 
     <Button
-        android:layout_width="440px"
-        android:layout_height="80px"
-        android:id="@+id/registerbtn"
+        android:id="@+id/register_registerbtn"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="30px"
         android:background="@drawable/btn_back"
-        android:textColor="#ffffff"
+        android:text="Register"
         android:textAlignment="center"
-        android:text="Register"/>
-    <Button
-        android:layout_width="440px"
-        android:layout_height="80px"
-        android:layout_marginTop="10px"
-        android:id="@+id/login"
-        android:layout_gravity="center"
-        android:background="@drawable/btn_blue_back"
-        android:textColor="#ffffff"
-        android:textAlignment="center"
-        android:text="Login Now"/>
-
+        android:textColor="#ffffff" />
 
 
 </LinearLayout>
