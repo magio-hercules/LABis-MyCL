@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/heart"
+            android:title="♥" />
+        <item
+            android:id="@+id/usadrama"
+            android:title="❚ 미드" />
+        <item
+            android:id="@+id/koreadrama"
+            android:title="❚ 한드" />
+        <item
+            android:id="@+id/japandrama"
+            android:title="❚ 일드" />
+
+        <item
+            android:id="@+id/movie"
+            android:title="❚ 영화" />
+
+        <item
+            android:id="@+id/cartoon"
+            android:title="❚ 만화" />
+
+        <item
+            android:id="@+id/animation"
+            android:title="❚ 애니" />
+
+        <item
+            android:id="@+id/etc"
+            android:title="❚ 기타" />
+    </group>
+
+</menu>
