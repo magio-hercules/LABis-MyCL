@@ -9,29 +9,29 @@
             android:title="♥" />
         <item
             android:id="@+id/usadrama"
-            android:title="미드" />
+            android:title="미    드" />
         <item
             android:id="@+id/koreadrama"
-            android:title="한드" />
+            android:title="한    드" />
         <item
             android:id="@+id/japandrama"
-            android:title="일드" />
+            android:title="일    드" />
 
         <item
             android:id="@+id/movie"
-            android:title="영화" />
+            android:title="영    화" />
 
         <item
             android:id="@+id/cartoon"
-            android:title="만화" />
+            android:title="만    화" />
 
         <item
             android:id="@+id/animation"
-            android:title="애니" />
+            android:title="애    니" />
 
         <item
             android:id="@+id/etc"
-            android:title="기타" />
+            android:title="기    타" />
     </group>
 
 </menu>

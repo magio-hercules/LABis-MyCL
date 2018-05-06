@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.labis.mycl.R;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
+import com.labis.mycl.rest.models.Content;
 import com.labis.mycl.rest.models.User;
 
 import java.util.ArrayList;
@@ -32,8 +33,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private static final String LOG = "ContentsActivity";
 
     // REST
-    @BindView(R.id.contentlistView)
-    TextView bodyResultTextView;
     RetroClient retroClient;
 
     // RECYCLER
@@ -54,8 +53,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mRecyclerView = (RecyclerView)findViewById(R.id.myContentsView);
         mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         // ArrayList 에 Item 객체(데이터) 넣기
-        ArrayList<Item> items = new ArrayList();
+        /*ArrayList<Item> items = new ArrayList();
         items.add(new Item("1", "하나","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
         items.add(new Item("2", "둘","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
         items.add(new Item("3", "셋","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
@@ -70,7 +70,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         items.add(new Item("2", "둘","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
         items.add(new Item("3", "셋","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
         items.add(new Item("4", "넷","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("5", "다섯","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
+        items.add(new Item("5", "다섯","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));*/
         // LinearLayout으로 설정
         mRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -81,8 +81,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mRecyclerView.addItemDecoration(new RecyclerViewDecoration(this, RecyclerViewDecoration.VERTICAL_LIST));
 
         // Adapter 생성
-        mAdapter = new RecyclerViewAdapter(items);
-        mRecyclerView.setAdapter(mAdapter);
+        //mAdapter = new RecyclerViewAdapter(items);
+       // mRecyclerView.setAdapter(mAdapter);
 
         ButterKnife.bind(this);
         retroClient = RetroClient.getInstance(this).createBaseApi();
@@ -127,7 +127,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     @OnClick(R.id.button)
     void get1() {
         Toast.makeText(this, "GET 1 Clicked", Toast.LENGTH_SHORT).show();
-        retroClient.getUser("khercules", new RetroCallback() {
+        retroClient.getContents("0001", "A01", new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Log.e(LOG, t.toString());
@@ -136,18 +136,25 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onSuccess(int code, Object receivedData) {
                 Log.e(LOG, "SUCCESS");
-                List<User> data = (List<User>) receivedData;
+                List<Content> data = (List<Content>) receivedData;
                 if (!data.isEmpty()) {
-                    bodyResultTextView.setText(data.get(0).nickname);
+                    //bodyResultTextView.setText(data.get(0).name);
+                    ArrayList<Item> items = new ArrayList();
+                    for (int i = 0; i < data.size(); i++) {
+                        items.add(new Item(data.get(i).season_id + "시즌 - " + data.get(i).series_id + "화", data.get(i).name, data.get(i).image));
+                    }
+                    mAdapter = new RecyclerViewAdapter(items);
+                    mRecyclerView.setAdapter(mAdapter);
+
                 } else {
-                    bodyResultTextView.setText("Empty");
+                    Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(int code) {
                 Log.e(LOG, "FAIL");
-                bodyResultTextView.setText("Failure");
+                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
             }
         });
     }

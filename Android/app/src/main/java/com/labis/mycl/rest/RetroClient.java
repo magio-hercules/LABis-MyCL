@@ -5,6 +5,7 @@ import android.content.Context;
 
 import java.util.List;
 
+import com.labis.mycl.rest.models.Content;
 import com.labis.mycl.rest.models.Register;
 import com.labis.mycl.rest.models.User;
 import retrofit2.Call;
@@ -76,6 +77,27 @@ public class RetroClient {
             }
         });
     }
+
+    public void getContents(String id, String genid, final RetroCallback callback) {
+        apiService.getContents(id,genid).enqueue(new Callback<List<Content>>() {
+            @Override
+            public void onResponse(Call<List<Content>> call, Response<List<Content>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Content>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+
+
 
     public void postLogin(String id, String pw, final RetroCallback callback) {
         apiService.postLogin(id, pw).enqueue(new Callback<List<User>>() {

@@ -20,29 +20,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.5"
+        android:layout_weight="0.85"
         android:gravity="center"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/button"
-            android:layout_width="117dp"
+            android:layout_width="118dp"
             android:layout_height="wrap_content"
-            android:text="getUser" />
+            android:text="getContent" />
 
-        <TextView
-            android:id="@+id/contentlistView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="This is Tab 2"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.5"
+        android:layout_weight="0.15"
         android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView

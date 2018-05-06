@@ -2,6 +2,7 @@ package com.labis.mycl.rest;
 
 import java.util.List;
 
+import com.labis.mycl.rest.models.Content;
 import com.labis.mycl.rest.models.Register;
 import com.labis.mycl.rest.models.User;
 import retrofit2.Call;
@@ -20,6 +21,8 @@ public interface RetroBaseApiService {
     final String Base_URL = "http://ec2-18-188-106-154.us-east-2.compute.amazonaws.com:9000/MyCL/";
     //http://ec2-18-188-106-154.us-east-2.compute.amazonaws.com:9000/MyCL/user?id=khercules
 
+    // http://ec2-18-188-106-154.us-east-2.compute.amazonaws.com:9000/MyCL/contents?id=0001&gen_id=A01
+
     @FormUrlEncoded
     @POST("login")
     Call<List<User>> postLogin(@Field("id") String id, @Field("pw") String pw);
@@ -33,5 +36,7 @@ public interface RetroBaseApiService {
     @GET("user")
     Call<List<User>> getUser(@Query("id") String id);
 
+    @GET("contents")
+    Call<List<Content>> getContents(@Query("id") String id, @Query("gen_id") String gen_id);
 
 }
