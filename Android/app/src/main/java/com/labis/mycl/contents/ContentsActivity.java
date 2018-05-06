@@ -12,19 +12,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.labis.mycl.R;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.rest.models.Content;
-import com.labis.mycl.rest.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -54,23 +51,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        // ArrayList 에 Item 객체(데이터) 넣기
-        /*ArrayList<Item> items = new ArrayList();
-        items.add(new Item("1", "하나","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("2", "둘","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("3", "셋","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("4", "넷","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("5", "다섯","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("1", "하나","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("2", "둘","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("3", "셋","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("4", "넷","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("5", "다섯","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("1", "하나","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("2", "둘","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("3", "셋","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("4", "넷","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));
-        items.add(new Item("5", "다섯","https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"));*/
         // LinearLayout으로 설정
         mRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -79,10 +59,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         // Decoration 설정
         mRecyclerView.addItemDecoration(new RecyclerViewDecoration(this, RecyclerViewDecoration.VERTICAL_LIST));
-
-        // Adapter 생성
-        //mAdapter = new RecyclerViewAdapter(items);
-       // mRecyclerView.setAdapter(mAdapter);
 
         ButterKnife.bind(this);
         retroClient = RetroClient.getInstance(this).createBaseApi();
@@ -126,7 +102,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     @OnClick(R.id.button)
     void get1() {
-        Toast.makeText(this, "GET 1 Clicked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "GET ContentButton Clicked", Toast.LENGTH_SHORT).show();
         retroClient.getContents("0001", "A01", new RetroCallback() {
             @Override
             public void onError(Throwable t) {
@@ -138,14 +114,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 Log.e(LOG, "SUCCESS");
                 List<Content> data = (List<Content>) receivedData;
                 if (!data.isEmpty()) {
-                    //bodyResultTextView.setText(data.get(0).name);
-                    ArrayList<Item> items = new ArrayList();
-                    for (int i = 0; i < data.size(); i++) {
-                        items.add(new Item(data.get(i).season_id + "시즌 - " + data.get(i).series_id + "화", data.get(i).name, data.get(i).image));
-                    }
+                    ArrayList<Content> items = new ArrayList();
+                    items.addAll(data);
                     mAdapter = new RecyclerViewAdapter(items);
                     mRecyclerView.setAdapter(mAdapter);
-
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
                 }

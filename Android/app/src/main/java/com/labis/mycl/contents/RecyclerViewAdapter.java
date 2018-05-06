@@ -8,13 +8,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.labis.mycl.R;
+import com.labis.mycl.rest.models.Content;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
-    private ArrayList<Item> mItems;
+    private ArrayList<Content> mItems;
     Context mContext;
 
     public RecyclerViewAdapter(ArrayList itemList) {
@@ -36,9 +37,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
 
         // 해당 position에 해당하는 데이터 결합
-        holder.mIndex.setText(mItems.get(position).index);
+        holder.mIndex.setText(mItems.get(position).season_id + "시즌 / " + mItems.get(position).series_id + "화");
         holder.mName.setText(mItems.get(position).name);
-        Picasso.get().load(mItems.get(position).imgUrl).into(holder.mImgView);
+        Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
 
         // 생성된 List 중 선택된 목록번호를 Toast로 출력
         holder.itemView.setOnClickListener(new View.OnClickListener() {
