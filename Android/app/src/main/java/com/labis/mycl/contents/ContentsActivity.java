@@ -1,5 +1,6 @@
 package com.labis.mycl.contents;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,9 +22,6 @@ import com.labis.mycl.rest.models.Content;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class ContentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -60,7 +58,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         // Decoration 설정
         mRecyclerView.addItemDecoration(new RecyclerViewDecoration(this, RecyclerViewDecoration.VERTICAL_LIST));
 
-        ButterKnife.bind(this);
+        // Retrofit Set
         retroClient = RetroClient.getInstance(this).createBaseApi();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -71,6 +69,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        loadContentList();
     }
 
     @Override
@@ -100,13 +100,23 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
-    @OnClick(R.id.button)
-    void get1() {
-        Toast.makeText(this, "GET ContentButton Clicked", Toast.LENGTH_SHORT).show();
+
+
+    private void loadContentList() {
+
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(this);
+        progressDoalog.setMessage("잠시만 기다리세요....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDoalog.show();
+
         retroClient.getContents("0001", "A01", new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Log.e(LOG, t.toString());
+                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
             }
 
             @Override
@@ -121,13 +131,17 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
                 }
+
+                progressDoalog.dismiss();
             }
 
             @Override
             public void onFailure(int code) {
                 Log.e(LOG, "FAIL");
-                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
             }
         });
     }
+
 }
