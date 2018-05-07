@@ -1,6 +1,7 @@
 package com.labis.mycl.contents;
 
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -76,6 +77,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 toolbar.setTitle("CONTENTS MARKET");
+                toolbar.setBackgroundColor(Color.parseColor("#AE3066"));
             }
         });
     }
