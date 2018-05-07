@@ -27,10 +27,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     private static final String LOG = "ContentsActivity";
 
-    // REST
+    // -- Global Variable Section -- ////////////////////////////////////////
     RetroClient retroClient;
-
-    // RECYCLER
     RecyclerView mRecyclerView;
     LinearLayoutManager mLayoutManager;
     RecyclerViewAdapter mAdapter;
@@ -40,70 +38,35 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contents);
 
-        //Adding toolbar to the activity
+
+        // -- ToolBar -- //
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // RecyclerView
+
+        // -- RecyclerView -- //
         mRecyclerView = (RecyclerView)findViewById(R.id.myContentsView);
         mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        // LinearLayout으로 설정
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        // Animation Defualt 설정
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        // Decoration 설정
         mRecyclerView.addItemDecoration(new RecyclerViewDecoration(this, RecyclerViewDecoration.VERTICAL_LIST));
-
-        // Retrofit Set
-        retroClient = RetroClient.getInstance(this).createBaseApi();
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        // -- RetroClient -- //
+        retroClient = RetroClient.getInstance(this).createBaseApi();
         loadContentList();
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.usadrama) {
-            // Handle the camera action
-        } else if (id == R.id.koreadrama) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-
-
+    // -- User Function Section -- ////////////////////////////////////////
     private void loadContentList() {
-
         // Set up progress before call
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(this);
@@ -131,7 +94,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
                 }
-
                 progressDoalog.dismiss();
             }
 
@@ -144,4 +106,28 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         });
     }
 
+    // -- Drawer Section -- ////////////////////////////////////////
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        if (id == R.id.usadrama) {
+            // Handle the camera action
+        } else if (id == R.id.koreadrama) {
+
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
