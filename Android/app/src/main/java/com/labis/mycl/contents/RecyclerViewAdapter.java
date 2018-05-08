@@ -17,10 +17,12 @@ import java.util.ArrayList;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
     private ArrayList<Content> mItems;
+    private String ModeStatus = "MY";
     Context mContext;
 
-    public RecyclerViewAdapter(ArrayList itemList) {
+    public RecyclerViewAdapter(ArrayList itemList, String Mode) {
         mItems = itemList;
+        ModeStatus = Mode;
     }
 
     // 필수 오버라이드 : View 생성
@@ -44,10 +46,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         if(Integer.parseInt(mItems.get(position).season) > 0) {
             holder.mSeason.setText("시즌 " + mItems.get(position).season);
         }
-        if(Integer.parseInt(mItems.get(position).chapter_end) > 0) {
-            holder.mIndex.setText(mItems.get(position).chapter_end + " 화");
+        if(ModeStatus == "MY") {
+            if(Integer.parseInt(mItems.get(position).chapter) > 0) {
+                holder.mIndex.setText(mItems.get(position).chapter + " 화");
+            }
+        } else if(ModeStatus == "TOTAL") {
+            if(Integer.parseInt(mItems.get(position).chapter_end) > 0) {
+                holder.mIndex.setText(mItems.get(position).chapter_end + " 화");
+            }
         }
-
 
         // 생성된 List 중 선택된 목록번호를 Toast로 출력
         holder.itemView.setOnClickListener(new View.OnClickListener() {

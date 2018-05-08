@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -36,7 +37,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     RecyclerViewAdapter mAdapter;
     Toolbar toolbar;
 
-    String ModeStatus = "MY";
+    String ModeStatus = "TOTAL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +69,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         // -- RetroClient -- //
         retroClient = RetroClient.getInstance(this).createBaseApi();
-        loadTotalContent();
 
-        // loadGetContents();
+        if(ModeStatus == "MY") {
+            loadGetContents();
+        } else if(ModeStatus == "TOTAL") {
+            loadTotalContent();
+        }
+
 
         // -- FloatingAction Button -- //
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -109,7 +114,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 if (!data.isEmpty()) {
                     ArrayList<Content> items = new ArrayList();
                     items.addAll(data);
-                    mAdapter = new RecyclerViewAdapter(items);
+                    mAdapter = new RecyclerViewAdapter(items, ModeStatus);
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
@@ -149,7 +154,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 if (!data.isEmpty()) {
                     ArrayList<Content> items = new ArrayList();
                     items.addAll(data);
-                    mAdapter = new RecyclerViewAdapter(items);
+                    mAdapter = new RecyclerViewAdapter(items, ModeStatus);
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
