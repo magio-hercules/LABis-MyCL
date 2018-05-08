@@ -68,7 +68,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         // -- RetroClient -- //
         retroClient = RetroClient.getInstance(this).createBaseApi();
-        loadContentList();
+        loadTotalContent();
+
+        // loadGetContents();
 
         // -- FloatingAction Button -- //
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -84,7 +86,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     // -- User Function Section -- ////////////////////////////////////////
-    private void loadContentList() {
+    private void loadTotalContent() {
         // Set up progress before call
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(this);
@@ -92,7 +94,47 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
 
-        retroClient.getContents("0001", "A01", new RetroCallback() {
+        retroClient.getTotalContents(new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Log.e(LOG, t.toString());
+                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                Log.e(LOG, "SUCCESS");
+                List<Content> data = (List<Content>) receivedData;
+                if (!data.isEmpty()) {
+                    ArrayList<Content> items = new ArrayList();
+                    items.addAll(data);
+                    mAdapter = new RecyclerViewAdapter(items);
+                    mRecyclerView.setAdapter(mAdapter);
+                } else {
+                    Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
+                }
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int code) {
+                Log.e(LOG, "FAIL");
+                Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+        });
+    }
+
+    private void loadGetContents() {
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(this);
+        progressDoalog.setMessage("잠시만 기다리세요....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDoalog.show();
+
+        retroClient.getContents(null,null,null,"evol", new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Log.e(LOG, t.toString());

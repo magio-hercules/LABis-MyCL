@@ -37,6 +37,9 @@ public interface RetroBaseApiService {
     Call<List<User>> getUser(@Query("id") String id);
 
     @GET("contents")
-    Call<List<Content>> getContents(@Query("id") String id, @Query("gen_id") String gen_id);
+    Call<List<Content>> getContents(@Query("id") String id, @Query("gen_id") String gen_id, @Query("season") String season, @Query("user_id") String user_id);
+
+    @GET("total_contents")
+    Call<List<Content>> getTotalContents();
 
 }

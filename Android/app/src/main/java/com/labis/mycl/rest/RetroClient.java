@@ -77,8 +77,26 @@ public class RetroClient {
         });
     }
 
-    public void getContents(String id, String genid, final RetroCallback callback) {
-        apiService.getContents(id,genid).enqueue(new Callback<List<Content>>() {
+    public void getContents(String id, String genid, String season, String userid, final RetroCallback callback) {
+        apiService.getContents(id, genid, season, userid).enqueue(new Callback<List<Content>>() {
+            @Override
+            public void onResponse(Call<List<Content>> call, Response<List<Content>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Content>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void getTotalContents(final RetroCallback callback) {
+        apiService.getTotalContents().enqueue(new Callback<List<Content>>() {
             @Override
             public void onResponse(Call<List<Content>> call, Response<List<Content>> response) {
                 if (response.isSuccessful()) {

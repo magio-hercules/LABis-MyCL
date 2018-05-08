@@ -2,6 +2,7 @@ package com.labis.mycl.contents;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,14 +40,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         // 해당 position에 해당하는 데이터 결합
         Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
         holder.mName.setText(mItems.get(position).name);
-        holder.mSeason.setText("시즌 " + mItems.get(position).season_id);
-        holder.mIndex.setText(mItems.get(position).series_id + " 화");
+        holder.mNameOrg.setText(mItems.get(position).name_org);
+        if(Integer.parseInt(mItems.get(position).season) > 0) {
+            holder.mSeason.setText("시즌 " + mItems.get(position).season);
+        }
+        if(Integer.parseInt(mItems.get(position).chapter_end) > 0) {
+            holder.mIndex.setText(mItems.get(position).chapter_end + " 화");
+        }
+
 
         // 생성된 List 중 선택된 목록번호를 Toast로 출력
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, String.format("%d 선택", position + 1), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, String.format("%d 선택", position + 1), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -14,6 +14,7 @@ import com.labis.mycl.R;
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     public ImageView mImgView;
     public TextView mName;
+    public TextView mNameOrg;
     public TextView mSeason;
     public TextView mIndex;
 
@@ -22,6 +23,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         mImgView = (ImageView) itemView.findViewById(R.id.imageView);
         mName = (TextView) itemView.findViewById(R.id.name);
+        mNameOrg = (TextView) itemView.findViewById(R.id.name2);
         mSeason = (TextView) itemView.findViewById(R.id.season);
         mIndex = (TextView) itemView.findViewById(R.id.index);
     }
