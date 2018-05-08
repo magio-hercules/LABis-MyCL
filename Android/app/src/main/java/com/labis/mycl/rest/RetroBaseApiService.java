@@ -2,9 +2,9 @@ package com.labis.mycl.rest;
 
 import java.util.List;
 
-import com.labis.mycl.rest.models.Content;
-import com.labis.mycl.rest.models.Register;
-import com.labis.mycl.rest.models.User;
+import com.labis.mycl.model.Content;
+import com.labis.mycl.model.Register;
+import com.labis.mycl.model.User;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;

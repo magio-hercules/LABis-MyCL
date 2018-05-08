@@ -1,12 +1,9 @@
 package com.labis.mycl.login;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,9 +16,6 @@ import com.labis.mycl.R;
 import com.labis.mycl.contents.ContentsActivity;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
-import com.labis.mycl.rest.models.User;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

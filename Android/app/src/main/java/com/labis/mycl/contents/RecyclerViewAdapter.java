@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.labis.mycl.R;
-import com.labis.mycl.rest.models.Content;
+import com.labis.mycl.model.Content;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

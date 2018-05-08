@@ -5,15 +5,14 @@ import android.content.Context;
 
 import java.util.List;
 
-import com.labis.mycl.rest.models.Content;
-import com.labis.mycl.rest.models.Register;
-import com.labis.mycl.rest.models.User;
+import com.labis.mycl.model.Content;
+import com.labis.mycl.model.Register;
+import com.labis.mycl.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Field;
 
 /**
  * Created by sonchangwoo on 2017. 1. 6..

@@ -1,4 +1,4 @@
-package com.labis.mycl.rest.models;
+package com.labis.mycl.model;
 
 public class Content {
     public final String id;
