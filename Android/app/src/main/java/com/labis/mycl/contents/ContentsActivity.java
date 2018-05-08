@@ -37,7 +37,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     RecyclerViewAdapter mAdapter;
     Toolbar toolbar;
 
-    String ModeStatus = "TOTAL";
+    String ModeStatus = "MY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +139,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
 
-        retroClient.getContents(null,null,null,"evol", new RetroCallback() {
+//        retroClient.getContents(null,null,null,"evol", new RetroCallback() {
+        retroClient.postMyContents("evol", new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Log.e(LOG, t.toString());

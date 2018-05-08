@@ -3,13 +3,12 @@ var connection = mysql_dbc.init();
 
 module.exports = function () {
     return {
-        doQuery : function(req, res, query, obj, callback) {
-            console.log("query :" + query);
-            console.log("obj :" + JSON.stringify(obj));
-        
-            connection.query(query, [obj.id, obj.gen_id], function (error, result) {
-                console.log(result);
-            
+        // doQuery : function(req, res, query, obj, callback) {
+        doQuery : function(req, res, query, params, callback) {
+            console.log("[INFO][doQuery] query :" + query);
+            console.log("[INFO][doQuery] params :" + JSON.stringify(params));
+
+            connection.query(query, params, function (error, result) {
                 if (error) {
                     console.log('error :' + error);
                 } else {
@@ -19,15 +18,15 @@ module.exports = function () {
                         console.log('------');
                         console.log(result);
                         console.log('------');
-                        console.log(obj);
+                        console.log(params);
     
                         console.log('callback');
-                        callback(req, res, obj, error, result);
+                        callback(req, res, params, error, result);
                     } else {
-                        console.log('[QUERY] result : ', result);
+                        console.log('[INFO][QUERY] result : ', result);
                         // res.writeHead(200, {'Content-Type':'text/html'});
                         res.writeHead(200, {'Content-Type': 'application/json'});
-                        
+                        console.log('[INFO][QUERY] result end');
                         var jsonData = JSON.stringify(result);
                         res.end(jsonData);
                     }

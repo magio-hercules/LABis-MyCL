@@ -26,17 +26,17 @@ router.get('/', function(req, res) {
 });
 
 // POST
-router.post('/login', 		controller_login.postLogin);
-router.post('/register', 	controller_login.postRegister);
+router.post('/login', 			controller_login.postLogin);
+router.post('/register', 		controller_login.postRegister);
+router.post('/contents', 		controller_contents.postContents);
+router.post('/my_contents', 		controller_contents.postMyContents);
 
 // GET
-router.get('/user',			controller_user.getUser);
-router.get('/contents', 	controller_contents.getContents);
-router.get('/genre', 		controller_genre.getGenre);
-router.get('/favorite', 	controller_favorite.getFavorite);
-router.get('/prefer', 		controller_prefer.getPrefer);
-
-
-
+router.get('/user',				controller_user.getUser);
+router.get('/contents', 		controller_contents.getContents);
+router.get('/total_contents', 	controller_contents.getTotalContents);
+router.get('/genre', 			controller_genre.getGenre);
+router.get('/favorite', 		controller_favorite.getFavorite);
+router.get('/prefer', 			controller_prefer.getPrefer);
 
 module.exports = router;
