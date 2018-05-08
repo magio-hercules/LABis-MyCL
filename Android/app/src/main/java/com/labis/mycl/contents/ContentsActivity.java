@@ -84,6 +84,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 ModeStatus = "TOTAL";
+                loadTotalContent();
                 toolbar.setTitle("모든 콘텐츠");
                 toolbar.setBackgroundResource(R.color.colorAccent);
             }
@@ -91,7 +92,15 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     // -- User Function Section -- ////////////////////////////////////////
+    private void clearRecyclerView() {
+        ArrayList<Content> items = new ArrayList();
+        mAdapter = new RecyclerViewAdapter(items, ModeStatus);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
     private void loadTotalContent() {
+
+        clearRecyclerView();
         // Set up progress before call
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(this);
@@ -132,6 +141,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void loadGetContents() {
+
+        clearRecyclerView();
         // Set up progress before call
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(this);
@@ -195,6 +206,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             drawer.closeDrawer(GravityCompat.START);
         } else if (ModeStatus.equals("TOTAL")) {
             ModeStatus = "MY";
+            loadGetContents();
             toolbar.setBackgroundResource(R.color.colorPrimary);
             toolbar.setTitle("내 콘텐츠");
         } else {
