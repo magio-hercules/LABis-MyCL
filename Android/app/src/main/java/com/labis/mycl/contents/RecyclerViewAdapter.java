@@ -37,9 +37,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
 
         // 해당 position에 해당하는 데이터 결합
-        holder.mIndex.setText(mItems.get(position).season_id + "시즌 / " + mItems.get(position).series_id + "화");
-        holder.mName.setText(mItems.get(position).name);
         Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
+        holder.mName.setText(mItems.get(position).name);
+        holder.mSeason.setText("시즌 " + mItems.get(position).season_id);
+        holder.mIndex.setText(mItems.get(position).series_id + " 화");
 
         // 생성된 List 중 선택된 목록번호를 Toast로 출력
         holder.itemView.setOnClickListener(new View.OnClickListener() {

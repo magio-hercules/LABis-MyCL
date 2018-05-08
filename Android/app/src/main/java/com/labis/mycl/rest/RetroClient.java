@@ -96,9 +96,6 @@ public class RetroClient {
         });
     }
 
-
-
-
     public void postLogin(String id, String pw, final RetroCallback callback) {
         apiService.postLogin(id, pw).enqueue(new Callback<List<User>>() {
             @Override

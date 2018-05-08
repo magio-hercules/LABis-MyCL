@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="74dp"
     android:layout_gravity="center_horizontal"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="4dp"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -17,9 +17,9 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="4dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:layout_weight="1"
             android:background="@android:color/background_dark"
             android:scaleType="fitXY" />
@@ -65,11 +65,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.68"
+            android:orientation="horizontal"
             android:gravity="center">
+
+            <TextView
+                android:id="@+id/season"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="left|center_vertical"
+                android:text="시즌 1"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/index"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="5 화"
                 android:gravity="left|center_vertical"
                 android:textColor="@color/colorAccent"
                 android:textSize="14sp" />

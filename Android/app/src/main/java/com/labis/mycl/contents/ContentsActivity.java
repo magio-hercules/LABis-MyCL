@@ -38,6 +38,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     RecyclerViewAdapter mAdapter;
     Toolbar toolbar;
 
+    String ModeStatus = "MY";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +48,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         // -- ToolBar -- //
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("MY CONTENTS");
+        toolbar.setTitle("내 콘텐츠");
         setSupportActionBar(toolbar);
 
 
@@ -76,8 +78,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                toolbar.setTitle("CONTENTS MARKET");
-                toolbar.setBackgroundColor(Color.parseColor("#AE3066"));
+                ModeStatus = "TOTAL";
+                toolbar.setTitle("모든 콘텐츠");
+                toolbar.setBackgroundResource(R.color.colorAccent);
             }
         });
     }
@@ -138,13 +141,17 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (ModeStatus.equals("TOTAL")) {
+            ModeStatus = "MY";
+            toolbar.setBackgroundResource(R.color.colorPrimary);
+            toolbar.setTitle("내 콘텐츠");
         } else {
-            toolbar.setTitle("MY CONTENTS");
             super.onBackPressed();
         }
     }
