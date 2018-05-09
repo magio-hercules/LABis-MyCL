@@ -19,8 +19,7 @@ module.exports = function () {
                         console.log(result);
                         console.log('------');
                         console.log(params);
-    
-                        console.log('callback');
+
                         callback(req, res, params, error, result);
                     } else {
                         console.log('[INFO][QUERY] result : ', result);
@@ -60,7 +59,7 @@ module.exports = function () {
                     res.end(JSON.stringify(response));
                 }
             });
-        }
+        },
     }
 	
 }

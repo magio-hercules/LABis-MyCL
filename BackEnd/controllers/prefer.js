@@ -1,8 +1,36 @@
 var mysql_query = require('../db/db_query')();
+var table = require('../db/db_table');
 var common = require('./common')();
 
-exports.getPrefer = function(req, res) {
-	var query = mysql_query.getPrefer();
-	var obj = { id: req.query.id };
-	common.doQuery(req, res, query, obj);
+var bFirst = true;
+
+
+
+
+exports.postPrefer = function(req, res) {
+	console.log("[INFO] call postPrefer");
+
+	var query = mysql_query.postPrefer();
+	var params = [ ];
+
+	query = _checkParams(query, params, req.body.user_id, table.Prefer.user_id);
+
+	bFirst = true;
+	common.doQuery(req, res, query, params);
 };
+
+
+function _checkParams(query, params, val, str) {
+	if (val != null && val != undefined) {
+		if (bFirst) {
+			query += " WHERE "; 
+			bFirst = false;
+		} else {
+			query += " AND ";
+		}		
+		
+		query = query + str + "=? ";
+		params.push(val);
+	}
+	return query;
+}

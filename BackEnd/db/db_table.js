@@ -7,13 +7,10 @@ module.exports = (function () {
         gender: "`gender`",
         nickname: "`nickname`",
         phone: "`phone`",
-        pre_id: "`pre_id`",
-        fav_id: "`fav_id`"
+        image: "`image`"
       },
       Contents_my: { 
         id: "`id`",
-        gen_id: "`gen_id`",
-        season: "`season`",
         user_id: "`user_id`",
         score: "`score`",
         comment: "`comment`",
@@ -29,6 +26,8 @@ module.exports = (function () {
         theatrical: "`theatrical`",
         series_id: "`series_id`",
         summary: "`summary`",
+        publisher: "`publisher`",
+        auth: "`auth`",
         image: "`image`"
       },
       Favorite: { 

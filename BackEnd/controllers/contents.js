@@ -10,28 +10,26 @@ var bFirst = true;
 /////////
 // GET //
 /////////
-exports.getContents = function(req, res) {
-	console.log("[QUERY] getContents");
-	console.log("req.query : " + JSON.stringify(req.query));
+// exports.getContents = function(req, res) {
+// 	console.log("[INFO] call getContents");
+// 	// console.log("req.query : " + JSON.stringify(req.query));
 
-	var query = mysql_query.getContents();
-	var params = [];
+// 	var query = mysql_query.getContents();
+// 	var params = [];
 
-	query = _checkParams(query, params, req.query.id, table.Contents_my.id);
-	query = _checkParams(query, params, req.query.gen_id, table.Contents_my.gen_id);
-	query = _checkParams(query, params, req.query.season, table.Contents_my.season);
-	query = _checkParams(query, params, req.query.user_id, table.Contents_my.user_id);
+// 	query = _checkParams(query, params, req.query.id, table.Contents_my.id);
+// 	query = _checkParams(query, params, req.query.user_id, table.Contents_my.user_id);
 
-	bFirst = true;
-	common.doQuery(req, res, query, params);
-};
+// 	bFirst = true;
+// 	common.doQuery(req, res, query, params);
+// };
 
 
 exports.getTotalContents = function(req, res) {
-	console.log("[QUERY] getTotalContents");
+	console.log("[INFO] call getTotalContents");
+	// console.log("req.query : " + JSON.stringify(req.query));
 
 	var query = mysql_query.getTotalContents();
-	// var obj = {};
 	common.doQuery(req, res, query);
 };
 
@@ -42,15 +40,13 @@ exports.getTotalContents = function(req, res) {
 // POST //
 //////////
 exports.postContents = function(req, res) {
-	console.log("[QUERY] postContents");
-	console.log("req.body : " + JSON.stringify(req.body));
+	console.log("[INFO] call postContents");
+	// console.log("req.body : " + JSON.stringify(req.body));
 	
 	var query = mysql_query.postContents();
 	var params = [];
 
 	query = _checkParams(query, params, req.body.id, table.Contents_my.id);
-	query = _checkParams(query, params, req.body.gen_id, table.Contents_my.gen_id);
-	query = _checkParams(query, params, req.body.season, table.Contents_my.season);
 	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
 
 	bFirst = true;
@@ -59,11 +55,13 @@ exports.postContents = function(req, res) {
 
 
 exports.postMyContents = function(req, res) {
-	console.log("[QUERY] postMyContents");
-	// console.log("req.body.user_id : " + JSON.stringify(req.body.user_id));
+	console.log("[INFO] call postMyContents");
+	// console.log("req.body : " + JSON.stringify(req.body));
 
 	var query = mysql_query.postMyContents();
-	var params = [ req.body.user_id ];
+	var params = [ ];
+
+	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
 
 	bFirst = true;
 	common.doQuery(req, res, query, params);

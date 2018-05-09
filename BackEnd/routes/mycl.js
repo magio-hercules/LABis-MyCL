@@ -25,18 +25,25 @@ router.get('/', function(req, res) {
 	res.send('Welcome to My Contents List');
 });
 
-// POST
+/////////
+// GET //
+/////////
+// router.get('/user',				controller_user.getUser);
+// router.get('/contents', 		controller_contents.getContents);
+router.get('/total_contents', 	controller_contents.getTotalContents);
+// router.get('/genre', 			controller_genre.getGenre);
+
+//////////
+// POST //
+//////////
 router.post('/login', 			controller_login.postLogin);
 router.post('/register', 		controller_login.postRegister);
+router.post('/user',			controller_user.postUser);
+router.post('/genre', 			controller_genre.postGenre);
 router.post('/contents', 		controller_contents.postContents);
-router.post('/my_contents', 		controller_contents.postMyContents);
+router.post('/my_contents', 	controller_contents.postMyContents);
+router.post('/favorite', 		controller_favorite.postFavorite);
+router.post('/prefer', 			controller_prefer.postPrefer);
 
-// GET
-router.get('/user',				controller_user.getUser);
-router.get('/contents', 		controller_contents.getContents);
-router.get('/total_contents', 	controller_contents.getTotalContents);
-router.get('/genre', 			controller_genre.getGenre);
-router.get('/favorite', 		controller_favorite.getFavorite);
-router.get('/prefer', 			controller_prefer.getPrefer);
 
 module.exports = router;
