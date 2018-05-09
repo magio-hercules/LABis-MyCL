@@ -42,7 +42,7 @@ public interface RetroBaseApiService {
     @GET("total_contents")
     Call<List<Content>> getTotalContents();
 
-
+    @FormUrlEncoded
     @POST("my_contents")
-    Call<List<Content>> postMyContents(@Query("user_id") String user_id);
+    Call<List<Content>> postMyContents(@Field("user_id") String user_id);
 }
