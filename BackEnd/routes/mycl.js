@@ -31,7 +31,7 @@ router.get('/', function(req, res) {
 // router.get('/user',				controller_user.getUser);
 // router.get('/contents', 		controller_contents.getContents);
 router.get('/total_contents', 	controller_contents.getTotalContents);
-// router.get('/genre', 			controller_genre.getGenre);
+router.get('/total_genre', 			controller_genre.getTotalGenre);
 
 //////////
 // POST //

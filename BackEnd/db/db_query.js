@@ -15,10 +15,10 @@ module.exports = function () {
             // .../MyCL/total_contents
             return 'SELECT * FROM Contents_list';
         },
-        // getGenre: function () {
+        getTotalGenre: function () {
         //     // .../MyCL/contents?id=A01
-        //     return 'SELECT * FROM Genre WHERE `id`=?';
-        // },
+             return 'SELECT * FROM Genre';
+        },
 
 
         //////////

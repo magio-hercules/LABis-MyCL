@@ -6,6 +6,12 @@ var bFirst = true;
 
 
 
+exports.getTotalGenre = function(req, res) {
+	console.log("[INFO] call getTotalGenre");
+	// console.log("req.query : " + JSON.stringify(req.query));
+	var query = mysql_query.getTotalGenre();
+	common.doQuery(req, res, query);
+};
 
 // exports.getGenre = function(req, res) {
 //     var query = mysql_query.getGenre();
