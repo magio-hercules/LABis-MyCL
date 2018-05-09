@@ -30,7 +30,7 @@ import java.util.List;
 
 public class ContentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String LOG = "ContentsActivity";
+    private static final String TAG = "ContentsActivity";
 
     // -- Global Variable Section -- ////////////////////////////////////////
     RetroClient retroClient;
@@ -60,9 +60,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
 
         // -- Genre Data Setting -- //
-        genreMap.put("A01", "만화");
-        genreMap.put("B01", "애니");
-        genreMap.put("C01", "영화");
+        ArrayList<Genre> genreData = getIntent().getParcelableArrayListExtra("genre");
+        for (int i = 0; i < genreData.size(); i++) {
+            genreMap.put(genreData.get(i).id, genreData.get(i).name);
+        }
 
 
         // -- RecyclerView -- //
@@ -99,7 +100,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 ModeStatus = "TOTAL";
                 loadTotalContent();
                 toolbar.setTitle("모든 콘텐츠");
-                toolbar.setBackgroundResource(R.color.colorAccent);
             }
         });
     }
@@ -125,14 +125,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         retroClient.getTotalContents(new RetroCallback() {
             @Override
             public void onError(Throwable t) {
-                Log.e(LOG, t.toString());
+                Log.e(TAG, t.toString());
                 Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
                 progressDoalog.dismiss();
             }
 
             @Override
             public void onSuccess(int code, Object receivedData) {
-                Log.e(LOG, "SUCCESS");
+                Log.e(TAG, "SUCCESS");
                 List<Content> data = (List<Content>) receivedData;
                 if (!data.isEmpty()) {
                     ArrayList<Content> items = new ArrayList();
@@ -147,7 +147,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             @Override
             public void onFailure(int code) {
-                Log.e(LOG, "FAIL");
+                Log.e(TAG, "FAIL");
                 Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
                 progressDoalog.dismiss();
             }
@@ -168,14 +168,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             retroClient.postMyContents("evol", new RetroCallback() {
                 @Override
                 public void onError(Throwable t) {
-                    Log.e(LOG, t.toString());
+                    Log.e(TAG, t.toString());
                     Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
                     progressDoalog.dismiss();
                 }
 
                 @Override
                 public void onSuccess(int code, Object receivedData) {
-                    Log.e(LOG, "SUCCESS");
+                    Log.e(TAG, "SUCCESS");
                     List<Content> data = (List<Content>) receivedData;
                     myContents.clear();
                     MyContentsRefresh = false;
@@ -192,7 +192,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
                 @Override
                 public void onFailure(int code) {
-                    Log.e(LOG, "FAIL");
+                    Log.e(TAG, "FAIL");
                     Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
                     progressDoalog.dismiss();
                 }
@@ -227,7 +227,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         } else if (ModeStatus.equals("TOTAL")) {
             ModeStatus = "MY";
             loadGetContents();
-            toolbar.setBackgroundResource(R.color.colorPrimary);
             toolbar.setTitle("내 콘텐츠");
         } else {
             super.onBackPressed();

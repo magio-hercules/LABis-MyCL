@@ -17,8 +17,8 @@
             android:id="@+id/gentext"
             android:layout_width="14dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="4dp"
-            android:background="@color/colorAccent"
+            android:layout_marginLeft="2dp"
+            android:background="@color/colorPrimary"
             android:gravity="center_vertical|center_horizontal"
             android:text="영화"
             android:textColor="@android:color/background_light"
@@ -28,7 +28,7 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="2dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
@@ -67,7 +67,7 @@
                 android:layout_marginTop="4dp"
                 android:gravity="left|center_vertical"
                 android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
 
         </LinearLayout>
 
@@ -92,8 +92,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:gravity="left|center_vertical"
-                android:textColor="@color/colorAccent"
+                android:layout_marginRight="2dp"
+                android:gravity="right|center_vertical"
+                android:textColor="#D31145"
                 android:textSize="14sp" />
         </LinearLayout>
 
