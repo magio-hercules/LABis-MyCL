@@ -23,6 +23,7 @@ public interface RetroBaseApiService {
 
     // http://ec2-18-188-106-154.us-east-2.compute.amazonaws.com:9000/MyCL/contents?id=0001&gen_id=A01
 
+    /// POST API ////////////////////////////////////////////////////////////////
     @FormUrlEncoded
     @POST("login")
     Call<List<User>> postLogin(@Field("id") String id, @Field("pw") String pw);
@@ -33,16 +34,15 @@ public interface RetroBaseApiService {
                                 @Field("age") String age, @Field("gender") String gender,
                                 @Field("nickname") String nickname, @Field("phone") String phone);
 
-    @GET("user")
+    @FormUrlEncoded
+    @POST("user")
     Call<List<User>> getUser(@Query("id") String id);
-
-    @GET("contents")
-    Call<List<Content>> getContents(@Query("id") String id, @Query("gen_id") String gen_id, @Query("season") String season, @Query("user_id") String user_id);
-
-    @GET("total_contents")
-    Call<List<Content>> getTotalContents();
 
     @FormUrlEncoded
     @POST("my_contents")
     Call<List<Content>> postMyContents(@Field("user_id") String user_id);
+
+    /// GET API ////////////////////////////////////////////////////////////////
+    @GET("total_contents")
+    Call<List<Content>> getTotalContents();
 }
