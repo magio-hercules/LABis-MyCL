@@ -19,11 +19,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.labis.mycl.R;
+import com.labis.mycl.model.Genre;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.model.Content;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ContentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,7 +39,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     RecyclerViewAdapter mAdapter;
     Toolbar toolbar;
 
+    ArrayList<Content> myContents = new ArrayList();
+    ArrayList<Genre> genreList = new ArrayList();
+
     String ModeStatus = "MY";
+    boolean MyContentsRefresh = true;
+
+    HashMap<String, String> genreMap = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,12 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("내 콘텐츠");
         setSupportActionBar(toolbar);
+
+
+        // -- Genre Data Setting -- //
+        genreMap.put("A01", "만화");
+        genreMap.put("B01", "애니");
+        genreMap.put("C01", "영화");
 
 
         // -- RecyclerView -- //
@@ -69,7 +83,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         // -- RetroClient -- //
         retroClient = RetroClient.getInstance(this).createBaseApi();
-
         if(ModeStatus == "MY") {
             loadGetContents();
         } else if(ModeStatus == "TOTAL") {
@@ -94,13 +107,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     // -- User Function Section -- ////////////////////////////////////////
     private void clearRecyclerView() {
         ArrayList<Content> items = new ArrayList();
-        mAdapter = new RecyclerViewAdapter(items, ModeStatus);
+        mAdapter = new RecyclerViewAdapter(items, genreMap, ModeStatus);
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void loadTotalContent() {
 
+    private void loadTotalContent() {
         clearRecyclerView();
+
         // Set up progress before call
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(this);
@@ -123,7 +137,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 if (!data.isEmpty()) {
                     ArrayList<Content> items = new ArrayList();
                     items.addAll(data);
-                    mAdapter = new RecyclerViewAdapter(items, ModeStatus);
+                    mAdapter = new RecyclerViewAdapter(items, genreMap, ModeStatus);
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
@@ -141,46 +155,52 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void loadGetContents() {
-
         clearRecyclerView();
-        // Set up progress before call
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(this);
-        progressDoalog.setMessage("잠시만 기다리세요....");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDoalog.show();
 
-//        retroClient.getContents(null,null,null,"evol", new RetroCallback() {
-        retroClient.postMyContents("evol", new RetroCallback() {
-            @Override
-            public void onError(Throwable t) {
-                Log.e(LOG, t.toString());
-                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
-                progressDoalog.dismiss();
-            }
+        if(MyContentsRefresh) {
+            // Set up progress before call
+            final ProgressDialog progressDoalog;
+            progressDoalog = new ProgressDialog(this);
+            progressDoalog.setMessage("잠시만 기다리세요....");
+            progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDoalog.show();
 
-            @Override
-            public void onSuccess(int code, Object receivedData) {
-                Log.e(LOG, "SUCCESS");
-                List<Content> data = (List<Content>) receivedData;
-                if (!data.isEmpty()) {
-                    ArrayList<Content> items = new ArrayList();
-                    items.addAll(data);
-                    mAdapter = new RecyclerViewAdapter(items, ModeStatus);
-                    mRecyclerView.setAdapter(mAdapter);
-                } else {
-                    Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
+            retroClient.postMyContents("evol", new RetroCallback() {
+                @Override
+                public void onError(Throwable t) {
+                    Log.e(LOG, t.toString());
+                    Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                    progressDoalog.dismiss();
                 }
-                progressDoalog.dismiss();
-            }
 
-            @Override
-            public void onFailure(int code) {
-                Log.e(LOG, "FAIL");
-                Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
-                progressDoalog.dismiss();
-            }
-        });
+                @Override
+                public void onSuccess(int code, Object receivedData) {
+                    Log.e(LOG, "SUCCESS");
+                    List<Content> data = (List<Content>) receivedData;
+                    myContents.clear();
+                    MyContentsRefresh = false;
+
+                    if (!data.isEmpty()) {
+                        myContents.addAll(data);
+                        mAdapter = new RecyclerViewAdapter(myContents, genreMap, ModeStatus);
+                        mRecyclerView.setAdapter(mAdapter);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
+                    }
+                    progressDoalog.dismiss();
+                }
+
+                @Override
+                public void onFailure(int code) {
+                    Log.e(LOG, "FAIL");
+                    Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
+                    progressDoalog.dismiss();
+                }
+            });
+        } else {
+            mAdapter = new RecyclerViewAdapter(myContents, genreMap, ModeStatus);
+            mRecyclerView.setAdapter(mAdapter);
+        }
     }
 
     // -- Drawer Section -- ////////////////////////////////////////

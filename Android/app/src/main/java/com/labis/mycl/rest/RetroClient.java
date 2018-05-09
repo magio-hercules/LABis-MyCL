@@ -6,6 +6,7 @@ import android.content.Context;
 import java.util.List;
 
 import com.labis.mycl.model.Content;
+import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.model.User;
 import retrofit2.Call;
@@ -90,6 +91,24 @@ public class RetroClient {
 
             @Override
             public void onFailure(Call<List<Content>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void getTotalGenre(final RetroCallback callback) {
+        apiService.getTotalGenre().enqueue(new Callback<List<Genre>>() {
+            @Override
+            public void onResponse(Call<List<Genre>> call, Response<List<Genre>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Genre>> call, Throwable t) {
                 callback.onError(t);
             }
         });

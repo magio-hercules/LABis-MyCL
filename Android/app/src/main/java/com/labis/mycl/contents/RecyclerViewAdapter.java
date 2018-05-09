@@ -10,18 +10,22 @@ import android.widget.Toast;
 
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
+import com.labis.mycl.model.Genre;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
     private ArrayList<Content> mItems;
+    HashMap<String, String> mGenre;
     private String ModeStatus = "MY";
     Context mContext;
 
-    public RecyclerViewAdapter(ArrayList itemList, String Mode) {
+    public RecyclerViewAdapter(ArrayList itemList, HashMap<String, String> genreMap, String Mode) {
         mItems = itemList;
+        mGenre = genreMap;
         ModeStatus = Mode;
     }
 
@@ -40,6 +44,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
 
         // 해당 position에 해당하는 데이터 결합
+        holder.mGen.setText(mGenre.get(mItems.get(position).gen_id));
         Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
         holder.mName.setText(mItems.get(position).name);
         holder.mNameOrg.setText(mItems.get(position).name_org);

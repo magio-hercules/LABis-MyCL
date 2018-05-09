@@ -12,6 +12,7 @@ import com.labis.mycl.R;
  */
 
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
+    public TextView mGen;
     public ImageView mImgView;
     public TextView mName;
     public TextView mNameOrg;
@@ -21,6 +22,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     public RecyclerViewHolder(View itemView) {
         super(itemView);
 
+        mGen = (TextView) itemView.findViewById(R.id.gentext);
         mImgView = (ImageView) itemView.findViewById(R.id.imageView);
         mName = (TextView) itemView.findViewById(R.id.name);
         mNameOrg = (TextView) itemView.findViewById(R.id.name2);

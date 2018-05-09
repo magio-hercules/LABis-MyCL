@@ -3,6 +3,7 @@ package com.labis.mycl.rest;
 import java.util.List;
 
 import com.labis.mycl.model.Content;
+import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.model.User;
 import retrofit2.Call;
@@ -45,4 +46,7 @@ public interface RetroBaseApiService {
     /// GET API ////////////////////////////////////////////////////////////////
     @GET("total_contents")
     Call<List<Content>> getTotalContents();
+
+    @GET("total_genre")
+    Call<List<Genre>> getTotalGenre();
 }
