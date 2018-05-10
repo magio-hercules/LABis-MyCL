@@ -43,6 +43,14 @@ public interface RetroBaseApiService {
     @POST("my_contents")
     Call<List<Content>> postMyContents(@Field("user_id") String user_id);
 
+    @FormUrlEncoded
+    @POST("insert_my_contents")
+    Call<Register> postInsertMyContents(@Field("id") String id, @Field("user_id") String user_id, @Field("chapter") int chapter);
+
+    @FormUrlEncoded
+    @POST("update_my_contents")
+    Call<Register> postUpdateMyContents(@Field("id") String id, @Field("user_id") String user_id, @Field("chapter") int chapter);
+
     /// GET API ////////////////////////////////////////////////////////////////
     @GET("total_contents")
     Call<List<Content>> getTotalContents();

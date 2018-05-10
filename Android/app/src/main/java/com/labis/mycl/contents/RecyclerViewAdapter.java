@@ -1,5 +1,6 @@
 package com.labis.mycl.contents;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,22 +10,22 @@ import android.widget.Toast;
 
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
+import com.labis.mycl.rest.RetroCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
     private ArrayList<Content> mItems;
-    HashMap<String, String> mGenre;
-    private String ModeStatus = "MY";
     Context mContext;
+    private ContentsActivity mActivity;
+    RecyclerViewHolder mHolder;
+    int mPosition;
 
-    public RecyclerViewAdapter(ArrayList itemList, HashMap<String, String> genreMap, String Mode) {
+    public RecyclerViewAdapter(ContentsActivity activity, ArrayList itemList) {
+        mActivity = activity;
         mItems = itemList;
-        mGenre = genreMap;
-        ModeStatus = Mode;
     }
 
     // 필수 오버라이드 : View 생성
@@ -42,23 +43,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
 
         // 해당 position에 해당하는 데이터 결합
-        holder.mGen.setText(mGenre.get(mItems.get(position).gen_id));
+        mPosition = position;
+        holder.mGen.setText(mActivity.genreMap.get(mItems.get(position).gen_id));
         Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
         holder.mName.setText(mItems.get(position).name);
         holder.mNameOrg.setText(mItems.get(position).name_org);
         if(Integer.parseInt(mItems.get(position).season) > 0) {
             holder.mSeason.setText("시즌 " + mItems.get(position).season);
         }
-        if(ModeStatus == "MY") {
-            if(Integer.parseInt(mItems.get(position).chapter) > 0) {
+        if(mActivity.modeStatus == "MY") {
+            if(mItems.get(position).chapter > 0) {
                 holder.mIndex.setText(mItems.get(position).chapter + " 화");
             }
-            holder.mConAddBtn.setVisibility(View.GONE);
-        } else if(ModeStatus == "TOTAL") {
-            if(Integer.parseInt(mItems.get(position).chapter_end) > 0) {
+            //holder.mConAddBtn.setVisibility(View.GONE);
+        } else if(mActivity.modeStatus == "TOTAL") {
+            if(mItems.get(position).chapter_end > 0) {
                 holder.mIndex.setText(mItems.get(position).chapter_end + " 화");
             }
-            holder.mConAddBtn.setVisibility(View.VISIBLE);
+            //holder.mConAddBtn.setVisibility(View.VISIBLE);
         }
 
         // 생성된 List 중 선택된 목록번호를 Toast로 출력
@@ -69,17 +71,91 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         });
 
+        holder.mConMinusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItems.get(position).setChapter(mItems.get(position).chapter - 1);
+                updateChapter(position, mItems.get(position).getChapter());
+            }
+        });
+
         holder.mConAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "EVOL", Toast.LENGTH_SHORT).show();
+
+                if(mActivity.modeStatus == "TOTAL") {
+                    final ProgressDialog progressDoalog;
+                    progressDoalog = new ProgressDialog(mContext);  
+                    progressDoalog.setMessage("잠시만 기다리세요....");
+                    progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDoalog.show();
+
+                    int chapterCnt = 0;
+                    if (mItems.get(position).chapter_end > 0) {
+                        chapterCnt = 1;
+                    }
+                    mActivity.retroClient.postInsertMyContents(mItems.get(position).id, mActivity.userData.id, chapterCnt, new RetroCallback() {
+                        @Override
+                        public void onError(Throwable t) {
+                            Toast.makeText(mContext, "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                            progressDoalog.dismiss();
+                        }
+
+                        @Override
+                        public void onSuccess(int code, Object receivedData) {
+                            Toast.makeText(mContext, "SUCCESS : " + code, Toast.LENGTH_SHORT).show();
+                            mActivity.myContentsRefresh = true;
+                            progressDoalog.dismiss();
+                        }
+
+                        @Override
+                        public void onFailure(int code) {
+                            Toast.makeText(mContext, "FAIL : " + code, Toast.LENGTH_SHORT).show();
+                            progressDoalog.dismiss();
+                        }
+                    });
+                } else if(mActivity.modeStatus == "MY") {
+                    mItems.get(position).setChapter(mItems.get(position).chapter + 1);
+                    updateChapter(position, mItems.get(position).getChapter());
+                }
+
+            }
+        });
+
+    }
+
+    private void updateChapter(final int position, int value) {
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(mContext);
+        progressDoalog.setMessage("잠시만 기다리세요....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDoalog.show();
+
+        mActivity.retroClient.postUpdateMyContents(mItems.get(position).id, mActivity.userData.id, value, new RetroCallback() {
+
+            @Override
+            public void onError(Throwable t) {
+                Toast.makeText(mContext, "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                mActivity.refrshList(mItems);
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int code) {
+                progressDoalog.dismiss();
             }
         });
     }
 
+
     // 필수 오버라이드 : 데이터 갯수 반환
     @Override
-    public int getItemCount() {
+        public int getItemCount() {
         return mItems.size();
     }
 

@@ -18,6 +18,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     public TextView mName;
     public TextView mNameOrg;
     public Button mConAddBtn;
+    public Button mConMinusBtn;
     public TextView mSeason;
     public TextView mIndex;
 
@@ -29,6 +30,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         mName = (TextView) itemView.findViewById(R.id.name);
         mNameOrg = (TextView) itemView.findViewById(R.id.name2);
         mConAddBtn = (Button) itemView.findViewById(R.id.ConAddBtn);
+        mConMinusBtn = (Button) itemView.findViewById(R.id.ConMinusBtn);
         mSeason = (TextView) itemView.findViewById(R.id.season);
         mIndex = (TextView) itemView.findViewById(R.id.index);
     }

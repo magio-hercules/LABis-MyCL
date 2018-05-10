@@ -7,7 +7,7 @@ public class Content {
     public final String season;
     public final String name;
     public final String name_org;
-    public final String chapter_end;
+    public final int chapter_end;
     public final String theatrical;
     public final String series_id;
     public final String summary;
@@ -17,10 +17,10 @@ public class Content {
     public final String user_id;
     public final String score;
     public final String comment;
-    public final String chapter;
+    public int chapter;
 
-    public Content(String id, String gen_id, String season, String name, String name_org, String chapter_end, String theatrical, String series_id, String summary, String image,
-    String user_id, String score, String comment, String chapter) {
+    public Content(String id, String gen_id, String season, String name, String name_org, int chapter_end, String theatrical, String series_id, String summary, String image,
+    String user_id, String score, String comment, int chapter) {
         this.id = id;
         this.gen_id = gen_id;
         this.season = season;
@@ -35,6 +35,14 @@ public class Content {
         this.user_id = user_id;
         this.score = score;
         this.comment = comment;
+        this.chapter = chapter;
+    }
+
+    public int getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(int chapter) {
         this.chapter = chapter;
     }
 

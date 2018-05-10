@@ -13,7 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -34,20 +33,20 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private static final String TAG = "ContentsActivity";
 
     // -- Global Variable Section -- ////////////////////////////////////////
-    RetroClient retroClient;
-    RecyclerView mRecyclerView;
+    public RetroClient retroClient;
+    public RecyclerView mRecyclerView;
     LinearLayoutManager mLayoutManager;
     RecyclerViewAdapter mAdapter;
     Toolbar toolbar;
 
-    ArrayList<Content> myContents = new ArrayList();
-    ArrayList<Genre> genreList = new ArrayList();
+    public ArrayList<Content> myContents = new ArrayList();
+    public ArrayList<Genre> genreList = new ArrayList();
 
-    String ModeStatus = "MY";
-    boolean MyContentsRefresh = true;
+    public String modeStatus = "MY";
+    public boolean myContentsRefresh = true;
 
-    User userData = null;
-    HashMap<String, String> genreMap = new HashMap<String, String>();
+    public User userData = null;
+    public HashMap<String, String> genreMap = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +63,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         ArrayList<User> userList = getIntent().getParcelableArrayListExtra("user");
         if (userList != null) {
             userData = userList.get(0);
+        } else {
+            // for test
+            userData = new User("evol", null, null, null, null, null, null);
         }
 
         // -- Genre Data Setting -- //
@@ -92,9 +94,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         // -- RetroClient -- //
         retroClient = RetroClient.getInstance(this).createBaseApi();
-        if(ModeStatus == "MY") {
+        if(modeStatus == "MY") {
             loadGetContents();
-        } else if(ModeStatus == "TOTAL") {
+        } else if(modeStatus == "TOTAL") {
             loadTotalContent();
         }
 
@@ -105,7 +107,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                ModeStatus = "TOTAL";
+                modeStatus = "TOTAL";
                 loadTotalContent();
                 toolbar.setTitle("모든 콘텐츠");
             }
@@ -115,12 +117,17 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     // -- User Function Section -- ////////////////////////////////////////
     private void clearRecyclerView() {
         ArrayList<Content> items = new ArrayList();
-        mAdapter = new RecyclerViewAdapter(items, genreMap, ModeStatus);
+        mAdapter = new RecyclerViewAdapter(this, items);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public void refrshList(ArrayList<Content> items) {
+        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, items);
         mRecyclerView.setAdapter(mAdapter);
     }
 
 
-    private void loadTotalContent() {
+    public void loadTotalContent() {
         clearRecyclerView();
 
         // Set up progress before call
@@ -145,7 +152,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 if (!data.isEmpty()) {
                     ArrayList<Content> items = new ArrayList();
                     items.addAll(data);
-                    mAdapter = new RecyclerViewAdapter(items, genreMap, ModeStatus);
+                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, items);
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
@@ -165,7 +172,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private void loadGetContents() {
         clearRecyclerView();
 
-        if(MyContentsRefresh) {
+        if(myContentsRefresh) {
             // Set up progress before call
             final ProgressDialog progressDoalog;
             progressDoalog = new ProgressDialog(this);
@@ -173,10 +180,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDoalog.show();
 
-            // for test
-            String id = userData == null ? "evol" : userData.id;
-
-            retroClient.postMyContents(id, new RetroCallback() {
+            retroClient.postMyContents(userData.id, new RetroCallback() {
                 @Override
                 public void onError(Throwable t) {
                     Log.e(TAG, t.toString());
@@ -189,11 +193,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     Log.e(TAG, "SUCCESS");
                     List<Content> data = (List<Content>) receivedData;
                     myContents.clear();
-                    MyContentsRefresh = false;
+                    myContentsRefresh = false;
 
                     if (!data.isEmpty()) {
                         myContents.addAll(data);
-                        mAdapter = new RecyclerViewAdapter(myContents, genreMap, ModeStatus);
+                        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, myContents);
                         mRecyclerView.setAdapter(mAdapter);
                     } else {
                         Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
@@ -209,7 +213,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 }
             });
         } else {
-            mAdapter = new RecyclerViewAdapter(myContents, genreMap, ModeStatus);
+            mAdapter = new RecyclerViewAdapter(this, myContents);
             mRecyclerView.setAdapter(mAdapter);
         }
     }
@@ -235,8 +239,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (ModeStatus.equals("TOTAL")) {
-            ModeStatus = "MY";
+        } else if (modeStatus.equals("TOTAL")) {
+            modeStatus = "MY";
             loadGetContents();
             toolbar.setTitle("내 콘텐츠");
         } else {
