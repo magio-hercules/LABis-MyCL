@@ -2,6 +2,7 @@ package com.labis.mycl.contents;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     public ImageView mImgView;
     public TextView mName;
     public TextView mNameOrg;
+    public Button mConAddBtn;
     public TextView mSeason;
     public TextView mIndex;
 
@@ -26,6 +28,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         mImgView = (ImageView) itemView.findViewById(R.id.imageView);
         mName = (TextView) itemView.findViewById(R.id.name);
         mNameOrg = (TextView) itemView.findViewById(R.id.name2);
+        mConAddBtn = (Button) itemView.findViewById(R.id.ConAddBtn);
         mSeason = (TextView) itemView.findViewById(R.id.season);
         mIndex = (TextView) itemView.findViewById(R.id.index);
     }
