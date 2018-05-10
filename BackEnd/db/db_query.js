@@ -57,9 +57,13 @@ module.exports = function () {
             // .../MyCL/my_contents (user_id=khercules)
             return 'SELECT * FROM Contents_my JOIN Contents_list USING(id)';
         },
-        postInsertContents: function () {
-            // .../MyCL/
+        postInsertMyContents: function () {
+            // .../MyCL/update_my_contents (id,user_id,score,comment,chapter)
             return 'INSERT INTO Contents_my SET ?';
+        },
+        postUpdateMyContents: function () {
+            // .../MyCL/update_my_contents (id,user_id,score,comment,chapter)
+            return 'UPDATE Contents_my SET ';
         },
         
     }

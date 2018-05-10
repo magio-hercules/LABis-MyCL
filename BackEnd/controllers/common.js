@@ -22,10 +22,11 @@ module.exports = function () {
 
                         callback(req, res, params, error, result);
                     } else {
-                        console.log('[INFO][QUERY] result : ', result);
+                        // console.log('[INFO][QUERY] result : ', result);
+                        // console.log('[INFO][QUERY] result end');
+
                         // res.writeHead(200, {'Content-Type':'text/html'});
                         res.writeHead(200, {'Content-Type': 'application/json'});
-                        console.log('[INFO][QUERY] result end');
                         var jsonData = JSON.stringify(result);
                         res.end(jsonData);
                     }
@@ -35,7 +36,7 @@ module.exports = function () {
                 
             });
         },
-        doRegister : function(req, res, query, user) {
+        doRequest : function(req, res, query, user) {
             console.log("query :" + query);
             console.log("user :" + JSON.stringify(user));
         
@@ -44,18 +45,21 @@ module.exports = function () {
             
                 if (error) {
                     console.log("error ocurred",error);
-                    res.send({
-                        "code":400,
-                        "failed":"error ocurred"
-                    })
+                    // res.send({
+                    //     "code":400,
+                    //     "failed":"error ocurred"
+                    // });
+                    var response = {"result":"NOK", "reason":"Register Failed", "id":req.body.id};
+                    console.log('[INFO][doRequest] response : ', response);
+                    res.end(JSON.stringify(response));
                 } else {
-                    console.log('[REGISTER] result : ', result);
+                    console.log('[INFO][doRequest] result : ', result);
                     res.writeHead(200, {'Content-Type': 'application/json'});
                     
                     // var jsonData = JSON.stringify(result);
                     // res.end(jsonData);
                     var response = {"result":"OK", "reason":"Register Success", "id":req.body.id};
-                    console.log('[REGISTER] TEST : ', response);
+                    console.log('[INFO][doRequest] response : ', response);
                     res.end(JSON.stringify(response));
                 }
             });

@@ -45,6 +45,7 @@ router.post('/prefer', 			controller_prefer.postPrefer);
 router.post('/contents', 		controller_contents.postContents);
 router.post('/my_contents', 	controller_contents.postMyContents);
 
-router.post('/insert_contents', controller_contents.postInsertContents);
+router.post('/insert_my_contents', controller_contents.postInsertMyContents);
+router.post('/update_my_contents', controller_contents.postUpdateMyContents);
 
 module.exports = router;

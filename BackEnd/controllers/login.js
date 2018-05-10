@@ -26,7 +26,7 @@ exports.postRegister = function(req, res) {
 		image : req.body.image
 	};
 	
-	common.doRegister(req, res, query, user);
+	common.doRequest(req, res, query, user);
 };
 
 
