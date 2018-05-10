@@ -16,14 +16,15 @@ module.exports = function () {
             return 'SELECT * FROM Contents_list';
         },
         getTotalGenre: function () {
-        //     // .../MyCL/contents?id=A01
-             return 'SELECT * FROM Genre';
+            // .../MyCL/total_genre
+            return 'SELECT * FROM Genre';
         },
 
 
         //////////
         // POST //
         //////////
+        // search
         postLogin: function () {
             // .../MyCL/login (id=khercules)
             return 'SELECT * FROM User WHERE `id`=?';
@@ -40,23 +41,26 @@ module.exports = function () {
             // .../MyCL/genre (id=A01)
             return 'SELECT * FROM Genre';
         },
+        postFavorite: function () {
+            // .../MyCL/favorite (user_id:khercules)
+            return 'SELECT * FROM Favorite';
+        },
+        postPrefer: function () {
+            // .../MyCL/prefer (user_id:khercules)
+            return 'SELECT * FROM Prefer';
+        },
         postContents: function () {
-            // .../MyCL/my_contents (id=khercules,gen_id=A01,season=0,user_id=khercules)
+            // .../MyCL/contents (id=khercules,user_id=khercules)
             return 'SELECT * FROM Contents_my';
         },
         postMyContents: function () {
             // .../MyCL/my_contents (user_id=khercules)
             return 'SELECT * FROM Contents_my JOIN Contents_list USING(id)';
         },
-        postFavorite: function () {
-            // .../MyCL/favorite (user_id:khercules)
-            return 'SELECT * FROM Favorite';
+        postInsertContents: function () {
+            // .../MyCL/
+            return 'INSERT INTO Contents_my SET ?';
         },
-        postPrefer: function () {
-            // .../MyCL/prefer (user_id=1)
-            return 'SELECT * FROM Prefer';
-        },
-        
         
     }
 };

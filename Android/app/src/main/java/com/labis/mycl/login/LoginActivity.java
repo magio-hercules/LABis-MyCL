@@ -14,8 +14,11 @@ import android.widget.Toast;
 //import org.apache.http.message.BasicNameValuePair;
 import com.labis.mycl.R;
 import com.labis.mycl.contents.ContentsActivity;
+import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,8 +79,12 @@ public class LoginActivity extends Activity {
                 Log.e(LOG, "SUCCESS");
                 Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
 
-                Intent i = new Intent(LoginActivity.this, ContentsActivity.class);
-                startActivity(i);
+                ArrayList<User> userList = (ArrayList<User>) receivedData;
+                if (!userList.isEmpty()) {
+                    Intent i = new Intent(LoginActivity.this, ContentsActivity.class);
+                    i.putParcelableArrayListExtra("user", userList);
+                    startActivity(i);
+                }
             }
 
             @Override

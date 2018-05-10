@@ -48,6 +48,7 @@ exports.postContents = function(req, res) {
 
 	query = _checkParams(query, params, req.body.id, table.Contents_my.id);
 	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
+	query = _checkParams(query, params, table.Config.public_publisher, table.Contents_my.user_id);
 
 	bFirst = true;
 	common.doQuery(req, res, query, params);
@@ -56,7 +57,6 @@ exports.postContents = function(req, res) {
 
 exports.postMyContents = function(req, res) {
 	console.log("[INFO] call postMyContents");
-	// console.log("req.body : " + JSON.stringify(req.body));
 
 	var query = mysql_query.postMyContents();
 	var params = [ ];
@@ -65,6 +65,28 @@ exports.postMyContents = function(req, res) {
 
 	bFirst = true;
 	common.doQuery(req, res, query, params);
+};
+
+
+exports.postInsertContents = function(req, res) {
+	console.log("[INFO] call postInsertContents");
+	// console.log("req.body : " + JSON.stringify(req.body));
+
+	var query = mysql_query.postInsertContents();
+	var params = [ ];
+
+	// query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
+	var myContents = {
+		id: req.body.id,
+		user_id: req.body.user_id,
+		score: req.body.score,
+		comment: req.body.comment,
+		chapter: req.body.chapter
+	};
+	
+	bFirst = true;
+	common.doQuery(req, res, query, myContents);
+	// common.doRegister(req, res, query, myContents);
 };
 
 

@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.labis.mycl.R;
 import com.labis.mycl.model.Genre;
+import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.model.Content;
@@ -45,6 +46,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     String ModeStatus = "MY";
     boolean MyContentsRefresh = true;
 
+    User userData = null;
     HashMap<String, String> genreMap = new HashMap<String, String>();
 
     @Override
@@ -59,12 +61,18 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         setSupportActionBar(toolbar);
 
 
-        // -- Genre Data Setting -- //
-        ArrayList<Genre> genreData = getIntent().getParcelableArrayListExtra("genre");
-        for (int i = 0; i < genreData.size(); i++) {
-            genreMap.put(genreData.get(i).id, genreData.get(i).name);
+        ArrayList<User> userList = getIntent().getParcelableArrayListExtra("user");
+        if (userList != null) {
+            userData = userList.get(0);
         }
 
+        // -- Genre Data Setting -- //
+        ArrayList<Genre> genreData = getIntent().getParcelableArrayListExtra("genre");
+        if (genreData != null) {
+            for (int i = 0; i < genreData.size(); i++) {
+                genreMap.put(genreData.get(i).id, genreData.get(i).name);
+            }
+        }
 
         // -- RecyclerView -- //
         mRecyclerView = (RecyclerView)findViewById(R.id.myContentsView);
@@ -165,7 +173,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDoalog.show();
 
-            retroClient.postMyContents("evol", new RetroCallback() {
+            // for test
+            String id = userData == null ? "evol" : userData.id;
+
+            retroClient.postMyContents(id, new RetroCallback() {
                 @Override
                 public void onError(Throwable t) {
                     Log.e(TAG, t.toString());

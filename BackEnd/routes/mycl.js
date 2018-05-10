@@ -31,7 +31,7 @@ router.get('/', function(req, res) {
 // router.get('/user',				controller_user.getUser);
 // router.get('/contents', 		controller_contents.getContents);
 router.get('/total_contents', 	controller_contents.getTotalContents);
-router.get('/total_genre', 			controller_genre.getTotalGenre);
+router.get('/total_genre', 		controller_genre.getTotalGenre);
 
 //////////
 // POST //
@@ -40,10 +40,11 @@ router.post('/login', 			controller_login.postLogin);
 router.post('/register', 		controller_login.postRegister);
 router.post('/user',			controller_user.postUser);
 router.post('/genre', 			controller_genre.postGenre);
-router.post('/contents', 		controller_contents.postContents);
-router.post('/my_contents', 	controller_contents.postMyContents);
 router.post('/favorite', 		controller_favorite.postFavorite);
 router.post('/prefer', 			controller_prefer.postPrefer);
+router.post('/contents', 		controller_contents.postContents);
+router.post('/my_contents', 	controller_contents.postMyContents);
 
+router.post('/insert_contents', controller_contents.postInsertContents);
 
 module.exports = router;
