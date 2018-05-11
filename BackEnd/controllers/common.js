@@ -10,10 +10,14 @@ module.exports = function () {
 
             connection.query(query, params, function (error, result) {
                 if (error) {
-                    console.log('error :' + error);
+                    console.log('[ERROR] error :' + error);
+                    
+                    var response = {"result":"NOK", "reason":"Query Failed", "id":req.body.id};
+                    console.log('[INFO][doQuery] response : ', response);
+                    res.end(JSON.stringify(response));
                 } else {
                     if (callback != undefined) {
-                        console.log('[DEBUG] callback');
+                        console.log('[INFO][DEBUG] callback');
                         console.log(error);
                         console.log('------');
                         console.log(result);
@@ -30,34 +34,22 @@ module.exports = function () {
                         var jsonData = JSON.stringify(result);
                         res.end(jsonData);
                     }
-                    
                 }
-                
-                
             });
         },
-        doRequest : function(req, res, query, user) {
-            console.log("query :" + query);
-            console.log("user :" + JSON.stringify(user));
+        doRequest : function(req, res, query, params) {
+            console.log("[INFO][doRequest] query : " + query);
+            console.log("[INFO][doRequest] params : " + JSON.stringify(params));
         
-            connection.query(query, user, function (error, result) {
-                console.log("req.body : " + JSON.stringify(req.body));
-            
+            connection.query(query, params, function (error, result) {
                 if (error) {
-                    console.log("error ocurred",error);
-                    // res.send({
-                    //     "code":400,
-                    //     "failed":"error ocurred"
-                    // });
+                    console.log("[ERROR] error ocurred",error);
+                    
                     var response = {"result":"NOK", "reason":"Register Failed", "id":req.body.id};
                     console.log('[INFO][doRequest] response : ', response);
                     res.end(JSON.stringify(response));
                 } else {
-                    console.log('[INFO][doRequest] result : ', result);
                     res.writeHead(200, {'Content-Type': 'application/json'});
-                    
-                    // var jsonData = JSON.stringify(result);
-                    // res.end(jsonData);
                     var response = {"result":"OK", "reason":"Register Success", "id":req.body.id};
                     console.log('[INFO][doRequest] response : ', response);
                     res.end(JSON.stringify(response));

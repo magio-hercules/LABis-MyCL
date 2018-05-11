@@ -1,7 +1,7 @@
 module.exports = (function () {
     return {
       Config: {
-        public_publisher: "`labis`"
+        public_publisher: "labis"
       },
       User: {
         id: "`id`",

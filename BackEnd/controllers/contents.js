@@ -39,16 +39,14 @@ exports.getTotalContents = function(req, res) {
 //////////
 // POST //
 //////////
-exports.postContents = function(req, res) {
-	console.log("[INFO] call postContents");
+exports.postTotalContents = function(req, res) {
+	console.log("[INFO] call postTotalContents");
 	// console.log("req.body : " + JSON.stringify(req.body));
 	
-	var query = mysql_query.postContents();
+	var query = mysql_query.postTotalContents();
 	var params = [];
-
-	query = _checkParams(query, params, req.body.id, table.Contents_my.id);
-	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
-	query = _checkParams(query, params, table.Config.public_publisher, table.Contents_my.user_id);
+	query = _checkParams(query, params, table.Config.public_publisher, table.Contents_list.publisher);
+	query = _checkParams(query, params, req.body.user_id, table.Contents_list.publisher, true);
 
 	bFirst = true;
 	common.doQuery(req, res, query, params);
@@ -110,6 +108,58 @@ exports.postUpdateMyContents = function(req, res) {
 };
 
 
+exports.postInsertContentsList = function(req, res) {
+	console.log("[INFO] call postInsertContentsList");
+	console.log("req.body : " + JSON.stringify(req.body));
+
+	var query = mysql_query.postInsertContentsList();
+	var params = [];
+	query = _setParams(query, params, req.body.gen_id, table.Contents_list.gen_id);
+	query = _setParams(query, params, req.body.season, table.Contents_list.season);
+	query = _setParams(query, params, req.body.name, table.Contents_list.name);
+	query = _setParams(query, params, req.body.name_org, table.Contents_list.name_org);
+	query = _setParams(query, params, req.body.chapter_end, table.Contents_list.chapter_end);
+	query = _setParams(query, params, req.body.theatrical, table.Contents_list.theatrical);
+	query = _setParams(query, params, req.body.series_id, table.Contents_list.series_id);
+	query = _setParams(query, params, req.body.summary, table.Contents_list.summary);
+	query = _setParams(query, params, req.body.publisher, table.Contents_list.publisher);
+	query = _setParams(query, params, req.body.auth, table.Contents_list.auth);
+	query = _setParams(query, params, req.body.image, table.Contents_list.image);
+
+	console.log("[TEST] query : " + query);
+	console.log("[TEST] params : " + params);
+
+	bFirst = true;
+	common.doRequest(req, res, query, params);
+};
+
+
+exports.postAcceptContentsList = function(req, res) {
+	console.log("[INFO] call postAcceptContentsList");
+	console.log("req.body : " + JSON.stringify(req.body));
+
+	var query = mysql_query.postAcceptContentsList();
+	var params = [];
+	query = _setParams(query, params, req.body.gen_id, table.Contents_list.gen_id);
+	query = _setParams(query, params, req.body.season, table.Contents_list.season);
+	query = _setParams(query, params, req.body.name, table.Contents_list.name);
+	query = _setParams(query, params, req.body.name_org, table.Contents_list.name_org);
+	query = _setParams(query, params, req.body.chapter_end, table.Contents_list.chapter_end);
+	query = _setParams(query, params, req.body.theatrical, table.Contents_list.theatrical);
+	query = _setParams(query, params, req.body.series_id, table.Contents_list.series_id);
+	query = _setParams(query, params, req.body.summary, table.Contents_list.summary);
+	query = _setParams(query, params, req.body.publisher, table.Contents_list.publisher);
+	query = _setParams(query, params, req.body.auth, table.Contents_list.auth);
+	query = _setParams(query, params, req.body.image, table.Contents_list.image);
+
+	console.log("[TEST] query : " + query);
+	console.log("[TEST] params : " + params);
+
+	bFirst = true;
+	common.doRequest(req, res, query, params);
+};
+
+
 function _setParams(query, params, val, str) {
 	if (val != null && val != undefined) {
 		if (bFirst) {
@@ -125,13 +175,17 @@ function _setParams(query, params, val, str) {
 }
 
 
-function _checkParams(query, params, val, str) {
+function _checkParams(query, params, val, str, bOr) {
 	if (val != null && val != undefined) {
 		if (bFirst) {
 			query += " WHERE "; 
 			bFirst = false;
 		} else {
-			query += " AND ";
+			if (bOr) {
+				query += " OR ";
+			} else {
+				query += " AND ";
+			}
 		}		
 		
 		query = query + str + "=? ";

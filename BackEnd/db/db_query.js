@@ -26,45 +26,52 @@ module.exports = function () {
         //////////
         // search
         postLogin: function () {
-            // .../MyCL/login (id=khercules)
+            // .../MyCL/login (id)
             return 'SELECT * FROM User WHERE `id`=?';
         },
         postRegister: function () {
-            // .../MyCL/register (id=khercules,pw:1234,age:36,gender:male,nickname:hercules,phone:01023250866,image:null)
+            // .../MyCL/register (id,pw,age,gender,nickname,phone,image)
             return 'INSERT INTO User SET ?';
         },
         postUser: function () {
-            // .../MyCL/user (id=khercules)
+            // .../MyCL/user (id)
            return 'SELECT * FROM User';
         },
         postGenre: function () {
-            // .../MyCL/genre (id=A01)
+            // .../MyCL/genre (id)
             return 'SELECT * FROM Genre';
         },
         postFavorite: function () {
-            // .../MyCL/favorite (user_id:khercules)
+            // .../MyCL/favorite (user_id)
             return 'SELECT * FROM Favorite';
         },
         postPrefer: function () {
-            // .../MyCL/prefer (user_id:khercules)
+            // .../MyCL/prefer (user_id)
             return 'SELECT * FROM Prefer';
         },
-        postContents: function () {
-            // .../MyCL/contents (id=khercules,user_id=khercules)
-            return 'SELECT * FROM Contents_my';
+        postTotalContents: function () {
+            // .../MyCL/total_contents (user_id)
+            return 'SELECT * FROM Contents_list';
         },
         postMyContents: function () {
-            // .../MyCL/my_contents (user_id=khercules)
+            // .../MyCL/my_contents (user_id)
             return 'SELECT * FROM Contents_my JOIN Contents_list USING(id)';
         },
         postInsertMyContents: function () {
-            // .../MyCL/update_my_contents (id,user_id,score,comment,chapter)
+            // .../MyCL/insert_my_contents (id,user_id,chapter)
             return 'INSERT INTO Contents_my SET ?';
         },
         postUpdateMyContents: function () {
             // .../MyCL/update_my_contents (id,user_id,score,comment,chapter)
-            return 'UPDATE Contents_my SET ';
+            return 'UPDATE Contents_my SET';
         },
-        
+        postInsertContentsList: function () {
+            // .../MyCL/insert_contents_list (gen_id,season,name,name_org,chapter_end,theatrical,series_id,summary,publisher,auth,image)
+            return 'INSERT INTO Contents_list SET';
+        },
+        postAcceptContentsList: function () {
+            // .../MyCL/accept_contents_list (id,user_id)
+            return '';
+        },
     }
 };
