@@ -49,16 +49,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         holder.mName.setText(mItems.get(position).name);
         holder.mNameOrg.setText(mItems.get(position).name_org);
         if(Integer.parseInt(mItems.get(position).season) > 0) {
-            holder.mSeason.setText("시즌 " + mItems.get(position).season);
+            holder.mSeason.setText("시즌" + mItems.get(position).season);
         }
         if(mActivity.modeStatus == "MY") {
             if(mItems.get(position).chapter > 0) {
-                holder.mIndex.setText(mItems.get(position).chapter + " 화");
+                holder.mIndex.setText(String.valueOf(mItems.get(position).chapter));
             }
             //holder.mConAddBtn.setVisibility(View.GONE);
         } else if(mActivity.modeStatus == "TOTAL") {
             if(mItems.get(position).chapter_end > 0) {
-                holder.mIndex.setText(mItems.get(position).chapter_end + " 화");
+                holder.mIndex.setText(String.valueOf(mItems.get(position).chapter_end));
             }
             //holder.mConAddBtn.setVisibility(View.VISIBLE);
         }
