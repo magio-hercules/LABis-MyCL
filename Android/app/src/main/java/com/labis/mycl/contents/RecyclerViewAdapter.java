@@ -3,7 +3,10 @@ package com.labis.mycl.contents;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -17,7 +20,7 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
-    private ArrayList<Content> mItems;
+    public ArrayList<Content> mItems;
     Context mContext;
     private ContentsActivity mActivity;
     RecyclerViewHolder mHolder;
@@ -52,11 +55,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             holder.mSeason.setText("시즌" + mItems.get(position).season);
         }
         if(mActivity.modeStatus == "MY") {
+            holder.mConMinusBtn.setVisibility(View.VISIBLE);
+            holder.mConAddBtn.setVisibility(View.VISIBLE);
+            holder.mIndex.setGravity(Gravity.CENTER);
             if(mItems.get(position).chapter > 0) {
                 holder.mIndex.setText(String.valueOf(mItems.get(position).chapter));
             }
-            //holder.mConAddBtn.setVisibility(View.GONE);
         } else if(mActivity.modeStatus == "TOTAL") {
+            holder.mConMinusBtn.setVisibility(View.GONE);
+            holder.mConAddBtn.setVisibility(View.GONE);
+            holder.mIndex.setGravity(Gravity.RIGHT);
             if(mItems.get(position).chapter_end > 0) {
                 holder.mIndex.setText(String.valueOf(mItems.get(position).chapter_end));
             }
@@ -67,7 +75,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, String.format("%d 선택", position + 1), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, String.format("%d 선택", position + 1), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("EVOL", String.format("%d 선택", position + 1));
+                mActivity.touchContentItem = mItems.get(position);
+                return false;
             }
         });
 
@@ -82,44 +99,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         holder.mConAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(mActivity.modeStatus == "TOTAL") {
-                    final ProgressDialog progressDoalog;
-                    progressDoalog = new ProgressDialog(mContext);  
-                    progressDoalog.setMessage("잠시만 기다리세요....");
-                    progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progressDoalog.show();
-
-                    int chapterCnt = 0;
-                    if (mItems.get(position).chapter_end > 0) {
-                        chapterCnt = 1;
-                    }
-                    mActivity.retroClient.postInsertMyContents(mItems.get(position).id, mActivity.userData.id, chapterCnt, new RetroCallback() {
-                        @Override
-                        public void onError(Throwable t) {
-                            Toast.makeText(mContext, "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
-                            progressDoalog.dismiss();
-                        }
-
-                        @Override
-                        public void onSuccess(int code, Object receivedData) {
-                            Toast.makeText(mContext, "SUCCESS : " + code, Toast.LENGTH_SHORT).show();
-                            mActivity.myContentsRefresh = true;
-                            progressDoalog.dismiss();
-                        }
-
-                        @Override
-                        public void onFailure(int code) {
-                            Toast.makeText(mContext, "FAIL : " + code, Toast.LENGTH_SHORT).show();
-                            progressDoalog.dismiss();
-                        }
-                    });
-                } else if(mActivity.modeStatus == "MY") {
-                    mItems.get(position).setChapter(mItems.get(position).chapter + 1);
-                    updateChapter(position, mItems.get(position).getChapter());
-                }
-
+                mItems.get(position).setChapter(mItems.get(position).chapter + 1);
+                updateChapter(position, mItems.get(position).getChapter());
             }
+
+
         });
 
     }

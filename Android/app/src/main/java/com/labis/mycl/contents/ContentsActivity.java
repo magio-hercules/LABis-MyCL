@@ -1,6 +1,7 @@
 package com.labis.mycl.contents;
 
 import android.app.ProgressDialog;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,22 +45,24 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public ArrayList<Genre> genreList = new ArrayList();
 
     public String modeStatus = "MY";
+    public Content touchContentItem;
     public boolean myContentsRefresh = true;
 
     public User userData = null;
     public HashMap<String, String> genreMap = new HashMap<String, String>();
+
+    SwipeController swipeController = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contents);
 
-
         // -- ToolBar -- //
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("내 콘텐츠");
         setSupportActionBar(toolbar);
-
 
         ArrayList<User> userList = getIntent().getParcelableArrayListExtra("user");
         if (userList != null) {
@@ -82,7 +86,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        //mRecyclerView.addItemDecoration(new RecyclerViewDecoration(this, RecyclerViewDecoration.VERTICAL_LIST));
+
+        // -- DrawerLayout View -- //
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -100,7 +105,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             loadTotalContent();
         }
 
-
         // -- FloatingAction Button -- //
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +119,64 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     // -- User Function Section -- ////////////////////////////////////////
+    private void addToMyContents(int position) {
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(this);
+        progressDoalog.setMessage("잠시만 기다리세요....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDoalog.show();
+
+        int chapterCnt = 0;
+        if (touchContentItem.chapter_end > 0) {
+            chapterCnt = 1;
+        }
+        retroClient.postInsertMyContents(touchContentItem.id, userData.id, chapterCnt, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                Toast.makeText(getApplicationContext(), "SUCCESS : " + code, Toast.LENGTH_SHORT).show();
+                myContentsRefresh = true;
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int code) {
+                Toast.makeText(getApplicationContext(), "FAIL : " + code, Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+        });
+
+    }
+
+    private void drawSwipeMenu() {
+        swipeController = new SwipeController(this, new SwipeControllerActions() {
+            @Override
+            public void onLeftClicked(int position) {
+                mAdapter.mItems.remove(position);
+                mAdapter.notifyItemRemoved(position);
+                mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+            }
+
+            @Override
+            public void onRightClicked(int position) {
+                addToMyContents(position);
+            }
+        });
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(mRecyclerView);
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
+    }
+
     private void clearRecyclerView() {
         ArrayList<Content> items = new ArrayList();
         mAdapter = new RecyclerViewAdapter(this, items);
@@ -126,7 +188,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mRecyclerView.setAdapter(mAdapter);
     }
 
-
     public void loadTotalContent() {
         clearRecyclerView();
 
@@ -137,7 +198,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
 
-        retroClient.getTotalContents(new RetroCallback() {
+        retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, t.toString());
@@ -154,6 +215,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     items.addAll(data);
                     mAdapter = new RecyclerViewAdapter(ContentsActivity.this, items);
                     mRecyclerView.setAdapter(mAdapter);
+                    drawSwipeMenu();
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
                 }
@@ -199,6 +261,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                         myContents.addAll(data);
                         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, myContents);
                         mRecyclerView.setAdapter(mAdapter);
+                        drawSwipeMenu();
                     } else {
                         Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
                     }
@@ -215,6 +278,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         } else {
             mAdapter = new RecyclerViewAdapter(this, myContents);
             mRecyclerView.setAdapter(mAdapter);
+            drawSwipeMenu();
         }
     }
 

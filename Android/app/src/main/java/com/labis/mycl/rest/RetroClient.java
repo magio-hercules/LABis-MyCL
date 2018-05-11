@@ -78,24 +78,7 @@ public class RetroClient {
         });
     }
 
-    public void getTotalContents(final RetroCallback callback) {
-        apiService.getTotalContents().enqueue(new Callback<List<Content>>() {
-            @Override
-            public void onResponse(Call<List<Content>> call, Response<List<Content>> response) {
-                if (response.isSuccessful()) {
-                    callback.onSuccess(response.code(), response.body());
-                } else {
-                    callback.onFailure(response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Content>> call, Throwable t) {
-                callback.onError(t);
-            }
-        });
-    }
-
+    /// GET API ////////////////////////////////////////////////////////////////
     public void getTotalGenre(final RetroCallback callback) {
         apiService.getTotalGenre().enqueue(new Callback<List<Genre>>() {
             @Override
@@ -109,6 +92,25 @@ public class RetroClient {
 
             @Override
             public void onFailure(Call<List<Genre>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    /// POST API ////////////////////////////////////////////////////////////////
+    public void postTotalContents(String userid, final RetroCallback callback) {
+        apiService.postTotalContents(userid).enqueue(new Callback<List<Content>>() {
+            @Override
+            public void onResponse(Call<List<Content>> call, Response<List<Content>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Content>> call, Throwable t) {
                 callback.onError(t);
             }
         });
