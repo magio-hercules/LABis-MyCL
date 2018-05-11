@@ -42,6 +42,17 @@
         android:textAlignment="center"
         android:textColor="#ffffff" />
 
+    <Button
+        android:id="@+id/login_loginbtn_khercules"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_back"
+        android:text="khercules 로그인"
+        android:textAlignment="center"
+        android:layout_marginTop="10px"
+        android:textColor="#ffffff" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,6 +79,8 @@
         <!--android:text="Forgot Password"-->
         <!--android:textAlignment="center"-->
         <!--android:textColor="#ffffff" />-->
+
+
     </LinearLayout>
 
 

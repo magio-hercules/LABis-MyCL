@@ -41,6 +41,10 @@ public class LoginActivity extends Activity {
     @BindView(R.id.login_registerbtn)
     Button btn_register;
 
+    // for test
+    @BindView(R.id.login_loginbtn_khercules)
+    Button btn_login_khercules;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,4 +105,39 @@ public class LoginActivity extends Activity {
         startActivity(i);
     }
 
+    // for test
+    @OnClick(R.id.login_loginbtn_khercules)
+    void onClick_login_khercules(){
+        String str_email = "khercules";
+        String str_pw = "1234";
+
+        Log.e(LOG, "mail: " + str_email +", pw: "+str_pw);
+
+        retroClient.postLogin(str_email, str_pw, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Log.e(LOG, t.toString());
+                Toast.makeText(LoginActivity.this, "Login Error", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                Log.e(LOG, "SUCCESS");
+                Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+
+                ArrayList<User> userList = (ArrayList<User>) receivedData;
+                if (!userList.isEmpty()) {
+                    Intent i = new Intent(LoginActivity.this, ContentsActivity.class);
+                    i.putParcelableArrayListExtra("user", userList);
+                    startActivity(i);
+                }
+            }
+
+            @Override
+            public void onFailure(int code) {
+                Log.e(LOG, "FAIL");
+                Toast.makeText(LoginActivity.this, "Login Fail", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

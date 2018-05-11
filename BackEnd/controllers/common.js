@@ -5,8 +5,8 @@ module.exports = function () {
     return {
         // doQuery : function(req, res, query, obj, callback) {
         doQuery : function(req, res, query, params, callback) {
-            console.log("[INFO][doQuery] query :" + query);
-            console.log("[INFO][doQuery] params :" + JSON.stringify(params));
+            console.log("[INFO][doQuery] query : " + query);
+            console.log("[INFO][doQuery] params : " + JSON.stringify(params));
 
             connection.query(query, params, function (error, result) {
                 if (error) {
@@ -28,6 +28,8 @@ module.exports = function () {
                     } else {
                         // console.log('[INFO][QUERY] result : ', result);
                         // console.log('[INFO][QUERY] result end');
+                        var count = result.length ? result.length : result.changedRows;
+                        console.log('[INFO][QUERY] result end (count: ' + count + ')');
 
                         // res.writeHead(200, {'Content-Type':'text/html'});
                         res.writeHead(200, {'Content-Type': 'application/json'});

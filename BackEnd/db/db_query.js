@@ -63,15 +63,27 @@ module.exports = function () {
         },
         postUpdateMyContents: function () {
             // .../MyCL/update_my_contents (id,user_id,score,comment,chapter)
-            return 'UPDATE Contents_my SET';
+            return 'UPDATE Contents_my SET ';
+        },
+        postFilterMyContents: function () {
+            // .../MyCL/filter_my_contents (user_id,gen_id)
+            return 'SELECT * FROM Contents_my JOIN Contents_list USING(id)';
         },
         postInsertContentsList: function () {
             // .../MyCL/insert_contents_list (gen_id,season,name,name_org,chapter_end,theatrical,series_id,summary,publisher,auth,image)
             return 'INSERT INTO Contents_list SET';
         },
-        postAcceptContentsList: function () {
-            // .../MyCL/accept_contents_list (id,user_id)
-            return '';
+        postFilterContentsList: function () {
+            // .../MyCL/filter_contents_list (gen_id)
+            return 'SELECT * FROM Contents_list';
+        },
+        postNonAuthContentsList: function () {
+            // .../MyCL/non_auth_contents_list (user_id)
+            return 'SELECT * FROM Contents_list';
+        },
+        postSetAuthContents: function () {
+            // .../MyCL/set_auth_contents_list (user_id,id_list:[id])
+            return 'UPDATE Contents_list SET ';
         },
     }
 };

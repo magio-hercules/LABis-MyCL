@@ -100,11 +100,22 @@ exports.postUpdateMyContents = function(req, res) {
 	query = _checkParams(query, params, req.body.id, table.Contents_my.id);
 	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
 	
-	console.log("[TEST] query : " + query);
-	console.log("[TEST] params : " + params);
-
 	bFirst = true;
 	common.doRequest(req, res, query, params);
+};
+
+
+exports.postFilterMyContents = function(req, res) {
+	console.log("[INFO] call postFilterMyContents");
+	// console.log("req.body : " + JSON.stringify(req.body));
+
+	var query = mysql_query.postFilterMyContents();
+	var params = [];
+	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
+	query = _checkParams(query, params, req.body.gen_id, table.Contents_list.gen_id);
+	
+	bFirst = true;
+	common.doQuery(req, res, query, params);
 };
 
 
@@ -126,37 +137,49 @@ exports.postInsertContentsList = function(req, res) {
 	query = _setParams(query, params, req.body.auth, table.Contents_list.auth);
 	query = _setParams(query, params, req.body.image, table.Contents_list.image);
 
-	console.log("[TEST] query : " + query);
-	console.log("[TEST] params : " + params);
-
 	bFirst = true;
 	common.doRequest(req, res, query, params);
 };
 
 
-exports.postAcceptContentsList = function(req, res) {
-	console.log("[INFO] call postAcceptContentsList");
-	console.log("req.body : " + JSON.stringify(req.body));
+exports.postFilterContentsList = function(req, res) {
+	console.log("[INFO] call postFilterContentsList");
 
-	var query = mysql_query.postAcceptContentsList();
+	var query = mysql_query.postFilterContentsList();
 	var params = [];
-	query = _setParams(query, params, req.body.gen_id, table.Contents_list.gen_id);
-	query = _setParams(query, params, req.body.season, table.Contents_list.season);
-	query = _setParams(query, params, req.body.name, table.Contents_list.name);
-	query = _setParams(query, params, req.body.name_org, table.Contents_list.name_org);
-	query = _setParams(query, params, req.body.chapter_end, table.Contents_list.chapter_end);
-	query = _setParams(query, params, req.body.theatrical, table.Contents_list.theatrical);
-	query = _setParams(query, params, req.body.series_id, table.Contents_list.series_id);
-	query = _setParams(query, params, req.body.summary, table.Contents_list.summary);
-	query = _setParams(query, params, req.body.publisher, table.Contents_list.publisher);
-	query = _setParams(query, params, req.body.auth, table.Contents_list.auth);
-	query = _setParams(query, params, req.body.image, table.Contents_list.image);
+	query = _checkParams(query, params, req.body.gen_id, table.Contents_list.gen_id);
+	
+	bFirst = true;
+	common.doQuery(req, res, query, params);
+};
 
-	console.log("[TEST] query : " + query);
-	console.log("[TEST] params : " + params);
+
+exports.postNonAuthContentsList = function(req, res) {
+	console.log("[INFO] call postNonAuthContentsList");
+
+	var query = mysql_query.postNonAuthContentsList();
+	var params = [];
+	query = _checkParams(query, params, req.body.user_id, table.Contents_list.publisher);
+	query = _checkParams(query, params, table.Config.non_auth, table.Contents_list.auth);	
 
 	bFirst = true;
-	common.doRequest(req, res, query, params);
+	common.doQuery(req, res, query, params);
+};
+
+
+exports.postSetAuthContentsList = function(req, res) {
+	console.log("[INFO] call postSetAuthContentsList");
+
+	var query = mysql_query.postSetAuthContentsList();
+	var params = [];
+	query = _setParams(query, params, table.Config.public_publisher, table.Contents_list.publisher);
+	query = _setParams(query, params, table.Config.auth, table.Contents_list.auth);
+	bFirst = true;
+	query = _checkParams(query, params, req.body.user_id, table.Contents_list.publisher);
+	query = _checkParams(query, params, req.body.id_list, table.Contents_list.id);	
+
+	bFirst = true;
+	common.doQuery(req, res, query, params);
 };
 
 
@@ -188,7 +211,12 @@ function _checkParams(query, params, val, str, bOr) {
 			}
 		}		
 		
-		query = query + str + "=? ";
+		if (typeof(val) != 'string') {
+			query = query + str + "in (" + val + ")";
+		} else {
+			query = query + str + "=? ";
+		}
+		
 		params.push(val);
 	}
 	return query;

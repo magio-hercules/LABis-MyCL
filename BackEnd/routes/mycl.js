@@ -36,20 +36,24 @@ router.get('/total_genre', 		controller_genre.getTotalGenre);
 //////////
 // POST //
 //////////
-router.post('/login', 			controller_login.postLogin);
-router.post('/register', 		controller_login.postRegister);
-router.post('/user',			controller_user.postUser);
-router.post('/genre', 			controller_genre.postGenre);
-router.post('/favorite', 		controller_favorite.postFavorite);
-router.post('/prefer', 			controller_prefer.postPrefer);
-router.post('/total_contents', 	controller_contents.postTotalContents);
-router.post('/my_contents', 	controller_contents.postMyContents);
+router.post('/login', 					controller_login.postLogin);
+router.post('/register', 				controller_login.postRegister);
+router.post('/user',					controller_user.postUser);
+router.post('/genre', 					controller_genre.postGenre);
+router.post('/favorite', 				controller_favorite.postFavorite);
+router.post('/prefer', 					controller_prefer.postPrefer);
+router.post('/total_contents', 			controller_contents.postTotalContents);
+router.post('/my_contents', 			controller_contents.postMyContents);
 
-router.post('/insert_my_contents', controller_contents.postInsertMyContents);
-router.post('/update_my_contents', controller_contents.postUpdateMyContents);
+router.post('/insert_my_contents', 		controller_contents.postInsertMyContents);
+router.post('/update_my_contents', 		controller_contents.postUpdateMyContents);
+router.post('/filter_my_contents', 		controller_contents.postFilterMyContents);
 
-router.post('/insert_contents_list', controller_contents.postInsertContentsList);
-router.post('/accept_contents_list', controller_contents.postAcceptContentsList);
+router.post('/insert_contents_list', 	controller_contents.postInsertContentsList);
+router.post('/filter_contents_list', 	controller_contents.postFilterContentsList);
+
+router.post('/non_auth_contents_list', 	controller_contents.postNonAuthContentsList);
+router.post('/set_auth_contents_list', 	controller_contents.postSetAuthContentsList);
 
 
 

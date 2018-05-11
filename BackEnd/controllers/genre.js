@@ -24,11 +24,10 @@ exports.postGenre = function(req, res) {
 
     var query = mysql_query.postGenre();
 	var params = [];
-
 	query = _checkParams(query, params, req.body.id, table.Genre.id);
 	
 	bFirst = true;
-	common.doQuery(req, res, query, obj);
+	common.doQuery(req, res, query, params);
 };
 
 
