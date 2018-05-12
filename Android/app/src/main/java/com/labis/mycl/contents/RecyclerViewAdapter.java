@@ -34,7 +34,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     // 필수 오버라이드 : View 생성
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item2, parent, false);
         mContext = parent.getContext();
 
         RecyclerViewHolder holder = new RecyclerViewHolder(v);
@@ -59,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             holder.mConAddBtn.setVisibility(View.VISIBLE);
             holder.mIndex.setGravity(Gravity.CENTER);
             if(mItems.get(position).chapter > 0) {
-                holder.mIndex.setText(String.valueOf(mItems.get(position).chapter));
+                holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + "화");
             }
         } else if(mActivity.modeStatus == "TOTAL") {
             holder.mConMinusBtn.setVisibility(View.GONE);
