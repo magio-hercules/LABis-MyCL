@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorAccent"
-    android:layout_marginRight="6dp"
     android:layout_marginLeft="6dp"
-    card_view:cardElevation="1dp"
-    card_view:contentPadding="0dp"
-    card_view:cardUseCompatPadding="true"
+    android:layout_marginRight="6dp"
+    android:background="@color/colorAccent"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    card_view:cardElevation="1dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:contentPadding="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
 
         <LinearLayout
             android:id="@+id/firstDiv"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
@@ -47,22 +47,22 @@
             android:id="@+id/secondDiv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="0.5"
             android:gravity="center_vertical"
-            android:paddingLeft="8dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/name"
-                android:layout_width="160dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
-                android:layout_marginTop="1dp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/name2"
-                android:layout_width="160dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textColor="@color/colorPrimary"
@@ -70,13 +70,12 @@
 
         </LinearLayout>
 
-
         <LinearLayout
             android:id="@+id/thirdDiv"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:gravity="top"
+            android:layout_toRightOf="@+id/secondDiv"
             android:orientation="vertical">
 
             <TextView
@@ -86,13 +85,13 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:textColor="@color/colorPrimary"
-                android:textSize="13sp" />
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:id="@+id/subThirdDiv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="2dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -109,10 +108,10 @@
                     android:id="@+id/index"
                     android:layout_width="48dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="123화"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:textColor="@color/colorAccent"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -128,9 +127,26 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/thirdDivTotal"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/SeasonTotal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="시즌 10"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp" />
+        </LinearLayout>
+
 
     </LinearLayout>
-
 
 
 </android.support.v7.widget.CardView>

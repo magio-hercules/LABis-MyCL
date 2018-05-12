@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.labis.mycl.R;
@@ -22,6 +23,10 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     public TextView mSeason;
     public TextView mIndex;
 
+    public LinearLayout mThirdDivMy;
+    public LinearLayout mThirdDivTotal;
+    public TextView mSeasonTotal;
+
     public RecyclerViewHolder(View itemView) {
         super(itemView);
 
@@ -33,5 +38,9 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         mConMinusBtn = (TextView) itemView.findViewById(R.id.ConMinusBtn);
         mSeason = (TextView) itemView.findViewById(R.id.season);
         mIndex = (TextView) itemView.findViewById(R.id.index);
+
+        mThirdDivMy = (LinearLayout)itemView.findViewById(R.id.thirdDiv);
+        mThirdDivTotal = (LinearLayout)itemView.findViewById(R.id.thirdDivTotal);
+        mSeasonTotal = (TextView) itemView.findViewById(R.id.SeasonTotal);
     }
 }

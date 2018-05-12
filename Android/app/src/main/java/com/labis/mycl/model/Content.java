@@ -4,7 +4,7 @@ public class Content {
     // content_list table
     public final String id;
     public final String gen_id;
-    public final String season;
+    public final int season;
     public final String name;
     public final String name_org;
     public final int chapter_end;
@@ -19,7 +19,7 @@ public class Content {
     public final String comment;
     public int chapter;
 
-    public Content(String id, String gen_id, String season, String name, String name_org, int chapter_end, String theatrical, String series_id, String summary, String image,
+    public Content(String id, String gen_id, int season, String name, String name_org, int chapter_end, String theatrical, String series_id, String summary, String image,
     String user_id, String score, String comment, int chapter) {
         this.id = id;
         this.gen_id = gen_id;
