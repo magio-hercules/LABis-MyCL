@@ -56,11 +56,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         if(mActivity.modeStatus == "MY") {
 
             holder.mThirdDivTotal.setVisibility(View.GONE);
-            holder.mThirdDivMy.setVisibility(View.VISIBLE);
+
             if(mItems.get(position).season > 0) {
                 holder.mSeason.setText("시즌" + mItems.get(position).season);
             }
-            holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + "화");
+
+            if(mItems.get(position).chapter > 0) {
+                holder.mThirdDivMy.setVisibility(View.VISIBLE);
+                holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + "화");
+            } else {
+                holder.mThirdDivMy.setVisibility(View.GONE);
+            }
 
         } else if(mActivity.modeStatus == "TOTAL") {
 

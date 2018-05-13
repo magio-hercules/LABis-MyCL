@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -25,7 +27,7 @@ class SwipeController extends Callback {
 
     private boolean swipeBack = false;
 
-    private ButtonsState buttonShowedState = ButtonsState.GONE;
+    public ButtonsState buttonShowedState = ButtonsState.GONE;
 
     private RectF buttonInstance = null;
 
@@ -44,12 +46,13 @@ class SwipeController extends Callback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+
         if(mActivity.modeStatus == "MY")
             return makeMovementFlags(0, RIGHT);
         else if(mActivity.modeStatus == "TOTAL")
             return makeMovementFlags(0, LEFT);
-        else
-            return makeMovementFlags(0, LEFT | RIGHT);
+
+        return makeMovementFlags(0, LEFT | RIGHT);
     }
 
     @Override
@@ -58,9 +61,7 @@ class SwipeController extends Callback {
     }
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-    }
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) { }
 
     @Override
     public int convertToAbsoluteDirection(int flags, int layoutDirection) {
@@ -75,8 +76,12 @@ class SwipeController extends Callback {
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ACTION_STATE_SWIPE) {
             if (buttonShowedState != ButtonsState.GONE) {
-                if (buttonShowedState == ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
-                if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) dX = Math.min(dX, -buttonWidth);
+
+                if (mActivity.modeStatus == "MY" && buttonShowedState == ButtonsState.LEFT_VISIBLE)
+                    dX = Math.max(dX, buttonWidth);
+                if (mActivity.modeStatus == "TOTAL" && buttonShowedState == ButtonsState.RIGHT_VISIBLE)
+                    dX = Math.min(dX, -buttonWidth);
+
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
             else {
@@ -96,8 +101,8 @@ class SwipeController extends Callback {
             public boolean onTouch(View v, MotionEvent event) {
                 swipeBack = event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP;
                 if (swipeBack) {
-                    if (dX - 22 < buttonWidth) buttonShowedState = ButtonsState.RIGHT_VISIBLE;
-                    else if (dX + 11 > buttonWidth) buttonShowedState = ButtonsState.LEFT_VISIBLE;
+                    if (dX  < buttonWidth) buttonShowedState = ButtonsState.RIGHT_VISIBLE;
+                    else if (dX  > buttonWidth) buttonShowedState = ButtonsState.LEFT_VISIBLE;
 
                     if (buttonShowedState != ButtonsState.GONE) {
                         setTouchDownListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -164,22 +169,21 @@ class SwipeController extends Callback {
 
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
-
-        RectF leftButton = new RectF(itemView.getLeft() + 11, itemView.getTop() + 15, itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom() - 15);
-        p.setColor(Color.RED);
-        c.drawRoundRect(leftButton, corners, corners, p);
-        drawText("삭제", c, leftButton, p);
-
-        RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop() + 15, itemView.getRight() - 11, itemView.getBottom() - 15);
-        p.setColor(Color.parseColor("#041642"));
-        c.drawRoundRect(rightButton, corners, corners, p);
-        drawText("추가", c, rightButton, p);
-
         buttonInstance = null;
-        if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
-            buttonInstance = leftButton;
-        } else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-            buttonInstance = rightButton;
+
+        if(mActivity.modeStatus == "MY") {
+            RectF leftButton = new RectF(itemView.getLeft() + 11, itemView.getTop() + 15, itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom() - 15);
+            p.setColor(Color.RED);
+            c.drawRoundRect(leftButton, corners, corners, p);
+            drawText("삭제", c, leftButton, p);
+            if (buttonShowedState == ButtonsState.LEFT_VISIBLE) buttonInstance = leftButton;
+        } else if(mActivity.modeStatus == "TOTAL") {
+            RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop() + 15, itemView.getRight() - 11, itemView.getBottom() - 15);
+            p.setColor(Color.parseColor("#041642"));
+            c.drawRoundRect(rightButton, corners, corners, p);
+            drawText("추가", c, rightButton, p);
+            if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) buttonInstance = rightButton;
+
         }
     }
 

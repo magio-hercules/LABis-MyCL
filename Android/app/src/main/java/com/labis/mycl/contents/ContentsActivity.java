@@ -53,7 +53,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     SwipeController swipeController = null;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +85,20 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        swipeController = new SwipeController(this, new SwipeControllerActions() {
+            @Override
+            public void onLeftClicked(int position) {
+                mAdapter.mItems.remove(position);
+                mAdapter.notifyItemRemoved(position);
+                mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+            }
+
+            @Override
+            public void onRightClicked(int position) {
+                addToMyContents(position);
+            }
+        });
+
 
         // -- DrawerLayout View -- //
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -154,19 +167,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void drawSwipeMenu() {
-        swipeController = new SwipeController(this, new SwipeControllerActions() {
-            @Override
-            public void onLeftClicked(int position) {
-                mAdapter.mItems.remove(position);
-                mAdapter.notifyItemRemoved(position);
-                mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
-            }
+        swipeController.buttonShowedState = ButtonsState.GONE;
 
-            @Override
-            public void onRightClicked(int position) {
-                addToMyContents(position);
-            }
-        });
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         itemTouchhelper.attachToRecyclerView(mRecyclerView);
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
