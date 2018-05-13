@@ -182,6 +182,20 @@ exports.postSetAuthContentsList = function(req, res) {
 	common.doQuery(req, res, query, params);
 };
 
+exports.postDeleteMyContents = function(req, res) {
+	console.log("[INFO] call postDeleteMyContents");
+
+	var query = mysql_query.postDeleteMyContents();
+	var params = [];
+	
+	bFirst = true;
+	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
+	query = _checkParams(query, params, req.body.id, table.Contents_my.id);
+
+
+	common.doRequest(req, res, query, params);
+};
+
 
 function _setParams(query, params, val, str) {
 	if (val != null && val != undefined) {

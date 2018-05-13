@@ -51,7 +51,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public User userData = null;
     public HashMap<String, String> genreMap = new HashMap<String, String>();
 
-    SwipeController swipeController = null;
+    public SwipeController swipeController = null;
+
+    private ProgressDialog progressDoalog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         toolbar.setTitle("내 콘텐츠");
         setSupportActionBar(toolbar);
 
+        // -- User Data -- //
         ArrayList<User> userList = getIntent().getParcelableArrayListExtra("user");
         if (userList != null) {
             userData = userList.get(0);
@@ -79,6 +82,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             }
         }
 
+        //-- ProgressDialog Setting --//
+        progressDoalog = new ProgressDialog(this);
+        progressDoalog.setMessage("잠시만 기다리세요....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
         // -- RecyclerView -- //
         mRecyclerView = (RecyclerView)findViewById(R.id.myContentsView);
         mLayoutManager = new LinearLayoutManager(this);
@@ -86,13 +94,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         swipeController = new SwipeController(this, new SwipeControllerActions() {
+            // MY콘텐츠 삭제
             @Override
             public void onLeftClicked(int position) {
-                mAdapter.mItems.remove(position);
-                mAdapter.notifyItemRemoved(position);
-                mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+                delToMyContents(position);
             }
 
+            // MY콘텐츠 추가
             @Override
             public void onRightClicked(int position) {
                 addToMyContents(position);
@@ -132,17 +140,40 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     // -- User Function Section -- ////////////////////////////////////////
-    private void addToMyContents(int position) {
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(this);
-        progressDoalog.setMessage("잠시만 기다리세요....");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDoalog.show();
 
+    private void delToMyContents(int position) {
+        progressDoalog.show();
+        final int pos= position;
+        retroClient.postDeleteMyContents(userData.id, mAdapter.mItems.get(position).id, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                Toast.makeText(getApplicationContext(), "DELETE SUCCESS : " + code, Toast.LENGTH_SHORT).show();
+                mAdapter.mItems.remove(pos);
+                mAdapter.notifyItemRemoved(pos);
+                mAdapter.notifyItemRangeChanged(pos, mAdapter.getItemCount());
+
+                myContentsRefresh = true;
+                progressDoalog.dismiss();
+            }
+            @Override
+            public void onFailure(int code) {
+                Toast.makeText(getApplicationContext(), "DELETE FAIL : " + code, Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+        });
+    }
+
+    private void addToMyContents(int position) {
         int chapterCnt = 0;
         if (touchContentItem.chapter_end > 0) {
             chapterCnt = 1;
         }
+        progressDoalog.show();
         retroClient.postInsertMyContents(touchContentItem.id, userData.id, chapterCnt, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
@@ -152,14 +183,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             @Override
             public void onSuccess(int code, Object receivedData) {
-                Toast.makeText(getApplicationContext(), "SUCCESS : " + code, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "INSERT SUCCESS : " + code, Toast.LENGTH_SHORT).show();
                 myContentsRefresh = true;
                 progressDoalog.dismiss();
             }
 
             @Override
             public void onFailure(int code) {
-                Toast.makeText(getApplicationContext(), "FAIL : " + code, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "INSERT FAIL : " + code, Toast.LENGTH_SHORT).show();
                 progressDoalog.dismiss();
             }
         });
@@ -192,14 +223,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     public void loadTotalContent() {
         clearRecyclerView();
-
-        // Set up progress before call
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(this);
-        progressDoalog.setMessage("잠시만 기다리세요....");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
-
         retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
@@ -235,15 +259,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     private void loadGetContents() {
         clearRecyclerView();
-
         if(myContentsRefresh) {
-            // Set up progress before call
-            final ProgressDialog progressDoalog;
-            progressDoalog = new ProgressDialog(this);
-            progressDoalog.setMessage("잠시만 기다리세요....");
-            progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDoalog.show();
-
             retroClient.postMyContents(userData.id, new RetroCallback() {
                 @Override
                 public void onError(Throwable t) {

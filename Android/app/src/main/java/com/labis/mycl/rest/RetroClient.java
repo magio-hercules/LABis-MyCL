@@ -170,6 +170,24 @@ public class RetroClient {
         });
     }
 
+    public void postDeleteMyContents(String userid, String id, final RetroCallback callback) {
+        apiService.postDeleteMyContents(userid, id).enqueue(new Callback<Register>() {
+            @Override
+            public void onResponse(Call<Register> call, Response<Register> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Register> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
     public void postLogin(String id, String pw, final RetroCallback callback) {
         apiService.postLogin(id, pw).enqueue(new Callback<List<User>>() {
             @Override

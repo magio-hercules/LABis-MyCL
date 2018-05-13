@@ -48,6 +48,7 @@ router.post('/my_contents', 			controller_contents.postMyContents);
 router.post('/insert_my_contents', 		controller_contents.postInsertMyContents);
 router.post('/update_my_contents', 		controller_contents.postUpdateMyContents);
 router.post('/filter_my_contents', 		controller_contents.postFilterMyContents);
+router.post('/delete_my_contents', 		controller_contents.postDeleteMyContents);
 
 router.post('/insert_contents_list', 	controller_contents.postInsertContentsList);
 router.post('/filter_contents_list', 	controller_contents.postFilterContentsList);

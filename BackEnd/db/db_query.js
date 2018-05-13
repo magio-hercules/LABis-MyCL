@@ -85,5 +85,9 @@ module.exports = function () {
             // .../MyCL/set_auth_contents_list (user_id,id_list:[id])
             return 'UPDATE Contents_list SET ';
         },
+        postDeleteMyContents: function () {
+            // .../MyCL/delete_my_contents (user_id, id)
+            return 'DELETE FROM Contents_my';
+        },
     }
 };

@@ -55,6 +55,10 @@ public interface RetroBaseApiService {
     @POST("total_contents")
     Call<List<Content>> postTotalContents(@Field("user_id") String user_id);
 
+    @FormUrlEncoded
+    @POST("delete_my_contents")
+    Call<Register> postDeleteMyContents(@Field("user_id") String user_id, @Field("id") String id);
+
 
     /// GET API ////////////////////////////////////////////////////////////////
 
