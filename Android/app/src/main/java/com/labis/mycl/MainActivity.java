@@ -71,12 +71,12 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(LOG, "SUCCESS");
                     ArrayList<Genre> genreData = (ArrayList<Genre>) receivedData;
                     if (!genreData.isEmpty()) {
-                        /*Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
+                        Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
                         i.putParcelableArrayListExtra("genre", genreData);
-                        startActivity(i);*/
-
-                        Intent i = new Intent(getApplicationContext(), CustomActivity.class);
                         startActivity(i);
+
+                        //Intent i = new Intent(getApplicationContext(), CustomActivity.class);
+                        //startActivity(i);
                     } else {
                         Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
                     }

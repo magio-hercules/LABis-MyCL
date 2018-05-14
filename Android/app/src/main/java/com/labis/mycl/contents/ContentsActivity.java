@@ -57,6 +57,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public SwipeController swipeController = null;
 
     private ProgressDialog progressDoalog = null;
+    Menu contentsMainMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,16 +143,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         });*/
     }
 
-    //추가된 소스, ToolBar에 menu.xml을 인플레이트함
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //return super.onCreateOptionsMenu(menu);
-
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_contents, menu);
+        contentsMainMenu = menu;
 
-
-
+        MenuItem item = menu.findItem(R.id.action_my_contents);
+        item.setVisible(false);
         return true;
     }
 
@@ -160,12 +159,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         int id = item.getItemId();
 
         if (id == R.id.action_total_contents) {
-            modeStatus = "TOTAL";
+            swipeController.buttonShowedState = ButtonsState.GONE;
             loadTotalContent();
-            toolbar.setTitle("모든 콘텐츠");
-            toolbar.getMenu().clear();
             return true;
-        } else if(id == R.id.action_custom_contents) {
+        } else if (id == R.id.action_my_contents) {
+            myContentsRefresh = true;
+            loadGetContents();
+            return true;
+        } else if (id == R.id.action_custom_contents) {
             Intent i = new Intent(getApplicationContext(), CustomActivity.class);
             startActivity(i);
             return true;
@@ -258,7 +259,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     public void loadTotalContent() {
-        clearRecyclerView();
+        modeStatus = "TOTAL";
         progressDoalog.show();
         retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
@@ -270,7 +271,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             @Override
             public void onSuccess(int code, Object receivedData) {
-                Log.e(TAG, "SUCCESS");
+                clearRecyclerView(); //initialize
+                toolbar.setTitle("모든 콘텐츠");
+                contentsMainMenu.findItem(R.id.action_total_contents).setVisible(false);
+                contentsMainMenu.findItem(R.id.action_my_contents).setVisible(true);
                 List<Content> data = (List<Content>) receivedData;
                 if (!data.isEmpty()) {
                     ArrayList<Content> items = new ArrayList();
@@ -294,7 +298,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void loadGetContents() {
-        clearRecyclerView();
+        modeStatus = "MY";
         if(myContentsRefresh) {
             progressDoalog.show();
             retroClient.postMyContents(userData.id, new RetroCallback() {
@@ -307,11 +311,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
                 @Override
                 public void onSuccess(int code, Object receivedData) {
-                    Log.e(TAG, "SUCCESS");
+                    clearRecyclerView(); // Initialize
+                    myContentsRefresh = false;
+                    toolbar.setTitle("내 콘텐츠");
+                    contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
+                    contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
+
                     List<Content> data = (List<Content>) receivedData;
                     myContents.clear();
-                    myContentsRefresh = false;
-
                     if (!data.isEmpty()) {
                         myContents.addAll(data);
                         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, myContents);
@@ -359,12 +366,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (modeStatus.equals("TOTAL")) {
-            modeStatus = "MY";
+            myContentsRefresh = true;
             loadGetContents();
-            toolbar.setTitle("내 콘텐츠");
-             if (!toolbar.getMenu().hasVisibleItems()) {
-                getMenuInflater().inflate(R.menu.menu_contents, toolbar.getMenu());
-            }
         } else {
             super.onBackPressed();
         }

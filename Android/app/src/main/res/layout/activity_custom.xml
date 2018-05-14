@@ -44,6 +44,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
                 android:text="타이틀"
+                android:layout_marginLeft="4dp"
                 android:textSize="14sp" />
 
             <EditText
@@ -68,6 +69,7 @@
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
+                android:layout_marginLeft="4dp"
                 android:text="글로벌타이틀"
                 android:textSize="14sp" />
 
@@ -93,6 +95,7 @@
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
+                android:layout_marginLeft="4dp"
                 android:text="장르"
                 android:textSize="14sp" />
 
@@ -118,6 +121,7 @@
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
+                android:layout_marginLeft="4dp"
                 android:text="시즌"
                 android:textSize="14sp" />
 
@@ -143,6 +147,7 @@
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
+                android:layout_marginLeft="4dp"
                 android:text="챕터"
                 android:textSize="14sp" />
 
@@ -168,6 +173,7 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.7"
+                android:layout_marginLeft="4dp"
                 android:text="요약"
                 android:textSize="14sp" />
 
@@ -196,6 +202,7 @@
                 android:layout_weight="0.7"
                 android:textColor="#737373"
                 android:switchMinWidth="60dp"
+                android:layout_marginLeft="4dp"
                 android:text="극장판"
                 android:textSize="14sp" />
         </LinearLayout>

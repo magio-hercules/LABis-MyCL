@@ -3,7 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_total_contents"
-        android:title="모든 콘텐츠로 이동"
+        android:title="모든 콘텐츠 이동"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_my_contents"
+        android:title="내 콘텐츠 이동"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_custom_contents"
