@@ -188,11 +188,10 @@ exports.postDeleteMyContents = function(req, res) {
 	var query = mysql_query.postDeleteMyContents();
 	var params = [];
 	
-	bFirst = true;
 	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
 	query = _checkParams(query, params, req.body.id, table.Contents_my.id);
-
-
+	
+	bFirst = true;
 	common.doRequest(req, res, query, params);
 };
 
