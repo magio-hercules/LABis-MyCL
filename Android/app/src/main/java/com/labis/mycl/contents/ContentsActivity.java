@@ -1,6 +1,7 @@
 package com.labis.mycl.contents;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +16,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -127,7 +130,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         }
 
         // -- FloatingAction Button -- //
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -136,11 +139,44 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 loadTotalContent();
                 toolbar.setTitle("모든 콘텐츠");
             }
-        });
+        });*/
     }
 
-    // -- User Function Section -- ////////////////////////////////////////
+    //추가된 소스, ToolBar에 menu.xml을 인플레이트함
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //return super.onCreateOptionsMenu(menu);
 
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_contents, menu);
+
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_total_contents) {
+            modeStatus = "TOTAL";
+            loadTotalContent();
+            toolbar.setTitle("모든 콘텐츠");
+            toolbar.getMenu().clear();
+            return true;
+        } else if(id == R.id.action_custom_contents) {
+            Intent i = new Intent(getApplicationContext(), CustomActivity.class);
+            startActivity(i);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+    // -- User Function Section -- ////////////////////////////////////////
     private void delToMyContents(int position) {
         progressDoalog.show();
         final int pos= position;
@@ -326,6 +362,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             modeStatus = "MY";
             loadGetContents();
             toolbar.setTitle("내 콘텐츠");
+             if (!toolbar.getMenu().hasVisibleItems()) {
+                getMenuInflater().inflate(R.menu.menu_contents, toolbar.getMenu());
+            }
         } else {
             super.onBackPressed();
         }

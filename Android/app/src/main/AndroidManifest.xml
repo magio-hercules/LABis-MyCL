@@ -24,7 +24,8 @@
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".contents.ContentsActivity" />
-        <activity android:name=".contents.DetailActivity"></activity>
+        <activity android:name=".contents.DetailActivity" />
+        <activity android:name=".contents.CustomActivity"></activity>
     </application>
 
 </manifest>

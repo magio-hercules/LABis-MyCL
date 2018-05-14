@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.labis.mycl.contents.ContentsActivity;
+import com.labis.mycl.contents.CustomActivity;
 import com.labis.mycl.contents.RecyclerViewAdapter;
 import com.labis.mycl.login.LoginActivity;
 import com.labis.mycl.model.Content;
@@ -70,8 +71,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(LOG, "SUCCESS");
                     ArrayList<Genre> genreData = (ArrayList<Genre>) receivedData;
                     if (!genreData.isEmpty()) {
-                        Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
+                        /*Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
                         i.putParcelableArrayListExtra("genre", genreData);
+                        startActivity(i);*/
+
+                        Intent i = new Intent(getApplicationContext(), CustomActivity.class);
                         startActivity(i);
                     } else {
                         Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
