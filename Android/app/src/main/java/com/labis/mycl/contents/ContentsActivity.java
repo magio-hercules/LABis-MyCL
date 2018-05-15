@@ -235,8 +235,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void drawSwipeMenu() {
-        swipeController.buttonShowedState = ButtonsState.GONE;
-
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         itemTouchhelper.attachToRecyclerView(mRecyclerView);
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -261,6 +259,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public void loadTotalContent() {
         modeStatus = "TOTAL";
         progressDoalog.show();
+        swipeController.buttonShowedState = ButtonsState.GONE;
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
         retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
@@ -299,8 +304,15 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     private void loadGetContents() {
         modeStatus = "MY";
+        progressDoalog.show();
+        swipeController.buttonShowedState = ButtonsState.GONE;
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
         if(myContentsRefresh) {
-            progressDoalog.show();
             retroClient.postMyContents(userData.id, new RetroCallback() {
                 @Override
                 public void onError(Throwable t) {
@@ -341,6 +353,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             mAdapter = new RecyclerViewAdapter(this, myContents);
             mRecyclerView.setAdapter(mAdapter);
             drawSwipeMenu();
+            progressDoalog.dismiss();
         }
     }
 
