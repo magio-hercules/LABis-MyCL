@@ -3,12 +3,13 @@ package com.labis.mycl.rest;
 
 import android.content.Context;
 
-import java.util.List;
-
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.model.User;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -207,8 +208,8 @@ public class RetroClient {
     }
 
     public void postRegister(String id, String pw, String age, String gender,
-                               String nickname, String phone, final RetroCallback callback) {
-        apiService.postRegister(id, pw, age, gender, nickname, phone).enqueue(new Callback<Register>() {
+                               String nickname, String phone, String image, final RetroCallback callback) {
+        apiService.postRegister(id, pw, age, gender, nickname, phone, image).enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
                 if (response.isSuccessful()) {

@@ -1,11 +1,12 @@
 package com.labis.mycl.rest;
 
-import java.util.List;
-
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.model.User;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -33,7 +34,7 @@ public interface RetroBaseApiService {
     @POST("register")
     Call<Register> postRegister(@Field("id") String id, @Field("pw") String pw,
                                 @Field("age") String age, @Field("gender") String gender,
-                                @Field("nickname") String nickname, @Field("phone") String phone);
+                                @Field("nickname") String nickname, @Field("phone") String phone, @Field("image") String image);
 
     @FormUrlEncoded
     @POST("user")
