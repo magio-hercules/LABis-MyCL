@@ -46,7 +46,7 @@ public class CustomActivity extends AppCompatActivity {
         
         // -- ToolBar -- //
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("개인 콘텐츠 추가");
+        toolbar.setTitle("커스텀 콘텐츠 추가");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -58,7 +58,7 @@ public class CustomActivity extends AppCompatActivity {
             }
         });
 
-        sAdapter = ArrayAdapter.createFromResource(this, R.array.genre, android.R.layout.simple_spinner_dropdown_item);
+        sAdapter = ArrayAdapter.createFromResource(this, R.array.genre, R.layout.spinner_item);
 
         comboGenre.setAdapter(sAdapter);
         comboGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

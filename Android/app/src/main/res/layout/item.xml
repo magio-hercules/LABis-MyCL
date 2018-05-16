@@ -39,7 +39,7 @@
                 android:id="@+id/imageView"
                 android:layout_width="71dp"
                 android:layout_height="71dp"
-                android:background="@android:color/background_dark"
+                android:background="@mipmap/ic_default_thum"
                 android:scaleType="fitXY" />
         </LinearLayout>
 
