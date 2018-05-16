@@ -54,8 +54,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public User userData = null;
     public HashMap<String, String> genreMap = new HashMap<String, String>();
 
-    public SwipeController swipeController = null;
-
     private ProgressDialog progressDoalog = null;
     Menu contentsMainMenu;
 
@@ -97,19 +95,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        swipeController = new SwipeController(this, new SwipeControllerActions() {
-            // MY콘텐츠 삭제
-            @Override
-            public void onLeftClicked(int position) {
-                delToMyContents(position);
-            }
-
-            // MY콘텐츠 추가
-            @Override
-            public void onRightClicked(int position) {
-                addToMyContents(position);
-            }
-        });
+        drawSwipeMenu();
 
 
         // -- DrawerLayout View -- //
@@ -125,7 +111,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         // -- RetroClient -- //
         retroClient = RetroClient.getInstance(this).createBaseApi();
         if(modeStatus == "MY") {
-            loadGetContents();
+            loadMyContents();
         } else if(modeStatus == "TOTAL") {
             loadTotalContent();
         }
@@ -159,12 +145,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         int id = item.getItemId();
 
         if (id == R.id.action_total_contents) {
-            swipeController.buttonShowedState = ButtonsState.GONE;
             loadTotalContent();
             return true;
         } else if (id == R.id.action_my_contents) {
             myContentsRefresh = true;
-            loadGetContents();
+            loadMyContents();
             return true;
         } else if (id == R.id.action_custom_contents) {
             Intent i = new Intent(getApplicationContext(), CustomActivity.class);
@@ -235,8 +220,23 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void drawSwipeMenu() {
+        final SwipeController swipeController = new SwipeController(this, new SwipeControllerActions() {
+            // MY콘텐츠 삭제
+            @Override
+            public void onLeftClicked(int position) {
+                delToMyContents(position);
+            }
+
+            // MY콘텐츠 추가
+            @Override
+            public void onRightClicked(int position) {
+                addToMyContents(position);
+            }
+        });
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         itemTouchhelper.attachToRecyclerView(mRecyclerView);
+
+
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
@@ -249,6 +249,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         ArrayList<Content> items = new ArrayList();
         mAdapter = new RecyclerViewAdapter(this, items);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.refreshDrawableState();
     }
 
     public void refrshList(ArrayList<Content> items) {
@@ -259,13 +260,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public void loadTotalContent() {
         modeStatus = "TOTAL";
         progressDoalog.show();
-        swipeController.buttonShowedState = ButtonsState.GONE;
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                swipeController.onDraw(c);
-            }
-        });
         retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
@@ -302,16 +296,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         });
     }
 
-    private void loadGetContents() {
+    private void loadMyContents() {
         modeStatus = "MY";
         progressDoalog.show();
-        swipeController.buttonShowedState = ButtonsState.GONE;
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                swipeController.onDraw(c);
-            }
-        });
         if(myContentsRefresh) {
             retroClient.postMyContents(userData.id, new RetroCallback() {
                 @Override
@@ -380,7 +367,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             drawer.closeDrawer(GravityCompat.START);
         } else if (modeStatus.equals("TOTAL")) {
             myContentsRefresh = true;
-            loadGetContents();
+            loadMyContents();
         } else {
             super.onBackPressed();
         }
