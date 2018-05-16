@@ -51,45 +51,48 @@ public class MainActivity extends AppCompatActivity {
 
     Button.OnClickListener linkButtonClickListener = new View.OnClickListener() {
         public void onClick(View v) {
-            // Set up progress before call
-            final ProgressDialog progressDoalog;
-            progressDoalog = new ProgressDialog(v.getContext());
-            progressDoalog.setMessage("잠시만 기다리세요....");
-            progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDoalog.show();
 
-            retroClient.getTotalGenre(new RetroCallback() {
-                @Override
-                public void onError(Throwable t) {
-                    Log.e(LOG, t.toString());
-                    Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
-                    progressDoalog.dismiss();
-                }
+            if (true) {
+                Intent i = new Intent(getApplicationContext(), CustomActivity.class);
+                startActivity(i);
+            } else {
+                // Set up progress before call
+                final ProgressDialog progressDoalog;
+                progressDoalog = new ProgressDialog(v.getContext());
+                progressDoalog.setMessage("잠시만 기다리세요....");
+                progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDoalog.show();
 
-                @Override
-                public void onSuccess(int code, Object receivedData) {
-                    Log.e(LOG, "SUCCESS");
-                    ArrayList<Genre> genreData = (ArrayList<Genre>) receivedData;
-                    if (!genreData.isEmpty()) {
-                        Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
-                        i.putParcelableArrayListExtra("genre", genreData);
-                        startActivity(i);
-
-                        //Intent i = new Intent(getApplicationContext(), CustomActivity.class);
-                        //startActivity(i);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
+                retroClient.getTotalGenre(new RetroCallback() {
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.e(LOG, t.toString());
+                        Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                        progressDoalog.dismiss();
                     }
-                    progressDoalog.dismiss();
-                }
 
-                @Override
-                public void onFailure(int code) {
-                    Log.e(LOG, "FAIL");
-                    Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
-                    progressDoalog.dismiss();
-                }
-            });
+                    @Override
+                    public void onSuccess(int code, Object receivedData) {
+                        Log.e(LOG, "SUCCESS");
+                        ArrayList<Genre> genreData = (ArrayList<Genre>) receivedData;
+                        if (!genreData.isEmpty()) {
+                            Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
+                            i.putParcelableArrayListExtra("genre", genreData);
+                            startActivity(i);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
+                        }
+                        progressDoalog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailure(int code) {
+                        Log.e(LOG, "FAIL");
+                        Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
+                        progressDoalog.dismiss();
+                    }
+                });
+            }
         }
     };
 

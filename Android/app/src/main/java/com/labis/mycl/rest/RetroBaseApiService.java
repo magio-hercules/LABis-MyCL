@@ -60,6 +60,15 @@ public interface RetroBaseApiService {
     @POST("delete_my_contents")
     Call<Register> postDeleteMyContents(@Field("user_id") String user_id, @Field("id") String id);
 
+    @FormUrlEncoded
+    @POST("insert_contents_list")
+    Call<Register> postInserCustomContents(@Field("gen_id") String gen_id, @Field("season") String season,
+                                           @Field("name") String name, @Field("name_org") String name_org,
+                                           @Field("chapter_end") String chapter_end, @Field("theatrical") String theatrical,
+                                           @Field("series_id") String series_id, @Field("summary") String summary,
+                                           @Field("publisher") String publisher, @Field("auth") String auth,
+                                           @Field("image") String image);
+
 
     /// GET API ////////////////////////////////////////////////////////////////
 
