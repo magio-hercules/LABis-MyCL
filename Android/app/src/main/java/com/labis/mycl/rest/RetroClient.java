@@ -3,12 +3,13 @@ package com.labis.mycl.rest;
 
 import android.content.Context;
 
-import java.util.List;
-
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.model.User;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -188,6 +189,27 @@ public class RetroClient {
         });
     }
 
+    public void postInserCustomContents(String gen_id, String season, String name, String name_org,
+                                        String chapter_end, String theatrical, String series_id, String summary,
+                                        String publisher, String auth, String image, final RetroCallback callback) {
+        apiService.postInserCustomContents( gen_id,  season,  name,  name_org,
+                 chapter_end,  theatrical,  series_id,  summary, publisher,  auth,  image).enqueue(new Callback<Register>() {
+            @Override
+            public void onResponse(Call<Register> call, Response<Register> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Register> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
     public void postLogin(String id, String pw, final RetroCallback callback) {
         apiService.postLogin(id, pw).enqueue(new Callback<List<User>>() {
             @Override
@@ -207,8 +229,8 @@ public class RetroClient {
     }
 
     public void postRegister(String id, String pw, String age, String gender,
-                               String nickname, String phone, final RetroCallback callback) {
-        apiService.postRegister(id, pw, age, gender, nickname, phone).enqueue(new Callback<Register>() {
+                               String nickname, String phone, String image, final RetroCallback callback) {
+        apiService.postRegister(id, pw, age, gender, nickname, phone, image).enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
                 if (response.isSuccessful()) {

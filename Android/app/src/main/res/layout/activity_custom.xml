@@ -88,6 +88,7 @@
             android:id="@+id/Div3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/border"
             android:orientation="vertical">
 
             <TextView
@@ -99,15 +100,15 @@
                 android:text="장르"
                 android:textSize="14sp" />
 
-            <EditText
-                android:id="@+id/editGenre"
-                android:layout_width="match_parent"
+            <Spinner
+                android:id="@+id/comboGenre"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
-                android:ems="12"
-                android:gravity="right"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                android:textSize="18sp"
+                android:layout_gravity="right"
+                android:gravity="right" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -148,7 +149,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
                 android:layout_marginLeft="4dp"
-                android:text="챕터"
+                android:text="시작챕터"
                 android:textSize="14sp" />
 
             <EditText
@@ -164,6 +165,24 @@
 
         <LinearLayout
             android:id="@+id/Div6"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="vertical">
+            <Switch
+                android:id="@+id/switchTheater"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="0.7"
+                android:textColor="#737373"
+                android:switchMinWidth="60dp"
+                android:layout_marginLeft="4dp"
+                android:text="극장판"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Div7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -189,23 +208,7 @@
                 android:text="어저고 저쩌고" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/Div7"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="vertical">
-            <Switch
-                android:id="@+id/switchTheater"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_weight="0.7"
-                android:textColor="#737373"
-                android:switchMinWidth="60dp"
-                android:layout_marginLeft="4dp"
-                android:text="극장판"
-                android:textSize="14sp" />
-        </LinearLayout>
+
 
     </LinearLayout>
 

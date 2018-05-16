@@ -1,11 +1,12 @@
 package com.labis.mycl.rest;
 
-import java.util.List;
-
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.model.User;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -33,7 +34,7 @@ public interface RetroBaseApiService {
     @POST("register")
     Call<Register> postRegister(@Field("id") String id, @Field("pw") String pw,
                                 @Field("age") String age, @Field("gender") String gender,
-                                @Field("nickname") String nickname, @Field("phone") String phone);
+                                @Field("nickname") String nickname, @Field("phone") String phone, @Field("image") String image);
 
     @FormUrlEncoded
     @POST("user")
@@ -58,6 +59,15 @@ public interface RetroBaseApiService {
     @FormUrlEncoded
     @POST("delete_my_contents")
     Call<Register> postDeleteMyContents(@Field("user_id") String user_id, @Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("insert_contents_list")
+    Call<Register> postInserCustomContents(@Field("gen_id") String gen_id, @Field("season") String season,
+                                           @Field("name") String name, @Field("name_org") String name_org,
+                                           @Field("chapter_end") String chapter_end, @Field("theatrical") String theatrical,
+                                           @Field("series_id") String series_id, @Field("summary") String summary,
+                                           @Field("publisher") String publisher, @Field("auth") String auth,
+                                           @Field("image") String image);
 
 
     /// GET API ////////////////////////////////////////////////////////////////

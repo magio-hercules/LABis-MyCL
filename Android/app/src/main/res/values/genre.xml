@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="genre">
+        <item>선택</item>
+        <item>미드</item>
+        <item>한드</item>
+        <item>일드</item>
+        <item>만화</item>
+        <item>애니</item>
+    </string-array>
+</resources>
