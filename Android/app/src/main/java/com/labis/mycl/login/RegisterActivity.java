@@ -183,13 +183,14 @@ public class RegisterActivity extends Activity {
 
         final TransferObserver observer = transferUtility.upload(
                 "mycl.userimage",
-                currentPhotoFile.getName(),
+                "images/" + currentPhotoFile.getName(),
                 currentPhotoFile
         );
+
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
-                String resourceUrl = ((AmazonS3Client)s3).getResourceUrl(observer.getBucket(), currentPhotoFile.getName());  // get resourceUrl
+                String resourceUrl = ((AmazonS3Client)s3).getResourceUrl(observer.getBucket(), "resize/" + currentPhotoFile.getName());  // get resourceUrl
                 Log.d(TAG, "onStateChanged: " + state);
                 Log.d(TAG, "resourceUrl: " + resourceUrl);
 
