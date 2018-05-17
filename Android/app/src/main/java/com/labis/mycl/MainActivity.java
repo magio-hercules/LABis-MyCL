@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     Button.OnClickListener linkButtonClickListener = new View.OnClickListener() {
         public void onClick(View v) {
 
-            if (false) {
+            if (true) {
                 Intent i = new Intent(getApplicationContext(), CustomActivity.class);
                 startActivity(i);
             } else {

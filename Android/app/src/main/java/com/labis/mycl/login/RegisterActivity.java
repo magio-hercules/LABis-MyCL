@@ -1,9 +1,11 @@
 package com.labis.mycl.login;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +15,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.Button;
@@ -75,6 +79,7 @@ public class RegisterActivity extends Activity {
     private String currentPhotoPath;
     private Uri photoUri;
 
+    private final int WRITE_CODE   = 1110;
     private final int CAMERA_CODE   = 1111;
     private final int GALLERY_CODE  = 1112;
 
@@ -246,15 +251,38 @@ public class RegisterActivity extends Activity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result = Utility.checkPermission(getApplicationContext());
+                int permissionGalleryCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE);
+
+                int permissionCameraCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.CAMERA);
+
+                int permissionWriteCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
 
                 if (items[item].equals("촬영하기")) {
-                    if (result) {
-                        selectPhoto();
+                    if (permissionCameraCheck == PackageManager.PERMISSION_GRANTED) {
+                        if(permissionWriteCheck == PackageManager.PERMISSION_GRANTED)
+                        {
+                            selectPhoto();
+                        } else {
+                            ActivityCompat.requestPermissions(RegisterActivity.this,
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    WRITE_CODE);
+                        }
+                    } else {
+                        ActivityCompat.requestPermissions(RegisterActivity.this,
+                                new String[]{Manifest.permission.CAMERA},
+                                CAMERA_CODE);
                     }
                 } else if (items[item].equals("가져오기")) {
-                    if (result) {
+                    if (permissionGalleryCheck == PackageManager.PERMISSION_GRANTED) {
                         selectGallery();
+                    } else {
+                        ActivityCompat.requestPermissions(RegisterActivity.this,
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                GALLERY_CODE);
                     }
                 } else if (items[item].equals("취소")) {
                     dialog.dismiss();
@@ -264,6 +292,35 @@ public class RegisterActivity extends Activity {
         builder.show();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case GALLERY_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    selectGallery();
+                }
+                return;
+            }
+            case CAMERA_CODE : {
+                int permissionWriteCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permissionWriteCheck == PackageManager.PERMISSION_GRANTED) {
+                    selectPhoto();
+                } else {
+                    ActivityCompat.requestPermissions(RegisterActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            WRITE_CODE);
+                }
+                return;
+            }
+            case WRITE_CODE : {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    selectPhoto();
+                }
+                return;
+            }
+        }
+    }
 
     private void selectPhoto() {
         String state = Environment.getExternalStorageState();

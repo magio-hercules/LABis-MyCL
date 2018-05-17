@@ -61,7 +61,7 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_gravity="center"
-                    android:alpha="0.3"
+                    android:alpha="0.4"
                     android:background="@mipmap/ic_default_thum"
                     android:scaleType="fitXY" />
             </LinearLayout>
