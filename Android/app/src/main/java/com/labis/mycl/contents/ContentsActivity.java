@@ -2,6 +2,7 @@ package com.labis.mycl.contents;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -46,8 +47,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     public ArrayList<Content> myContents = new ArrayList();
     public ArrayList<Genre> genreList = new ArrayList();
-
-    public String modeStatus = "MY";
+    static String modeStatus = "MY";
     public Content touchContentItem;
     public boolean myContentsRefresh = true;
 
@@ -64,7 +64,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         // -- ToolBar -- //
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("내 콘텐츠");
         setSupportActionBar(toolbar);
 
         // -- User Data -- //
@@ -116,17 +115,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             loadTotalContent();
         }
 
-        // -- FloatingAction Button -- //
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                modeStatus = "TOTAL";
-                loadTotalContent();
-                toolbar.setTitle("모든 콘텐츠");
-            }
-        });*/
     }
 
     @Override
@@ -258,7 +246,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     public void loadTotalContent() {
+        Log.d("EVOL","전체 리스트");
+
         modeStatus = "TOTAL";
+        getSupportActionBar().setTitle("모든 콘텐츠");
+
         progressDoalog.show();
         retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
@@ -271,7 +263,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onSuccess(int code, Object receivedData) {
                 clearRecyclerView(); //initialize
-                toolbar.setTitle("모든 콘텐츠");
                 contentsMainMenu.findItem(R.id.action_total_contents).setVisible(false);
                 contentsMainMenu.findItem(R.id.action_my_contents).setVisible(true);
                 List<Content> data = (List<Content>) receivedData;
@@ -297,7 +288,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void loadMyContents() {
+        Log.d("EVOL","내 리스트 / " + modeStatus);
         modeStatus = "MY";
+        getSupportActionBar().setTitle("내 콘텐츠");
+
         progressDoalog.show();
         if(myContentsRefresh) {
             retroClient.postMyContents(userData.id, new RetroCallback() {
@@ -312,7 +306,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 public void onSuccess(int code, Object receivedData) {
                     clearRecyclerView(); // Initialize
                     myContentsRefresh = false;
-                    toolbar.setTitle("내 콘텐츠");
                     contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
                     contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
 
