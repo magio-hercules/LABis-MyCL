@@ -37,7 +37,6 @@ import com.labis.mycl.R;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
-import com.labis.mycl.util.Utility;
 
 import java.io.File;
 import java.io.IOException;

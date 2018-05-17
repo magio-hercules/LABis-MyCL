@@ -44,6 +44,8 @@ public class LoginActivity extends Activity {
     // for test
     @BindView(R.id.login_loginbtn_khercules)
     Button btn_login_khercules;
+    @BindView(R.id.login_s3)
+    Button btn_login_s3;
 
 
     @Override
@@ -139,5 +141,12 @@ public class LoginActivity extends Activity {
                 Toast.makeText(LoginActivity.this, "Login Fail", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // for test
+    @OnClick(R.id.login_s3)
+    void onClick_login_s3(){
+        Intent i = new Intent(LoginActivity.this, UrlActivity.class);
+        startActivity(i);
     }
 }
