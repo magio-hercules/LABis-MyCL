@@ -18,6 +18,8 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,7 +56,7 @@ import butterknife.OnClick;
 //import org.apache.http.message.BasicNameValuePair;
 
 
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "[REGISTER]";
 
     RetroClient retroClient;
@@ -94,6 +96,10 @@ public class RegisterActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("사용자 등록");
+        setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
 

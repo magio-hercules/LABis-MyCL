@@ -53,7 +53,7 @@
 
         <LinearLayout
             android:layout_width="227dp"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:alpha="0.2"
             android:gravity="center"
             android:orientation="horizontal"
@@ -62,7 +62,7 @@
             <Button
                 android:id="@+id/login_loginbtn"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:layout_gravity="center"
                 android:text="LOGIN" />
@@ -70,7 +70,7 @@
             <Button
                 android:id="@+id/login_registerbtn"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:layout_gravity="center"
                 android:text="REGISTER" />
