@@ -97,16 +97,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         holder.mConMinusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItems.get(position).setChapter(mItems.get(position).chapter - 1);
-                updateChapter(position, mItems.get(position).getChapter());
+                if(mItems.get(position).chapter > 1) {
+                    mItems.get(position).setChapter(mItems.get(position).chapter - 1);
+                    updateChapter(position, mItems.get(position).getChapter());
+                } else {
+                    Toast.makeText(mContext, "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         holder.mConAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItems.get(position).setChapter(mItems.get(position).chapter + 1);
-                updateChapter(position, mItems.get(position).getChapter());
+                if(mItems.get(position).chapter < 999) {
+                    mItems.get(position).setChapter(mItems.get(position).chapter + 1);
+                    updateChapter(position, mItems.get(position).getChapter());
+                } else {
+                    Toast.makeText(mContext, "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
+                }
             }
 
 

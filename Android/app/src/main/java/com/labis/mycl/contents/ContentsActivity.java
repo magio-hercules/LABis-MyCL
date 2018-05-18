@@ -4,9 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,6 +28,7 @@ import android.widget.Toast;
 
 import com.labis.mycl.R;
 import com.labis.mycl.model.Genre;
+import com.labis.mycl.model.LoginData;
 import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
@@ -51,8 +55,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public Content touchContentItem;
     public boolean myContentsRefresh = true;
 
-    public User userData = null;
-    public HashMap<String, String> genreMap = new HashMap<String, String>();
+    public static User userData;
+    public static HashMap<String, String> genreMap = new HashMap<String, String>();
 
     private ProgressDialog progressDoalog = null;
     Menu contentsMainMenu;
@@ -66,17 +70,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // -- User Data -- //
-        ArrayList<User> userList = getIntent().getParcelableArrayListExtra("user");
-        if (userList != null) {
-            userData = userList.get(0);
-        } else {
-            // for test
-            userData = new User("evol", null, null, null, null, null, null);
-        }
-
-        // -- Genre Data Setting -- //
-        ArrayList<Genre> genreData = getIntent().getParcelableArrayListExtra("genre");
+        // -- LoginData ( User , ArrayList<Gente> ) -- //
+        LoginData logingData = (LoginData) getIntent().getExtras().getParcelable("LoingData");
+        userData = logingData.getUser();
+        ArrayList<Genre> genreData = logingData.getGenreList();
         if (genreData != null) {
             for (int i = 0; i < genreData.size(); i++) {
                 genreMap.put(genreData.get(i).id, genreData.get(i).name);
@@ -106,9 +103,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         // -- RetroClient -- //
         retroClient = RetroClient.getInstance(this).createBaseApi();
+
         if(modeStatus == "MY") {
             loadMyContents();
         } else if(modeStatus == "TOTAL") {
@@ -142,6 +139,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.action_custom_contents) {
             Intent i = new Intent(getApplicationContext(), CustomActivity.class);
             startActivity(i);
+            overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
             return true;
         }
 
@@ -151,6 +149,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
 
     // -- User Function Section -- ////////////////////////////////////////
+
+
     private void delToMyContents(int position) {
         progressDoalog.show();
         final int pos= position;
@@ -250,7 +250,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         modeStatus = "TOTAL";
         getSupportActionBar().setTitle("모든 콘텐츠");
-
+        getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
         progressDoalog.show();
         retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
@@ -291,7 +291,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         Log.d("EVOL","내 리스트 / " + modeStatus);
         modeStatus = "MY";
         getSupportActionBar().setTitle("내 콘텐츠");
-
+        getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.colorPrimary)));
         progressDoalog.show();
         if(myContentsRefresh) {
             retroClient.postMyContents(userData.id, new RetroCallback() {

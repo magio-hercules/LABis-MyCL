@@ -14,6 +14,7 @@ import android.widget.Toast;
 //import org.apache.http.message.BasicNameValuePair;
 import com.labis.mycl.R;
 import com.labis.mycl.contents.ContentsActivity;
+import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
@@ -47,6 +48,7 @@ public class LoginActivity extends Activity {
     @BindView(R.id.login_s3)
     Button btn_login_s3;
 
+    ArrayList<Genre> genreData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,8 @@ public class LoginActivity extends Activity {
             edit_email.setText(id);
             edit_password.requestFocus();
         }
+
+        genreData = getIntent().getParcelableArrayListExtra("genre");
     }
 
 
@@ -90,7 +94,7 @@ public class LoginActivity extends Activity {
                     Intent i = new Intent(LoginActivity.this, ContentsActivity.class);
                     i.putParcelableArrayListExtra("user", userList);
                     startActivity(i);
-                }
+            }
             }
 
             @Override

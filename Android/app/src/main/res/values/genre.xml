@@ -2,10 +2,16 @@
 <resources>
     <string-array name="genre">
         <item>선택</item>
-        <item>미드</item>
-        <item>한드</item>
-        <item>일드</item>
         <item>만화</item>
-        <item>애니</item>
+        <item>소설</item>
+        <item>전공서적</item>
+        <item>애니메이션</item>
+        <item>영화</item>
+        <item>드라마</item>
+        <item>영화</item>
+        <item>다큐멘터리</item>
+        <item>콘서트</item>
+        <item>오케스트라</item>
+        <item>뮤지컬</item>
     </string-array>
 </resources>

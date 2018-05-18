@@ -10,111 +10,133 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.labis.mycl.contents.ContentsActivity;
 import com.labis.mycl.contents.CustomActivity;
 import com.labis.mycl.contents.RecyclerViewAdapter;
 import com.labis.mycl.login.LoginActivity;
+import com.labis.mycl.login.RegisterActivity;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
+import com.labis.mycl.model.LoginData;
+import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MainActivity extends AppCompatActivity {
-    private static final String LOG = "MainActivity";
+    private static final String TAG = "MainActivity";
 
     RetroClient retroClient;
+    ArrayList<Genre> genreData;
+    User userData;
+
+    private ProgressDialog progressDoalog = null;
+
+    @BindView(R.id.main_layout)
+    LinearLayout mainLayout;
+
+    @BindView(R.id.login_email)
+    EditText edit_email;
+
+    @BindView(R.id.login_password)
+    EditText edit_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         retroClient = RetroClient.getInstance(this).createBaseApi();
 
-        findViewById(R.id.loginbutton).setOnClickListener(loginButtonClickListener);
-        findViewById(R.id.linkbutton).setOnClickListener(linkButtonClickListener);
+        //-- ProgressDialog Setting --//
+        progressDoalog = new ProgressDialog(this);
+        progressDoalog.setMessage("잠시만 기다리세요....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        loadGenreData();
     }
 
-    Button.OnClickListener loginButtonClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent i = new Intent(v.getContext(), LoginActivity.class);
-            startActivity(i);
-        }
-    };
-
-    Button.OnClickListener linkButtonClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-
-            if (true) {
-                Intent i = new Intent(getApplicationContext(), CustomActivity.class);
-                startActivity(i);
-            } else {
-                // Set up progress before call
-                final ProgressDialog progressDoalog;
-                progressDoalog = new ProgressDialog(v.getContext());
-                progressDoalog.setMessage("잠시만 기다리세요....");
-                progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDoalog.show();
-
-                retroClient.getTotalGenre(new RetroCallback() {
-                    @Override
-                    public void onError(Throwable t) {
-                        Log.e(LOG, t.toString());
-                        Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
-                        progressDoalog.dismiss();
-                    }
-
-                    @Override
-                    public void onSuccess(int code, Object receivedData) {
-                        Log.e(LOG, "SUCCESS");
-                        ArrayList<Genre> genreData = (ArrayList<Genre>) receivedData;
-                        if (!genreData.isEmpty()) {
-                            Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
-                            i.putParcelableArrayListExtra("genre", genreData);
-                            startActivity(i);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
-                        }
-                        progressDoalog.dismiss();
-                    }
-
-                    @Override
-                    public void onFailure(int code) {
-                        Log.e(LOG, "FAIL");
-                        Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
-                        progressDoalog.dismiss();
-                    }
-                });
+    private void loadGenreData() {
+        progressDoalog.show();
+        retroClient.getTotalGenre(new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Log.e(TAG, t.toString());
+                Toast.makeText(getApplicationContext(), "서버 접속 실패", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
             }
-        }
-    };
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                Log.e(TAG, "GENRE LOAD SUCCESS");
+                genreData = (ArrayList<Genre>) receivedData;
+                mainLayout.setVisibility(View.VISIBLE);
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int code) {
+                Log.e(TAG, "GENRE LOAD FAIL");
+                Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+        });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+    @OnClick(R.id.login_loginbtn)
+    void onClick_login(){
+        String str_email = edit_email.getText().toString();
+        String str_pw = edit_password.getText().toString();
+        Log.e(TAG, "mail: " + str_email +", pw: "+str_pw);
 
-        return super.onOptionsItemSelected(item);
+        progressDoalog.show();
+        retroClient.postLogin(str_email, str_pw, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Log.e(TAG, t.toString());
+                progressDoalog.dismiss();
+                Toast.makeText(getApplicationContext(), "서버 접속 실패", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                Log.e(TAG, "SUCCESS");
+                progressDoalog.dismiss();
+                userData = ((List<User>)receivedData).get(0);
+                Toast.makeText(getApplicationContext(), userData.id + "님 로그인 성공", Toast.LENGTH_SHORT).show();
+                LoginData loginData = new LoginData(userData, genreData);
+                Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
+                i.putExtra("LoingData", loginData);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public void onFailure(int code) {
+                Log.e(TAG, "FAIL");
+                progressDoalog.dismiss();
+                Toast.makeText(getApplicationContext(), "[" + code + "]에러 발생 - 로그인 실패", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @OnClick(R.id.login_registerbtn)
+    void onClick_register(){
+        Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
+        startActivity(i);
     }
 }

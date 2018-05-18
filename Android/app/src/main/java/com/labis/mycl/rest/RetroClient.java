@@ -189,11 +189,10 @@ public class RetroClient {
         });
     }
 
-    public void postInserCustomContents(String gen_id, String season, String name, String name_org,
-                                        String chapter_end, String theatrical, String series_id, String summary,
-                                        String publisher, String auth, String image, final RetroCallback callback) {
+    public void postInserCustomContents(String gen_id, int season, String name, String name_org,
+                                        int theatrical, String summary, String publisher, int auth, String image, final RetroCallback callback) {
         apiService.postInserCustomContents( gen_id,  season,  name,  name_org,
-                 chapter_end,  theatrical,  series_id,  summary, publisher,  auth,  image).enqueue(new Callback<Register>() {
+                 theatrical, summary, publisher,  auth,  image).enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
                 if (response.isSuccessful()) {

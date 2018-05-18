@@ -62,11 +62,11 @@ public interface RetroBaseApiService {
 
     @FormUrlEncoded
     @POST("insert_contents_list")
-    Call<Register> postInserCustomContents(@Field("gen_id") String gen_id, @Field("season") String season,
+    Call<Register> postInserCustomContents(@Field("gen_id") String gen_id, @Field("season") int season,
                                            @Field("name") String name, @Field("name_org") String name_org,
-                                           @Field("chapter_end") String chapter_end, @Field("theatrical") String theatrical,
-                                           @Field("series_id") String series_id, @Field("summary") String summary,
-                                           @Field("publisher") String publisher, @Field("auth") String auth,
+                                           @Field("theatrical") int theatrical,
+                                           @Field("summary") String summary,
+                                           @Field("publisher") String publisher, @Field("auth") int auth,
                                            @Field("image") String image);
 
 

@@ -26,7 +26,7 @@
     <LinearLayout
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/appbar"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
@@ -61,7 +61,6 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_gravity="center"
-                    android:alpha="0.4"
                     android:background="@mipmap/ic_default_thum"
                     android:scaleType="fitXY" />
             </LinearLayout>
@@ -119,7 +118,6 @@
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:inputType="textPersonName"
-                android:text="우리 생애 최고의 순간"
                 android:textSize="15sp" />
         </LinearLayout>
 
@@ -148,7 +146,6 @@
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:inputType="textPersonName"
-                android:text="Forever The Moment"
                 android:textSize="15sp" />
         </LinearLayout>
 
@@ -184,14 +181,13 @@
                     android:background="@color/cardview_light_background"
                     android:gravity="bottom|right"
                     android:inputType="numberDecimal"
-                    android:text="2"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/Div5"
+                android:id="@+id/Div6"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
@@ -200,63 +196,33 @@
                 android:padding="10dp">
 
                 <TextView
-                    android:id="@+id/textChapter"
+                    android:id="@+id/textTheater"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="26dp"
                     android:layout_weight="0.7"
-                    android:text="시작챕터"
+                    android:text="극장판"
                     android:textSize="12sp" />
 
-                <EditText
-                    android:id="@+id/editChapter"
+                <Switch
+                    android:id="@+id/switchTheater"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.3"
-                    android:background="@color/cardview_light_background"
-                    android:gravity="bottom|right"
-                    android:inputType="numberDecimal"
-                    android:text="10"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
+                    android:layout_gravity="right"
+                    android:layout_marginRight="-2dp"
+                    android:layout_weight="0.7"
+                    android:switchMinWidth="60dp"
+                    android:track="@drawable/bg_switch_track" />
+
             </LinearLayout>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/Div6"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="-1dp"
-            android:background="@drawable/border"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <TextView
-                android:id="@+id/textTheater"
-                android:layout_width="match_parent"
-                android:layout_height="26dp"
-                android:layout_weight="0.7"
-                android:text="극장판"
-                android:textSize="12sp" />
-
-            <Switch
-                android:id="@+id/switchTheater"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:layout_marginRight="-2dp"
-                android:layout_weight="0.7"
-                android:switchMinWidth="60dp"
-                android:track="@drawable/bg_switch_track" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/Div7"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="match_parent"
             android:layout_marginTop="-1dp"
+            android:layout_marginBottom="50dp"
             android:background="@drawable/border"
             android:orientation="vertical"
             android:padding="10dp">
@@ -278,11 +244,8 @@
                 android:gravity="top"
                 android:inputType="textMultiLine"
                 android:maxLines="@android:integer/config_longAnimTime"
-                android:text="어저고 저쩌고"
                 android:textSize="15sp" />
         </LinearLayout>
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -301,8 +264,9 @@
             android:layout_height="50dp"
             android:layout_gravity="bottom"
             android:background="#FFC000"
+            android:textStyle="bold"
             android:text="저장"
-            android:textSize="18sp" />
+            android:textSize="17sp" />
     </LinearLayout>
 
 </RelativeLayout>

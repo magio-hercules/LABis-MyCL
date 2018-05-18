@@ -6,19 +6,10 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -29,20 +20,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Switch;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.labis.mycl.R;
-import com.labis.mycl.login.RegisterActivity;
+import com.labis.mycl.model.Content;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.util.CheckPermission;
 import com.labis.mycl.util.ImagePicker;
-import com.labis.mycl.util.Utility;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,17 +49,29 @@ public class CustomActivity extends AppCompatActivity {
 
     private static final String TAG = "CustomActivity";
 
-    @BindView(R.id.editTitle)
-    EditText editTitle;
+    @BindView(R.id.imageView)
+    ImageView imageView;
 
     @BindView(R.id.comboGenre)
     Spinner comboGenre;
 
+    @BindView(R.id.editTitle)
+    EditText editTitle;
+
+    @BindView(R.id.editOriginal)
+    EditText editOriginal;
+
+    @BindView(R.id.editSeason)
+    EditText editSeason;
+
+    @BindView(R.id.switchTheater)
+    Switch switchTheater;
+
+    @BindView(R.id.editSummary)
+    EditText editSummary;
+
     @BindView(R.id.saveBtn)
     Button saveBtn;
-
-    @BindView(R.id.imageView)
-    ImageView imageView;
 
     SpinnerAdapter sAdapter;
 
@@ -72,10 +81,18 @@ public class CustomActivity extends AppCompatActivity {
     private final int CAMERA_CODE   = 1111;
     private final int GALLERY_CODE  = 1112;
     private ImagePicker imgPicker;
+    private  boolean isTitleImage = false;
 
     // 퍼미션 획득
     private final int  MULTIPLE_PERMISSIONS = 101;
     private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+
+    // for S3
+    CognitoCachingCredentialsProvider credentialsProvider;
+    AmazonS3 s3;
+    TransferUtility transferUtility;
+
+    private ProgressDialog progressDoalog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +129,145 @@ public class CustomActivity extends AppCompatActivity {
 
         // 이미지 픽커
         imgPicker = new ImagePicker(CustomActivity.this,CAMERA_CODE,GALLERY_CODE);
+
+        // S3 자격 증명 (MyCL)
+        credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "ap-northeast-2:2f0e9262-9746-43df-a7c3-4cb6585f11cb", // 자격 증명 풀 ID
+                Regions.AP_NORTHEAST_2 // 리전
+        );
+
+        s3 = new AmazonS3Client(credentialsProvider);
+        s3.setRegion(Region.getRegion(Regions.AP_NORTHEAST_2));
+        s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
+
+        transferUtility = new TransferUtility(s3, getApplicationContext());
+
+        progressDoalog = new ProgressDialog(this);
+        progressDoalog.setMessage("잠시만 기다리세요....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    }
+
+
+    // -- User Function Section -- ////////////////////////////////////////
+
+    private String getGenreID(String genreName) {
+        if(ContentsActivity.genreMap != null) {
+            return ContentsActivity.genreMap.get(genreName);
+        }
+        return null;
+    }
+
+    private void regContentsWithS3(Content Item) {
+        final Content mItem = Item;
+        final File currentPhotoFile = new File(imgPicker.getCurrentPhotoPath());
+        final TransferObserver observer = transferUtility.upload(
+                "mycl.userimage",
+                "images/" + currentPhotoFile.getName(),
+                currentPhotoFile
+        );
+        progressDoalog.show();
+        observer.setTransferListener(new TransferListener() {
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                String resourceUrl = ((AmazonS3Client) s3).getResourceUrl(observer.getBucket(), "resize/" + currentPhotoFile.getName());  // get resourceUrl
+                Log.d(TAG, "onStateChanged:" + state + " / " + "resourceUrl:" + resourceUrl);
+
+                switch (state) {
+                    case COMPLETED: {
+                        Log.d(TAG, "IMAGE_UPLOAD_COMPLETED");
+                        transferUtility.deleteTransferRecord(id);
+                        mItem.setImage(resourceUrl);
+                        regContents(mItem);
+                        break;
+                    }
+                    case CANCELED: {
+                        transferUtility.deleteTransferRecord(id);
+                        Toast.makeText(getApplicationContext(), "IMAGE_UPLOAD_CANCELED", Toast.LENGTH_SHORT).show();
+                        progressDoalog.dismiss();
+                        break;
+                    }
+                    case FAILED: {
+                        transferUtility.deleteTransferRecord(id);
+                        Toast.makeText(getApplicationContext(), "IMAGE_UPLOAD_FAILED", Toast.LENGTH_SHORT).show();
+                        progressDoalog.dismiss();
+                        break;
+                    }
+                    case PAUSED: {
+                        Toast.makeText(getApplicationContext(), "IMAGE_UPLOAD_PAUSED", Toast.LENGTH_SHORT).show();
+                        progressDoalog.dismiss();
+                        break;
+                    }
+                    case WAITING_FOR_NETWORK: {
+                        transferUtility.deleteTransferRecord(id);
+                        Toast.makeText(getApplicationContext(), "WAITING_FOR_NETWORK", Toast.LENGTH_SHORT).show();
+                        progressDoalog.dismiss();
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                Log.d(TAG, "onProgressChanged: bytesCurrent(" + bytesCurrent + "), bytesTotal(" + bytesTotal + ")");
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                Toast.makeText(getApplicationContext(), "이미지 업로드 실패", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void regContents(Content data) {
+        if(!progressDoalog.isShowing()) {
+            progressDoalog.show();
+        }
+        final Content Item = data;
+        retroClient.postInserCustomContents(Item.gen_id, Item.season, Item.name, Item.name_org, Item.theatrical,
+                 Item.summary, Item.publisher, Item.auth, Item.image, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Toast.makeText(getApplicationContext(), "서버 접속 실패", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                Toast.makeText(getApplicationContext(), "[" + Item.name + "] 추가 성공", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+                finish();
+                overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
+            }
+
+            @Override
+            public void onFailure(int code) {
+                Toast.makeText(getApplicationContext(), "[" + code + "] 에러 발생", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+        });
+    }
+
+    // -- Event Function Section -- ////////////////////////////////////////
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CAMERA_CODE:
+                    imageView.setImageBitmap(imgPicker.getImage());
+                    isTitleImage = true;
+                    break;
+                case GALLERY_CODE:
+                    imageView.setImageBitmap(imgPicker.getImage(data.getData()));
+                    isTitleImage = true;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     @Override
@@ -148,25 +304,6 @@ public class CustomActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case CAMERA_CODE:
-                    imageView.setImageBitmap(imgPicker.getImage());
-                    break;
-                case GALLERY_CODE:
-                    imageView.setImageBitmap(imgPicker.getImage(data.getData()));
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    // -- Event Function Section -- ////////////////////////////////////////
     @OnClick(R.id.imageView)
     void onClick_imageView(){
         final CharSequence[] items = {"촬영하기", "가져오기", "취소"};
@@ -197,38 +334,42 @@ public class CustomActivity extends AppCompatActivity {
 
     @OnClick(R.id.saveBtn)
     void onClick_saveBtn() {
-        final ProgressDialog progressDoalog = new ProgressDialog(this);
-        progressDoalog.setMessage("잠시만 기다리세요....");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDoalog.show();
-        retroClient.postInserCustomContents("A01", "1", "EVOL TEST", "에볼", "500", "0",
-                "1", "asdasdas", "최욱", "0", "http", new RetroCallback() {
-                @Override
-                public void onError(Throwable t) {
-                    Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
-                    progressDoalog.dismiss();
-                }
+        // Make Content
+        String gen_name = comboGenre.getSelectedItem().toString();
+        String gen_id = getGenreID(gen_name);
+        String name = editTitle.getText().toString();
+        String name_org = editOriginal.getText().toString();
+        int season = Integer.parseInt(editSeason.getText().toString());
+        int theatrical = switchTheater.isChecked() ? 1 : 0;
+        String summary = editSummary.getText().toString();
+        String publisher = ContentsActivity.userData.id;
+        int auth = 0;
+        String image = null;
 
-                @Override
-                public void onSuccess(int code, Object receivedData) {
-                    Toast.makeText(getApplicationContext(), "커스텀 추가 SUCCESS : " + code, Toast.LENGTH_SHORT).show();
-                    progressDoalog.dismiss();
-                }
+        // 타이틀 검사
+        if(name.length() < 1) {
+            Toast.makeText(getApplicationContext(), "타이틀을 입력해 주세요", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                @Override
-                public void onFailure(int code) {
-                    Toast.makeText(getApplicationContext(), "커스텀 추가 FAIL : " + code, Toast.LENGTH_SHORT).show();
-                    progressDoalog.dismiss();
-                }
-            });
+        // 장르 검사
+        if(gen_name.equals("선택")) {
+            Toast.makeText(getApplicationContext(), "장르를 선택해 주세요", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Content Item = new Content(gen_id, season, name, name_org, theatrical, summary, publisher, auth, image);
+        if(isTitleImage) {
+            regContentsWithS3(Item);       // 업로드 이미지 ON
+        } else {
+            regContents(Item);            // 업로드 이미지 OFF
+        }
     }
 
-
-
-
-
-
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
+    }
 
 }
