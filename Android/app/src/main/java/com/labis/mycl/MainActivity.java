@@ -14,15 +14,12 @@ import android.widget.Toast;
 
 import com.labis.mycl.contents.ContentsActivity;
 import com.labis.mycl.contents.CustomActivity;
-import com.labis.mycl.contents.RecyclerViewAdapter;
 import com.labis.mycl.login.LoginActivity;
-import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG = "MainActivity";
@@ -52,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     Button.OnClickListener linkButtonClickListener = new View.OnClickListener() {
         public void onClick(View v) {
 
-            if (true) {
+            if (false) {
                 Intent i = new Intent(getApplicationContext(), CustomActivity.class);
                 startActivity(i);
             } else {

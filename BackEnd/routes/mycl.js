@@ -56,7 +56,7 @@ router.post('/filter_contents_list', 	controller_contents.postFilterContentsList
 router.post('/non_auth_contents_list', 	controller_contents.postNonAuthContentsList);
 router.post('/set_auth_contents_list', 	controller_contents.postSetAuthContentsList);
 
-
+router.post('/update_contents_image',	controller_contents.postUpdateContentsImage);
 
 
 module.exports = router;

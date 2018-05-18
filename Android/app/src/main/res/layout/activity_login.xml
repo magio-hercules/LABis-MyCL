@@ -49,17 +49,6 @@
             android:textAlignment="center"
             android:textColor="#ffffff" />
 
-        <Button
-            android:id="@+id/login_loginbtn_khercules"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/btn_back"
-            android:text="khercules 로그인"
-            android:textAlignment="center"
-            android:textColor="#ffffff" />
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -88,11 +77,31 @@
             <!--android:textColor="#ffffff" />-->
 
             <Button
+                android:id="@+id/login_loginbtn_labis"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                android:background="@android:color/holo_orange_dark"
+                android:text="labis 로그인"
+                android:textAlignment="center"
+                android:textColor="#ffffff" />
+            <Button
+                android:id="@+id/login_loginbtn_khercules"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/holo_orange_dark"
+                android:text="khercules 로그인"
+                android:textAlignment="center"
+                android:textColor="#ffffff" />
+            <Button
                 android:id="@+id/login_s3"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
                 android:background="@android:color/holo_orange_dark"
                 android:text="URL 변경"
                 android:textAlignment="center"
