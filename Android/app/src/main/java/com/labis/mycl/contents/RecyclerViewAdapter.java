@@ -54,9 +54,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
 
         if(mActivity.modeStatus == "MY") {
-
             holder.mThirdDivTotal.setVisibility(View.GONE);
-
+            holder.mGen.setBackground(mActivity.getResources().getDrawable(R.color.colorAccent));
             if(mItems.get(position).season > 0) {
                 holder.mSeason.setVisibility(View.VISIBLE);
                 holder.mSeason.setText("시즌" + mItems.get(position).season);
@@ -70,8 +69,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
 
         } else if(mActivity.modeStatus == "TOTAL") {
-
             holder.mThirdDivMy.setVisibility(View.GONE);
+            holder.mGen.setBackground(mActivity.getResources().getDrawable(R.color.actionBar));
             if(mItems.get(position).season > 0) {
                 holder.mThirdDivTotal.setVisibility(View.VISIBLE);
                 holder.mSeasonTotal.setText("시즌" + mItems.get(position).season);
