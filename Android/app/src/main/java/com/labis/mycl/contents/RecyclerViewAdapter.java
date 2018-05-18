@@ -58,6 +58,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             holder.mThirdDivTotal.setVisibility(View.GONE);
 
             if(mItems.get(position).season > 0) {
+                holder.mSeason.setVisibility(View.VISIBLE);
                 holder.mSeason.setText("시즌" + mItems.get(position).season);
             }
 
