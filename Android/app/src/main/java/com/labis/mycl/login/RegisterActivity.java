@@ -34,9 +34,12 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.labis.mycl.R;
+import com.labis.mycl.contents.CustomActivity;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
+import com.labis.mycl.util.CheckPermission;
+import com.labis.mycl.util.ImagePicker;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,22 +76,19 @@ public class RegisterActivity extends Activity {
     @BindView(R.id.register_registerbtn)
     Button btn_register;
 
-    // Image 선택
-    private String folder_name = "/MyCL/";
-    private String currentPhotoPath;
-    private Uri photoUri;
-
-    private final int WRITE_CODE   = 1110;
-    private final int CAMERA_CODE   = 1111;
-    private final int GALLERY_CODE  = 1112;
-
     // for S3
     CognitoCachingCredentialsProvider credentialsProvider;
     AmazonS3 s3;
     TransferUtility transferUtility;
 
+    // Image 선택
+    private final int CAMERA_CODE   = 1111;
+    private final int GALLERY_CODE  = 1112;
+    private ImagePicker imgPicker;
 
-
+    // 퍼미션 획득
+    private final int  MULTIPLE_PERMISSIONS = 101;
+    private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,17 +111,20 @@ public class RegisterActivity extends Activity {
         s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
 
         transferUtility = new TransferUtility(s3, getApplicationContext());
+
+        // 이미지 픽커
+        imgPicker = new ImagePicker(RegisterActivity.this,CAMERA_CODE,GALLERY_CODE);
     }
 
 
     @OnClick(R.id.register_registerbtn)
-    void onClick_register(){
+    void onClick_register() {
         storeImageToBucket();
     }
 
 
     @OnClick(R.id.register_image)
-    void onClick_image(){
+    void onClick_image() {
         selectImage();
     }
 
@@ -133,10 +136,10 @@ public class RegisterActivity extends Activity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CAMERA_CODE:
-                    setImage();
+                    register_image.setImageBitmap(imgPicker.getImage());
                     break;
                 case GALLERY_CODE:
-                    setImage(data.getData());
+                    register_image.setImageBitmap(imgPicker.getImage(data.getData()));
                     break;
                 default:
                     break;
@@ -153,8 +156,8 @@ public class RegisterActivity extends Activity {
         String str_nickname = register_nickname.getText().toString();
         String str_phone = register_phone.getText().toString();
 
-        Log.e(TAG, "email: " + str_email + ", pw: "+str_pw+ ", age: "+str_age
-                + ", gender: "+str_gender+ ", nick: "+str_nickname+ ", phone: "+str_phone + ", image: " + url);
+        Log.e(TAG, "email: " + str_email + ", pw: " + str_pw + ", age: " + str_age
+                + ", gender: " + str_gender + ", nick: " + str_nickname + ", phone: " + str_phone + ", image: " + url);
 
         retroClient.postRegister(str_email, str_pw, str_age, str_gender, str_nickname, str_phone, url, new RetroCallback<Register>() {
             @Override
@@ -183,7 +186,7 @@ public class RegisterActivity extends Activity {
 
 
     private void storeImageToBucket() {
-        final File currentPhotoFile = new File(currentPhotoPath);
+        final File currentPhotoFile = new File(imgPicker.getCurrentPhotoPath());
 
         final TransferObserver observer = transferUtility.upload(
                 "mycl.userimage",
@@ -194,7 +197,7 @@ public class RegisterActivity extends Activity {
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
-                String resourceUrl = ((AmazonS3Client)s3).getResourceUrl(observer.getBucket(), "resize/" + currentPhotoFile.getName());  // get resourceUrl
+                String resourceUrl = ((AmazonS3Client) s3).getResourceUrl(observer.getBucket(), "resize/" + currentPhotoFile.getName());  // get resourceUrl
                 Log.d(TAG, "onStateChanged: " + state);
                 Log.d(TAG, "resourceUrl: " + resourceUrl);
 
@@ -250,38 +253,16 @@ public class RegisterActivity extends Activity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                int permissionGalleryCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.READ_EXTERNAL_STORAGE);
-
-                int permissionCameraCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.CAMERA);
-
-                int permissionWriteCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
+                CheckPermission permission = new CheckPermission(permissions, MULTIPLE_PERMISSIONS);
+                boolean result = permission.checkPermissions(RegisterActivity.this);
 
                 if (items[item].equals("촬영하기")) {
-                    if (permissionCameraCheck == PackageManager.PERMISSION_GRANTED) {
-                        if(permissionWriteCheck == PackageManager.PERMISSION_GRANTED)
-                        {
-                            selectPhoto();
-                        } else {
-                            ActivityCompat.requestPermissions(RegisterActivity.this,
-                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                    WRITE_CODE);
-                        }
-                    } else {
-                        ActivityCompat.requestPermissions(RegisterActivity.this,
-                                new String[]{Manifest.permission.CAMERA},
-                                CAMERA_CODE);
+                    if (result) {
+                        imgPicker.selectPhoto();
                     }
                 } else if (items[item].equals("가져오기")) {
-                    if (permissionGalleryCheck == PackageManager.PERMISSION_GRANTED) {
-                        selectGallery();
-                    } else {
-                        ActivityCompat.requestPermissions(RegisterActivity.this,
-                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                GALLERY_CODE);
+                    if (result) {
+                        imgPicker.selectGallery();
                     }
                 } else if (items[item].equals("취소")) {
                     dialog.dismiss();
@@ -293,168 +274,38 @@ public class RegisterActivity extends Activity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        boolean deny = false;
+
         switch (requestCode) {
-            case GALLERY_CODE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    selectGallery();
-                }
-                return;
-            }
-            case CAMERA_CODE : {
-                int permissionWriteCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if (permissionWriteCheck == PackageManager.PERMISSION_GRANTED) {
-                    selectPhoto();
+            case MULTIPLE_PERMISSIONS: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < permissions.length; i++) {
+                        if (permissions[i].equals(this.permissions[0])) {
+                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                                deny = true;
+                            }
+                        } else if (permissions[i].equals(this.permissions[1])) {
+                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                                deny = true;
+
+                            }
+                        } else if (permissions[i].equals(this.permissions[2])) {
+                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                                deny = true;
+                            }
+                        }
+                    }
                 } else {
-                    ActivityCompat.requestPermissions(RegisterActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            WRITE_CODE);
-                }
-                return;
-            }
-            case WRITE_CODE : {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    selectPhoto();
-                }
-                return;
-            }
-        }
-    }
-
-    private void selectPhoto() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                File photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                } catch (IOException e) {
-                    Log.d(TAG, "[Exception] createImageFile");
-                    e.printStackTrace();
-                }
-                if (photoFile != null) {
-                    photoUri = FileProvider.getUriForFile(this, getPackageName(), photoFile);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                    startActivityForResult(intent, CAMERA_CODE);
+                    deny = true;
                 }
             }
         }
+
+        if(deny) {
+            Toast.makeText(getApplicationContext(), "퍼미션 인증 실패", Toast.LENGTH_SHORT).show();
+        }
     }
 
-
-    private File createImageFile() throws IOException {
-        File dir = new File(Environment.getExternalStorageDirectory() + folder_name);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String captureImageName = timeStamp + ".png";
-
-        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + folder_name + captureImageName);
-        currentPhotoPath = storageDir.getAbsolutePath();
-        Log.d(TAG, "[INFO] currentPhotoPath : " + currentPhotoPath);
-
-        return storageDir;
-    }
-
-
-    private void selectGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-
-        startActivityForResult(intent, GALLERY_CODE);
-    }
-
-
-    // for CAMERA
-    private void setImage() {
-        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(currentPhotoPath);
-        } catch (IOException e) {
-            Log.d(TAG, "[Exception] new ExifInterface");
-            e.printStackTrace();
-        }
-
-        int exifOrientation, exifDegree;
-        if (exif != null) {
-            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            exifDegree = exifOrientationToDegrees(exifOrientation);
-        } else {
-            exifDegree = 0;
-        }
-        register_image.setImageBitmap(rotate(bitmap, exifDegree));
-    }
-
-
-    // for GALLERY
-    private void setImage(Uri imgUri) {
-        String imagePath = getRealPathFromURI(imgUri);
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(imagePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        int exifOrientation, exifDegree;
-        if (exif != null) {
-            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            exifDegree = exifOrientationToDegrees(exifOrientation);
-        } else {
-            exifDegree = 0;
-        }
-        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-        register_image.setImageBitmap(rotate(bitmap, exifDegree));
-
-        currentPhotoPath = imagePath;
-        Log.d(TAG, "[INFO] currentPhotoPath : " + currentPhotoPath);
-    }
-
-
-    private String getRealPathFromURI(Uri contentUri) {
-        String uri = null;
-        int column_index=0;
-        String[] prj = {MediaStore.Images.Media.DATA};
-
-        Cursor cursor = getContentResolver().query(contentUri, prj, null, null, null);
-        if (cursor == null) {
-            Log.e(TAG, " CURSOR is null");
-            return "";
-        }
-
-        try {
-            if(cursor.moveToFirst()){
-                column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            }
-            uri = cursor.getString(column_index);
-        } finally {
-            cursor.close();
-        }
-
-        return uri;
-    }
-
-
-    private int exifOrientationToDegrees(int exifOrientation) {
-        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
-            return 90;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
-            return 180;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
-            return 270;
-        }
-        return 0;
-    }
-
-
-    private Bitmap rotate(Bitmap src, float degree) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-
-        return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, true);
-    }
 }
+
+
