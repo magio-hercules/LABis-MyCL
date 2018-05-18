@@ -1,9 +1,11 @@
 package com.labis.mycl.contents;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +14,8 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,8 +32,11 @@ import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.labis.mycl.R;
+import com.labis.mycl.login.RegisterActivity;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
+import com.labis.mycl.util.CheckPermission;
+import com.labis.mycl.util.ImagePicker;
 import com.labis.mycl.util.Utility;
 
 import java.io.File;
@@ -62,11 +69,13 @@ public class CustomActivity extends AppCompatActivity {
     private RetroClient retroClient;
 
     // Image 선택
-    private String folder_name = "/MyCL/";
-    private String currentPhotoPath;
-    private Uri photoUri;
     private final int CAMERA_CODE   = 1111;
     private final int GALLERY_CODE  = 1112;
+    private ImagePicker imgPicker;
+
+    // 퍼미션 획득
+    private final int  MULTIPLE_PERMISSIONS = 101;
+    private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,143 +109,64 @@ public class CustomActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView parent) {
             }
         });
+
+        // 이미지 픽커
+        imgPicker = new ImagePicker(CustomActivity.this,CAMERA_CODE,GALLERY_CODE);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        boolean deny = false;
 
-    // -- Image Process Function Section -- ////////////////////////////////////////
-    private File createImageFile() throws IOException {
-        File dir = new File(Environment.getExternalStorageDirectory() + folder_name);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String captureImageName = timeStamp + ".png";
+        switch (requestCode) {
+            case MULTIPLE_PERMISSIONS: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < permissions.length; i++) {
+                        if (permissions[i].equals(this.permissions[0])) {
+                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                                deny = true;
+                            }
+                        } else if (permissions[i].equals(this.permissions[1])) {
+                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                                deny = true;
 
-        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + folder_name + captureImageName);
-        currentPhotoPath = storageDir.getAbsolutePath();
-        Log.d(TAG, "[INFO] currentPhotoPath : " + currentPhotoPath);
-
-        return storageDir;
-    }
-
-    private void selectPhoto() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                File photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                } catch (IOException e) {
-                    Log.d(TAG, "[Exception] createImageFile");
-                    e.printStackTrace();
-                }
-                if (photoFile != null) {
-                    photoUri = FileProvider.getUriForFile(this, getPackageName(), photoFile);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                    startActivityForResult(intent, CAMERA_CODE);
+                            }
+                        } else if (permissions[i].equals(this.permissions[2])) {
+                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                                deny = true;
+                            }
+                        }
+                    }
+                } else {
+                    deny = true;
                 }
             }
         }
+
+        if(deny) {
+            Toast.makeText(getApplicationContext(), "퍼미션 인증 실패", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void selectGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        startActivityForResult(intent, GALLERY_CODE);
-    }
-
-    private void setImage() {
-        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(currentPhotoPath);
-        } catch (IOException e) {
-            Log.d(TAG, "[Exception] new ExifInterface");
-            e.printStackTrace();
-        }
-
-        int exifOrientation, exifDegree;
-        if (exif != null) {
-            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            exifDegree = exifOrientationToDegrees(exifOrientation);
-        } else {
-            exifDegree = 0;
-        }
-        imageView.setImageBitmap(rotate(bitmap, exifDegree));
-    }
-
-    // for GALLERY
-    private void setImage(Uri imgUri) {
-        String imagePath = getRealPathFromURI(imgUri);
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(imagePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        int exifOrientation, exifDegree;
-        if (exif != null) {
-            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            exifDegree = exifOrientationToDegrees(exifOrientation);
-        } else {
-            exifDegree = 0;
-        }
-        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-        imageView.setImageBitmap(rotate(bitmap, exifDegree));
-
-        currentPhotoPath = imagePath;
-        Log.d(TAG, "[INFO] currentPhotoPath : " + currentPhotoPath);
-    }
-
-    private String getRealPathFromURI(Uri contentUri) {
-        String uri = null;
-        int column_index=0;
-        String[] prj = {MediaStore.Images.Media.DATA};
-
-        Cursor cursor = getContentResolver().query(contentUri, prj, null, null, null);
-        if (cursor == null) {
-            Log.e(TAG, " CURSOR is null");
-            return "";
-        }
-
-        try {
-            if(cursor.moveToFirst()){
-                column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CAMERA_CODE:
+                    imageView.setImageBitmap(imgPicker.getImage());
+                    break;
+                case GALLERY_CODE:
+                    imageView.setImageBitmap(imgPicker.getImage(data.getData()));
+                    break;
+                default:
+                    break;
             }
-            uri = cursor.getString(column_index);
-        } finally {
-            cursor.close();
         }
-
-        return uri;
     }
-
-    private int exifOrientationToDegrees(int exifOrientation) {
-        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
-            return 90;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
-            return 180;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
-            return 270;
-        }
-        return 0;
-    }
-
-    private Bitmap rotate(Bitmap src, float degree) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-
-        return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, true);
-    }
-
 
     // -- Event Function Section -- ////////////////////////////////////////
-
-
     @OnClick(R.id.imageView)
     void onClick_imageView(){
         final CharSequence[] items = {"촬영하기", "가져오기", "취소"};
@@ -246,15 +176,16 @@ public class CustomActivity extends AppCompatActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result = Utility.checkPermission(getApplicationContext());
+                CheckPermission permission = new CheckPermission(permissions, MULTIPLE_PERMISSIONS);
+                boolean result = permission.checkPermissions(CustomActivity.this);
 
                 if (items[item].equals("촬영하기")) {
                     if (result) {
-                        selectPhoto();
+                        imgPicker.selectPhoto();
                     }
                 } else if (items[item].equals("가져오기")) {
                     if (result) {
-                        selectGallery();
+                        imgPicker.selectGallery();
                     }
                 } else if (items[item].equals("취소")) {
                     dialog.dismiss();
@@ -292,23 +223,6 @@ public class CustomActivity extends AppCompatActivity {
             });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case CAMERA_CODE:
-                    setImage();
-                    break;
-                case GALLERY_CODE:
-                    setImage(data.getData());
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
 
 
 
