@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/url_text_id"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="id"
+        android:textAlignment="center"
+        android:textColor="#000000" />
+
+    <TextView
+        android:id="@+id/url_text_title"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="title"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/url_text_s3url"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:text="text"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="14dp" />
+
+    <Button
+        android:id="@+id/url_button"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:text="URL 복사" />
+
+    <!--<Button-->
+        <!--android:id="@+id/url_button2"-->
+        <!--android:layout_width="30px"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="2"-->
+        <!--android:text="..." />-->
+
+</LinearLayout>

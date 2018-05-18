@@ -69,6 +69,10 @@ public interface RetroBaseApiService {
                                            @Field("publisher") String publisher, @Field("auth") int auth,
                                            @Field("image") String image);
 
+    @FormUrlEncoded
+    @POST("update_contents_image")
+    Call<Register> updateContentsImage(@Field("id") String id, @Field("url") String url);
+
 
     /// GET API ////////////////////////////////////////////////////////////////
 

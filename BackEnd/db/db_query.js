@@ -89,5 +89,9 @@ module.exports = function () {
             // .../MyCL/delete_my_contents (user_id, id)
             return 'DELETE FROM Contents_my';
         },
+        postUpdateContentsImage: function () {
+            // .../MyCL/update_contents_image (id, url)
+            return 'UPDATE Contents_list SET ';
+        }
     }
 };

@@ -46,7 +46,9 @@ exports.postTotalContents = function(req, res) {
 	var query = mysql_query.postTotalContents();
 	var params = [];
 	query = _checkParams(query, params, table.Config.public_publisher, table.Contents_list.publisher);
-	query = _checkParams(query, params, req.body.user_id, table.Contents_list.publisher, true);
+	if (req.body.user_id != 'labis') {
+		query = _checkParams(query, params, req.body.user_id, table.Contents_list.publisher, true);
+	}
 
 	bFirst = true;
 	common.doQuery(req, res, query, params);
@@ -194,6 +196,22 @@ exports.postDeleteMyContents = function(req, res) {
 	bFirst = true;
 	common.doRequest(req, res, query, params);
 };
+
+exports.postUpdateContentsImage = function(req, res) {
+	console.log("[INFO] call postUpdateContentsImage");
+
+	var query = mysql_query.postUpdateContentsImage();
+	var params = [];
+	
+	query = _setParams(query, params, req.body.id, table.Contents_list.id);
+	query = _setParams(query, params, req.body.url, table.Contents_list.image);
+	bFirst = true;
+	query = _checkParams(query, params, req.body.id, table.Contents_list.id);
+
+	bFirst = true;
+	common.doRequest(req, res, query, params);
+};
+
 
 
 function _setParams(query, params, val, str) {
