@@ -25,6 +25,9 @@ public class ImagePicker {
 
     // Image 선택
     private String folder_name = "/MyCL/";
+
+
+
     private String currentPhotoPath;
     private Uri photoUri;
 
@@ -37,6 +40,9 @@ public class ImagePicker {
         this.GALLERY_CODE = GALLERY_CODE;
     }
 
+    public String getCurrentPhotoPath() {
+        return currentPhotoPath;
+    }
 
     public void selectGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
