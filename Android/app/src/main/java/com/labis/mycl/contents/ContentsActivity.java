@@ -240,9 +240,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mRecyclerView.refreshDrawableState();
     }
 
-    public void refrshList(ArrayList<Content> items) {
-        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, items);
-        mRecyclerView.setAdapter(mAdapter);
+    public void updateItemDataView(int updateIndex) {
+        mAdapter.notifyItemChanged(updateIndex);
     }
 
     public void loadTotalContent() {

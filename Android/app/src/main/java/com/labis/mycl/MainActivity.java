@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -51,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.login_password)
     EditText edit_password;
 
+    // Animation
+    Animation animFadein;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         loadGenreData();
+
+        animFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
     }
 
     private void loadGenreData() {
@@ -82,9 +89,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int code, Object receivedData) {
                 Log.e(TAG, "GENRE LOAD SUCCESS");
+                progressDoalog.dismiss();
                 genreData = (ArrayList<Genre>) receivedData;
                 mainLayout.setVisibility(View.VISIBLE);
-                progressDoalog.dismiss();
+                mainLayout.setAnimation(animFadein);
             }
 
             @Override

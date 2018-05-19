@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="220dp"
@@ -31,7 +31,7 @@
                 android:background="@drawable/border"
                 android:hint="example@mail.com"
                 android:padding="6dp"
-                android:text="khercules"
+                android:text="evol"
                 android:textColor="#000000"
                 android:textColorHint="#AAAAAA"
                 android:textSize="16sp" />
@@ -53,7 +53,7 @@
 
         <LinearLayout
             android:layout_width="227dp"
-            android:layout_height="60dp"
+            android:layout_height="40dp"
             android:alpha="0.2"
             android:gravity="center"
             android:orientation="horizontal"

@@ -116,10 +116,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                     Toast.makeText(mContext, "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
                 }
             }
-
-
         });
-
     }
 
     private void updateChapter(final int position, int value) {
@@ -139,7 +136,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
             @Override
             public void onSuccess(int code, Object receivedData) {
-                mActivity.refrshList(mItems);
+                mActivity.updateItemDataView(position);
                 progressDoalog.dismiss();
             }
 
