@@ -21,6 +21,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -96,27 +97,34 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("사용자 등록");
         setSupportActionBar(toolbar);
-
-        ButterKnife.bind(this);
-
-        retroClient = RetroClient.getInstance(this).createBaseApi();
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                finish();
+            }
+        });
+        
         // S3 자격 증명 (MyCL)
         credentialsProvider = new CognitoCachingCredentialsProvider(
                 getApplicationContext(),
                 "ap-northeast-2:2f0e9262-9746-43df-a7c3-4cb6585f11cb", // 자격 증명 풀 ID
                 Regions.AP_NORTHEAST_2 // 리전
         );
-
         s3 = new AmazonS3Client(credentialsProvider);
         s3.setRegion(Region.getRegion(Regions.AP_NORTHEAST_2));
         s3.setEndpoint("s3.ap-northeast-2.amazonaws.com");
-
         transferUtility = new TransferUtility(s3, getApplicationContext());
+
+        // retrofit
+        retroClient = RetroClient.getInstance(this).createBaseApi();
 
         // 이미지 픽커
         imgPicker = new ImagePicker(RegisterActivity.this,CAMERA_CODE,GALLERY_CODE);
