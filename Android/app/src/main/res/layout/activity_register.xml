@@ -206,7 +206,7 @@
                 android:layout_weight="0.3"
                 android:layout_gravity="right"
                 android:alpha="0.6"
-                android:background="@drawable/baseline_person_black_24"
+                android:background="@drawable/baseline_person_pin_black_48"
                 android:scaleType="fitXY" />
         </LinearLayout>
     </LinearLayout>
