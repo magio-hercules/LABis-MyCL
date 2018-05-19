@@ -82,6 +82,7 @@ public class CustomActivity extends AppCompatActivity {
     private final int GALLERY_CODE  = 1112;
     private ImagePicker imgPicker;
     private  boolean isTitleImage = false;
+    private String selectImgPick;
 
     // 퍼미션 획득
     private final int  MULTIPLE_PERMISSIONS = 101;
@@ -301,6 +302,12 @@ public class CustomActivity extends AppCompatActivity {
 
         if(deny) {
             Toast.makeText(getApplicationContext(), "퍼미션 인증 실패", Toast.LENGTH_SHORT).show();
+        } else {
+            if(selectImgPick.equals("photo")) {
+                imgPicker.selectPhoto();
+            } else if (selectImgPick.equals("gallery")) {
+                imgPicker.selectGallery();
+            }
         }
     }
 
@@ -317,10 +324,12 @@ public class CustomActivity extends AppCompatActivity {
                 boolean result = permission.checkPermissions(CustomActivity.this);
 
                 if (items[item].equals("촬영하기")) {
+                    selectImgPick = "photo";
                     if (result) {
                         imgPicker.selectPhoto();
                     }
                 } else if (items[item].equals("가져오기")) {
+                    selectImgPick = "gallery";
                     if (result) {
                         imgPicker.selectGallery();
                     }
@@ -339,7 +348,10 @@ public class CustomActivity extends AppCompatActivity {
         String gen_id = getGenreID(gen_name);
         String name = editTitle.getText().toString();
         String name_org = editOriginal.getText().toString();
-        int season = Integer.parseInt(editSeason.getText().toString());
+        int season = 0;
+        if(editSeason.getText().length() > 0) {
+            season = Integer.parseInt(editSeason.getText().toString());
+        }
         int theatrical = switchTheater.isChecked() ? 1 : 0;
         String summary = editSummary.getText().toString();
         String publisher = ContentsActivity.userData.id;
