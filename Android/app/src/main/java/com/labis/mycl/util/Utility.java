@@ -5,10 +5,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class Utility {
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
@@ -46,4 +52,30 @@ public class Utility {
             return true;
         }
     }
+
+    public static Bitmap getBitmap(String url) {
+        URL imgUrl = null;
+        HttpURLConnection connection = null;
+        InputStream is = null;
+
+        Bitmap retBitmap = null;
+
+        try {
+            imgUrl = new URL(url);
+            connection = (HttpURLConnection) imgUrl.openConnection();
+            connection.setDoInput(true); //url로 input받는 flag 허용
+            connection.connect(); //연결
+            is = connection.getInputStream(); // get inputstream
+            retBitmap = BitmapFactory.decodeStream(is);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+            return retBitmap;
+        }
+    }
+
 }

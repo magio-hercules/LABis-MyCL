@@ -141,6 +141,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             startActivity(i);
             overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
             return true;
+        }  else if (id == R.id.action_search_contents) {
+            Intent i = new Intent(getApplicationContext(), DetailActivity.class);
+            startActivity(i);
+            overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -246,10 +251,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     public void loadTotalContent() {
         Log.d("EVOL","전체 리스트");
-
-        modeStatus = "TOTAL";
-        getSupportActionBar().setTitle("모든 콘텐츠");
-        getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
         progressDoalog.show();
         retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
@@ -262,6 +263,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onSuccess(int code, Object receivedData) {
                 clearRecyclerView(); //initialize
+                modeStatus = "TOTAL";
+                getSupportActionBar().setTitle("모든 콘텐츠");
+                getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
+
                 contentsMainMenu.findItem(R.id.action_total_contents).setVisible(false);
                 contentsMainMenu.findItem(R.id.action_my_contents).setVisible(true);
                 List<Content> data = (List<Content>) receivedData;
@@ -288,9 +293,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     private void loadMyContents() {
         Log.d("EVOL","내 리스트 / " + modeStatus);
-        modeStatus = "MY";
-        getSupportActionBar().setTitle("내 콘텐츠");
-        getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.colorPrimary)));
         progressDoalog.show();
         if(myContentsRefresh) {
             retroClient.postMyContents(userData.id, new RetroCallback() {
@@ -304,6 +306,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 @Override
                 public void onSuccess(int code, Object receivedData) {
                     clearRecyclerView(); // Initialize
+                    modeStatus = "MY";
+                    getSupportActionBar().setTitle("내 콘텐츠");
+                    getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.colorPrimary)));
+
                     myContentsRefresh = false;
                     contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
                     contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
