@@ -1,5 +1,6 @@
 package com.labis.mycl.contents;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.labis.mycl.R;
+import com.labis.mycl.model.Content;
 import com.labis.mycl.util.Utility;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -29,6 +31,10 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
+        // -- Get Intent Data -- //
+        Intent intent = getIntent();
+        Content item = (Content) intent.getSerializableExtra("CONTENT");
+
         // -- ToolBar -- //
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("상세보기");
@@ -43,7 +49,9 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-       loadAppTitleImage("https://s3.ap-northeast-2.amazonaws.com/mycl.userimage/images/20180518_185140.jpg");
+        String imageUrl = item.image;
+        imageUrl = imageUrl.replace("/resize/", "/images/");
+        loadAppTitleImage(imageUrl);
     }
 
     private  void loadAppTitleImage(String url) {

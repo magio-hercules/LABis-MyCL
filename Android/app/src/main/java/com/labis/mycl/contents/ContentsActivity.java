@@ -142,9 +142,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
             return true;
         }  else if (id == R.id.action_search_contents) {
-            Intent i = new Intent(getApplicationContext(), DetailActivity.class);
-            startActivity(i);
-            overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
+            // 검색 기능 활성화
             return true;
         }
 

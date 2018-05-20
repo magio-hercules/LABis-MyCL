@@ -2,6 +2,7 @@ package com.labis.mycl.contents;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -81,7 +82,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(mContext, String.format("%d 선택", position + 1), Toast.LENGTH_SHORT).show();
+                Content data = mItems.get(position);
+                if(!data.equals(null)) {
+                    Intent i = new Intent(mActivity, DetailActivity.class);
+                    i.putExtra("CONTENT", mItems.get(position));
+                    mActivity.startActivity(i);
+                    mActivity.overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
+                } else {
+                    Toast.makeText(mContext, "선택한 항목에 데이터 오류가 있습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

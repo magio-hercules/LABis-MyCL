@@ -1,6 +1,8 @@
 package com.labis.mycl.model;
 
-public class Content {
+import java.io.Serializable;
+
+public class Content implements Serializable {
     // content_list table
     public String id;
     public final String gen_id;
