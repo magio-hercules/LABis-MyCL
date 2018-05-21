@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
@@ -72,16 +73,14 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_summary)
     TextView detailSummary;
 
-    @BindView(R.id.deatal_ad_image)
-    ImageView imgView;
+    @BindView(R.id.temp_image)
+    ImageView tempImgView;
 
 
     private static int chapterIndex = 0;
 
     private boolean breakFlag = false;
     private Handler mHandler = new Handler ();
-
-    ImageView backImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,21 +105,19 @@ public class DetailActivity extends AppCompatActivity {
                 finish();
             }
         });
-
         minusBtn.setOnTouchListener(mTouchEvent);
         plusBtn.setOnTouchListener(mTouchEvent);
 
-       //
-
-        backImg = new ImageView(this);
-        String imageUrl = item.image;
-        imageUrl = imageUrl.replace("/resize/", "/images/");
-        Picasso.get().load(imageUrl).into(imgView);
-
+        //
         inflateContent(item);
     }
 
     private void inflateContent(Content Item) {
+        final ProgressDialog progressDoalog = new ProgressDialog(this);
+        progressDoalog.setMessage("잠시만 기다리세요....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //progressDoalog.show();
+
         // 챕터
         if(Item.chapter > 0) {
             detailChapterDiv.setVisibility(View.VISIBLE);
@@ -155,9 +152,23 @@ public class DetailActivity extends AppCompatActivity {
             detailSummary.setText(Item.summary);
         }
 
-        //Drawable d = new BitmapDrawable(getResources(), bitmap);
+        // 이미지 로딩
+        String imageUrl = Item.image;
+        imageUrl = imageUrl.replace("/resize/", "/images/");
+        Picasso.get().load(imageUrl).into(tempImgView);
+        /*Picasso.get().load(imageUrl).into(tempImgView, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                appBar.setBackground(tempImgView.getDrawable());
+                progressDoalog.dismiss();
+            }
 
-        appBar.setBackground(imgView.getBackground());
+            @Override
+            public void onError(Exception e) {
+                Log.d(TAG, e.toString());
+                progressDoalog.dismiss();
+            }
+        });*/
 
     }
 
@@ -202,29 +213,6 @@ public class DetailActivity extends AppCompatActivity {
                 }
             };
         };
-
-    private  void loadAppTitleImage(String url, final Content item) {
-        final ProgressDialog progressDoalog = new ProgressDialog(this);
-        progressDoalog.setMessage("잠시만 기다리세요....");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        Target t = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Drawable d = new BitmapDrawable(getResources(), bitmap);
-                appBar.setBackground(d);
-                progressDoalog.dismiss();
-            }
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                progressDoalog.dismiss();
-            }
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                progressDoalog.show();
-            }
-        };
-        Picasso.get().load(url).into(t);
-    }
 
     @Override
     public void onBackPressed() {

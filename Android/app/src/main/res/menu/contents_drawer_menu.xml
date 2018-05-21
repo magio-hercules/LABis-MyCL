@@ -9,41 +9,37 @@
             android:title="★" />
         <item
             android:id="@+id/usadrama"
-            android:title="만화" />
+            android:title="영화" />
         <item
             android:id="@+id/koreadrama"
-            android:title="소설" />
+            android:title="애니메이션" />
         <item
             android:id="@+id/japandrama"
-            android:title="애니메이션" />
+            android:title="만화" />
 
         <item
             android:id="@+id/movie"
-            android:title="영화" />
+            android:title="한국 드라마" />
 
         <item
             android:id="@+id/cartoon"
-            android:title="드라마" />
+            android:title="미국 드라마" />
 
         <item
             android:id="@+id/animation"
-            android:title="예능" />
+            android:title="일본 드라마" />
 
         <item
             android:id="@+id/etc1"
-            android:title="다큐멘터리" />
+            android:title="TV" />
 
         <item
             android:id="@+id/etc2"
-            android:title="뮤지컬" />
+            android:title="책" />
 
         <item
             android:id="@+id/etc3"
-            android:title="연극" />
-
-        <item
-            android:id="@+id/etc4"
-            android:title="오케스트라" />
+            android:title="기타" />
 
     </group>
 

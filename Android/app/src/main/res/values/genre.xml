@@ -2,25 +2,14 @@
 <resources>
     <string-array name="genre">
         <item>선택</item>
-        <item>만화</item>
-        <item>소설</item>
-        <item>전공서적</item>
-        <item>애니메이션</item>
         <item>영화</item>
-        <item>드라마</item>
-        <item>예능</item>
-        <item>다큐멘터리</item>
-        <item>콘서트</item>
-        <item>오케스트라</item>
-        <item>뮤지컬</item>
-        <item>연극</item>
-        <item>RPG</item>
-        <item>MMORPG</item>
-        <item>FPS</item>
-        <item>RTS</item>
-        <item>보드게임</item>
-        <item>배우</item>
-        <item>코미디언</item>
-        <item>가수</item>
+        <item>애니메이션</item>
+        <item>만화</item>
+        <item>한국 드라마</item>
+        <item>미국 드라마</item>
+        <item>일본 드라마</item>
+        <item>TV</item>
+        <item>책</item>
+        <item>기타</item>
     </string-array>
 </resources>

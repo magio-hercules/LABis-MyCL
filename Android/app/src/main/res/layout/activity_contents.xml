@@ -19,8 +19,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:itemTextAppearance="@style/NavigationDrawerStyle"
         app:headerLayout="@layout/contents_drawer_header"
-        app:menu="@menu/contents_drawer_menu" />
+        app:itemTextAppearance="@style/NavigationDrawerStyle"
+        app:menu="@menu/contents_drawer_menu">
+        <include
+            layout="@layout/contents_drawer_header"
+            android:layout_width="match_parent"
+            android:layout_height="176dp" />
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
