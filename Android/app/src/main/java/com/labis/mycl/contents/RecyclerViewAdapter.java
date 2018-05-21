@@ -48,7 +48,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
         // 해당 position에 해당하는 데이터 결합
         mPosition = position;
-        holder.mGen.setText(mActivity.genreMap.get(mItems.get(position).gen_id));
+
+        // 스페셜 줄임말 처리
+        String genreText = mActivity.genreMap.get(mItems.get(position).gen_id);
+        if(genreText != null) {
+            if (genreText.equals("한국 드라마")) {
+                genreText = "한드";
+            } else if (genreText.equals("미국 드라마")) {
+                genreText = "미드";
+            } else if (genreText.equals("일본 드라마")) {
+                genreText = "일드";
+            } else if (genreText.equals("애니메이션")) {
+                genreText = "애니";
+            }
+        }
+        holder.mGen.setText(genreText);
         Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
         holder.mName.setText(mItems.get(position).name);
         holder.mNameOrg.setText(mItems.get(position).name_org);
