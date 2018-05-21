@@ -58,8 +58,8 @@ module.exports = function () {
             return 'SELECT * FROM Contents_my JOIN Contents_list USING(id)';
         },
         postInsertMyContents: function () {
-            // .../MyCL/insert_my_contents (id,user_id,chapter)
-            return 'INSERT INTO Contents_my SET ?';
+            // .../MyCL/insert_my_contents (id,user_id,score,comment,chapter)
+            return 'INSERT INTO Contents_my SET ';
         },
         postUpdateMyContents: function () {
             // .../MyCL/update_my_contents (id,user_id,score,comment,chapter)
@@ -71,10 +71,14 @@ module.exports = function () {
         },
         postInsertContentsList: function () {
             // .../MyCL/insert_contents_list (gen_id,season,name,name_org,chapter_end,theatrical,series_id,summary,publisher,auth,image)
-            return 'INSERT INTO Contents_list SET';
+            return 'INSERT INTO Contents_list SET ';
         },
-        postFilterContentsList: function () {
-            // .../MyCL/filter_contents_list (gen_id)
+        // postInsertMyContents: function () {
+        //     // .../MyCL/insert_contents_list (id,user_id,score,comment,chapter)
+        //     return 'INSERT INTO Contents_my SET';
+        // },
+        postFilterContentsJenre: function () {
+            // .../MyCL/filter_contents_jenre (gen_id)
             return 'SELECT * FROM Contents_list';
         },
         postNonAuthContentsList: function () {
@@ -92,6 +96,14 @@ module.exports = function () {
         postUpdateContentsImage: function () {
             // .../MyCL/update_contents_image (id, url)
             return 'UPDATE Contents_list SET ';
+        },
+        postSearchAllContents: function () {
+            // .../MyCL/search_all_contents (name)
+            return 'SELECT * FROM Contents_list ';
+        },
+        postSearchMyContents: function () {
+            // .../MyCL/search_my_contents (user_id,name)
+            return 'SELECT * FROM Contents_my JOIN Contents_list USING(id) ';
         }
     }
 };

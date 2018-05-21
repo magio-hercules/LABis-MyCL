@@ -46,9 +46,11 @@ exports.postTotalContents = function(req, res) {
 	var query = mysql_query.postTotalContents();
 	var params = [];
 	query = _checkParams(query, params, table.Config.public_publisher, table.Contents_list.publisher);
-	if (req.body.user_id != 'labis') {
-		query = _checkParams(query, params, req.body.user_id, table.Contents_list.publisher, true);
-	}
+	// if (req.body.user_id != 'labis') {
+	// 	query = _checkParams(query, params, req.body.user_id, table.Contents_list.publisher, true);
+	// }
+	// for sorting
+	query += " order by name asc, season asc";
 
 	bFirst = true;
 	common.doQuery(req, res, query, params);
@@ -62,6 +64,8 @@ exports.postMyContents = function(req, res) {
 	var params = [ ];
 
 	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
+	// for sorting
+	query += " order by time desc";
 
 	bFirst = true;
 	common.doQuery(req, res, query, params);
@@ -70,21 +74,28 @@ exports.postMyContents = function(req, res) {
 
 exports.postInsertMyContents = function(req, res) {
 	console.log("[INFO] call postInsertMyContents");
-	// console.log("req.body : " + JSON.stringify(req.body));
+	console.log("req.body : " + JSON.stringify(req.body));
 
-	var query = mysql_query.postInsertMyContents();
-	var params = [ ];
+	// var query = mysql_query.postInsertMyContents();
+	// var params = [ ];
 	// query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
-	var myContents = {
-		id: req.body.id,
-		user_id: req.body.user_id,
-		score: req.body.score == null ? '' : req.body.score,
-		comment: req.body.comment == null ? '' : req.body.comment,
-		chapter: req.body.chapter == null ? '' : req.body.chapter
-	};
+	// var myContents = {
+	// 	id: req.body.id,
+	// 	user_id: req.body.user_id,
+	// 	score: req.body.score == null ? '' : req.body.score,
+	// 	comment: req.body.comment == null ? '' : req.body.comment,
+	// 	chapter: req.body.chapter == null ? '' : req.body.chapter
+	// };
+	var query = mysql_query.postInsertMyContents();
+	var params = [];
+	query = _setParams(query, params, req.body.id, table.Contents_my.id);
+	query = _setParams(query, params, req.body.user_id, table.Contents_my.user_id);
+	query = _setParams(query, params, req.body.score, table.Contents_my.score);
+	query = _setParams(query, params, req.body.comment, table.Contents_my.comment);
+	query = _setParams(query, params, req.body.chapter, table.Contents_my.chapter);
 	
 	bFirst = true;
-	common.doRequest(req, res, query, myContents);
+	common.doRequest(req, res, query, params);
 };
 
 
@@ -123,7 +134,7 @@ exports.postFilterMyContents = function(req, res) {
 
 exports.postInsertContentsList = function(req, res) {
 	console.log("[INFO] call postInsertContentsList");
-	console.log("req.body : " + JSON.stringify(req.body));
+	// console.log("req.body : " + JSON.stringify(req.body));
 
 	var query = mysql_query.postInsertContentsList();
 	var params = [];
@@ -140,14 +151,30 @@ exports.postInsertContentsList = function(req, res) {
 	query = _setParams(query, params, req.body.image, table.Contents_list.image);
 
 	bFirst = true;
-	common.doRequest(req, res, query, params);
+	common.doRequest(req, res, query, params, false)
+		  .then(function(result, fields, response){
+		  	console.log('result: ' + JSON.stringify(result));
+			console.log('result.insertId: ' + result.insertId);
+
+			// insert myContents 
+			var newQuery = mysql_query.postInsertMyContents();
+			var newParams = [];
+			newQuery = _setParams(newQuery, newParams, result.insertId, table.Contents_my.id);
+			newQuery = _setParams(newQuery, newParams, req.body.publisher, table.Contents_my.user_id);
+			newQuery = _setParams(newQuery, newParams, req.body.score, table.Contents_my.score);
+			newQuery = _setParams(newQuery, newParams, req.body.comment, table.Contents_my.comment);
+			newQuery = _setParams(newQuery, newParams, req.body.chapter, table.Contents_my.chapter);
+
+			bFirst = true;
+			common.doRequest(req, res, newQuery, newParams);
+		});
 };
 
 
-exports.postFilterContentsList = function(req, res) {
-	console.log("[INFO] call postFilterContentsList");
+exports.postFilterContentsJenre = function(req, res) {
+	console.log("[INFO] call postFilterContentsJenre");
 
-	var query = mysql_query.postFilterContentsList();
+	var query = mysql_query.postFilterContentsJenre();
 	var params = [];
 	query = _checkParams(query, params, req.body.gen_id, table.Contents_list.gen_id);
 	
@@ -213,6 +240,48 @@ exports.postUpdateContentsImage = function(req, res) {
 };
 
 
+exports.postSearchAllContents = function(req, res) {
+	console.log("[INFO] call postSearchAllContents");
+
+	var query = mysql_query.postSearchAllContents();
+	var params = [];
+	
+	query = _searchParams(query, params, req.body.name, table.Contents_list.name);
+	query = _searchParams(query, params, req.body.name, table.Contents_list.name_org, true);
+	// for sorting
+	query += "order by name desc, season asc";
+
+	bFirst = true;
+	common.doQuery(req, res, query, params);
+};
+
+
+exports.postSearchMyContents = function(req, res) {
+	console.log("[INFO] call postSearchMyContents");
+
+	var query = mysql_query.postSearchMyContents();
+	var params = [];
+	
+	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
+	if (false) {
+		query += "(";
+		query = _searchParams(query, params, req.body.name, table.Contents_list.name);
+		query = _searchParams(query, params, req.body.name, table.Contents_list.name_org, true);
+		query += ")";
+	} else {
+		query += "AND (`name` like ? OR `name_org` like ?)";
+		params.push("%" + req.body.name + "%");
+		params.push("%" + req.body.name + "%");
+	}
+	// for sorting
+	query += "order by time desc";
+
+	bFirst = true;
+	common.doQuery(req, res, query, params);
+};
+
+
+
 
 function _setParams(query, params, val, str) {
 	if (val != null && val != undefined) {
@@ -224,6 +293,26 @@ function _setParams(query, params, val, str) {
 		
 		query = query + str + "=? ";
 		params.push(val);
+	}
+	return query;
+}
+
+
+function _searchParams(query, params, val, str, bOr) {
+	if (val != null && val != undefined) {
+		if (bFirst) {
+			query += " WHERE "; 
+			bFirst = false;
+		} else {
+			if (bOr) {
+				query += " OR ";
+			} else {
+				query += " AND ";
+			}
+		}		
+		
+		query = query + str + " like ? ";
+		params.push("%" + val + "%");
 	}
 	return query;
 }
