@@ -95,7 +95,8 @@ public class DetailActivity extends AppCompatActivity {
 
     @BindView(R.id.detail_fav_div)
     LinearLayout detailFavoriteDiv;
-
+    @BindView(R.id.detail_image_favorite)
+    ImageView favoriteImageView;
 
 
     private static int chapterIndex = 0;
@@ -270,6 +271,11 @@ public class DetailActivity extends AppCompatActivity {
     {
         super.onDestroy();
         softKeyboard.unRegisterSoftKeyboardCallback();
+    }
+
+    @OnClick(R.id.detail_feeling_div)
+    void detailFavoriteDivClick() {
+
     }
 
 }

@@ -144,7 +144,7 @@
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:layout_gravity="center"
-                            android:background="@mipmap/bookmark_favorite_on"
+                            android:background="@mipmap/bookmark_favorite"
                             android:scaleType="fitXY" />
                     </LinearLayout>
                 </LinearLayout>
