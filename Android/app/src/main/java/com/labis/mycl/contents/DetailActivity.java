@@ -93,7 +93,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_save_btn)
     Button saveBtn;
 
-    @BindView(R.id.detail_fav_div)
+    @BindView(R.id.detail_fav_image_layout)
     LinearLayout detailFavoriteDiv;
     @BindView(R.id.detail_image_favorite)
     ImageView favoriteImageView;
@@ -104,6 +104,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private Handler mHandler = new Handler ();
     private SoftKeyboard softKeyboard;
+
+    private boolean favoiteFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +180,7 @@ public class DetailActivity extends AppCompatActivity {
         detailGenre.setText(ContentsActivity.genreMap.get(Item.gen_id));
 
         // 즐겨찾기
+
 
         // 시즌
         if(Item.season > 0) {
@@ -273,9 +276,15 @@ public class DetailActivity extends AppCompatActivity {
         softKeyboard.unRegisterSoftKeyboardCallback();
     }
 
-    @OnClick(R.id.detail_feeling_div)
+    @OnClick(R.id.detail_fav_image_layout)
     void detailFavoriteDivClick() {
-
+        if(favoiteFlag) {
+            favoiteFlag = false;
+            favoriteImageView.setImageResource(R.mipmap.bookmark_favorite);
+        } else {
+            favoiteFlag = true;
+            favoriteImageView.setImageResource(R.mipmap.bookmark_favorite_on);
+        }
     }
 
 }
