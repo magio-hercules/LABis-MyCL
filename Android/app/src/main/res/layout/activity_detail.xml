@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detail_ll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F7F7F7"
@@ -39,6 +40,8 @@
 
         <LinearLayout
             android:id="@+id/mainLayout"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
@@ -88,7 +91,7 @@
             <LinearLayout
                 android:id="@+id/detail_genre_fav_div"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="68dp"
                 android:layout_marginTop="-1dp"
                 android:background="@drawable/border"
                 android:orientation="horizontal">
@@ -114,9 +117,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.22"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="영화"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="17sp" />
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -139,8 +141,8 @@
                         android:gravity="center">
                         <ImageView
                             android:id="@+id/detail_image_favorite"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
                             android:layout_gravity="center"
                             android:background="@mipmap/bookmark_favorite_on"
                             android:scaleType="fitXY" />
@@ -149,103 +151,103 @@
             </LinearLayout>
 
 
-
             <LinearLayout
-                android:id="@+id/detail_title_div"
+                android:id="@+id/deatail_title_season_div"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-1dp"
                 android:background="@drawable/border"
-                android:orientation="vertical"
-                android:padding="10dp">
-                <TextView
-                    android:id="@+id/detail_text_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:text="타이틀"
-                    android:textSize="12sp" />
-                <TextView
-                    android:id="@+id/detail_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="bottom"
-                    android:text="어벤져스 울트라"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="17sp" />
-                <TextView
-                    android:id="@+id/detail_org_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Ultra Askck Sic"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-
-
-
-
-            <LinearLayout
-                android:id="@+id/OptionDiv"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="-1dp"
-                android:background="@drawable/border"
-                android:visibility="gone"
                 android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/detail_title_div"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:background="@drawable/border"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/detail_text_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:text="타이틀"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/detail_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/detail_org_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/detail_season_div"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.75"
+                    android:visibility="gone"
                     android:orientation="vertical"
                     android:padding="10dp">
+
                     <TextView
                         android:id="@+id/detail_text_season"
-                        android:textColor="@color/colorPrimary"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.7"
+                        android:layout_height="24dp"
                         android:text="시즌"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="12sp" />
+
                     <TextView
                         android:id="@+id/detail_season"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.3"
-                        android:gravity="bottom|right"
-                        android:text="3"
-                        android:textSize="16sp"
+                        android:gravity="center"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
                 </LinearLayout>
+            </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/detail_theater_div"
+
+            <LinearLayout
+                android:id="@+id/detail_theater_div"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/border"
+                android:orientation="vertical"
+                android:layout_marginTop="-1dp"
+                android:visibility="gone"
+                android:padding="10dp">
+                <TextView
+                    android:id="@+id/detail_text_theater"
+                    android:layout_width="match_parent"
+                    android:layout_height="26dp"
+                    android:layout_weight="0.7"
+                    android:text="극장판"
+                    android:textSize="12sp" />
+                <Switch
+                    android:id="@+id/detail_switch_theater"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/border"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    android:padding="10dp">
-                    <TextView
-                        android:id="@+id/detail_text_theater"
-                        android:layout_width="match_parent"
-                        android:layout_height="26dp"
-                        android:layout_weight="0.7"
-                        android:text="극장판"
-                        android:textSize="12sp" />
-                    <Switch
-                        android:id="@+id/detail_switch_theater"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="right"
-                        android:layout_marginRight="-2dp"
-                        android:layout_weight="0.7"
-                        android:switchMinWidth="60dp"
-                        android:track="@drawable/bg_switch_track" />
-                </LinearLayout>
+                    android:layout_gravity="right"
+                    android:layout_marginRight="-2dp"
+                    android:layout_weight="0.7"
+                    android:switchMinWidth="60dp"
+                    android:track="@drawable/bg_switch_track" />
             </LinearLayout>
 
 
@@ -270,14 +272,14 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorPrimary"
                     android:gravity="top"
-                    android:textSize="15sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/detail_feeling_div"
                 android:layout_width="match_parent"
                 android:visibility="gone"
-                android:layout_height="150dp"
+                android:layout_height="200dp"
                 android:layout_marginTop="-1dp"
                 android:background="@drawable/border"
                 android:orientation="vertical"
@@ -289,11 +291,12 @@
                     android:text="감상평"
                     android:textSize="12sp" />
                 <EditText
-                    android:id="@+id/editFeeling"
+                    android:id="@+id/detail_feeling"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="top"
                     android:inputType="textMultiLine"
+                    android:hint="작품 어떠셨나요? 감상평을 기록해 기억을 남겨 보세요"
                     android:background="@color/cardview_light_background"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -301,8 +304,8 @@
             <LinearLayout
                 android:id="@+id/detail_ad_zone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="66dp"
                 android:layout_marginTop="-1dp"
                 android:background="@drawable/border"
                 android:orientation="vertical"
@@ -317,7 +320,6 @@
                     android:id="@+id/deatal_ad_image"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:background="@mipmap/temp_ad"
                     android:scaleType="centerCrop" />
             </LinearLayout>
@@ -333,7 +335,7 @@
         android:foregroundGravity="bottom"
         android:gravity="bottom">
         <Button
-            android:id="@+id/saveBtn"
+            android:id="@+id/detail_save_btn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="bottom"

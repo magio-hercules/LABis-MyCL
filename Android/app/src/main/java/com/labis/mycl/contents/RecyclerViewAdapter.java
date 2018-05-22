@@ -100,6 +100,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 if(!data.equals(null)) {
                     Intent i = new Intent(mActivity, DetailActivity.class);
                     i.putExtra("CONTENT", mItems.get(position));
+                    i.putExtra("MODE", mActivity.modeStatus);
                     mActivity.startActivity(i);
                     mActivity.overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
                 } else {

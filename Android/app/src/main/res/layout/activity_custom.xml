@@ -235,7 +235,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_weight="0.7"
-                android:text="요약"
+                android:text="감상평"
                 android:textSize="12sp" />
 
             <EditText

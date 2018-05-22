@@ -1,11 +1,13 @@
 package com.labis.mycl.contents;
 
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,15 +15,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
+import com.labis.mycl.util.SoftKeyboard;
 import com.labis.mycl.util.Utility;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -34,6 +40,9 @@ import butterknife.OnTouch;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailActivity";
+
+    @BindView(R.id.detail_ll)
+    RelativeLayout totalLayout;
 
     @BindView(R.id.detail_appbar)
     AppBarLayout appBar;
@@ -73,14 +82,27 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_summary)
     TextView detailSummary;
 
+    @BindView(R.id.detail_feeling_div)
+    LinearLayout detailFeelingDiv;
+    @BindView(R.id.detail_feeling)
+    EditText detailFeeling;
+
     @BindView(R.id.temp_image)
     ImageView tempImgView;
 
+    @BindView(R.id.detail_save_btn)
+    Button saveBtn;
+
+    @BindView(R.id.detail_fav_div)
+    LinearLayout detailFavoriteDiv;
+
+
 
     private static int chapterIndex = 0;
+    private String modeStatus = "";
 
-    private boolean breakFlag = false;
     private Handler mHandler = new Handler ();
+    private SoftKeyboard softKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +110,34 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
+        // -- KeyPad Event Control -- //
+        InputMethodManager controlManager = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
+        softKeyboard = new SoftKeyboard(totalLayout, controlManager);
+        softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
+            @Override
+            public void onSoftKeyboardHide() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        appBar.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+            @Override
+            public void onSoftKeyboardShow() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        appBar.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+
         // -- Get Intent Data -- //
         Intent intent = getIntent();
         Content item = (Content) intent.getSerializableExtra("CONTENT");
+        modeStatus = intent.getStringExtra("MODE");
 
         // -- ToolBar -- //
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -101,22 +148,19 @@ public class DetailActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(getApplicationContext(),MainActivity.class));
                 finish();
             }
         });
+
+        // -- Chapter Button Event Add -- //
         minusBtn.setOnTouchListener(mTouchEvent);
         plusBtn.setOnTouchListener(mTouchEvent);
 
-        //
+        // -- Inflate Content -- //
         inflateContent(item);
     }
 
     private void inflateContent(Content Item) {
-        final ProgressDialog progressDoalog = new ProgressDialog(this);
-        progressDoalog.setMessage("잠시만 기다리세요....");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        //progressDoalog.show();
 
         // 챕터
         if(Item.chapter > 0) {
@@ -147,29 +191,25 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         // 줄거리
-        if(Item.summary != null && Item.summary.length() > 0) {
+        if(modeStatus.equals("TOTAL")) {
             detailSummmaryDiv.setVisibility(View.VISIBLE);
-            detailSummary.setText(Item.summary);
+            if(Item.summary != null && Item.summary.length() > 0) {
+                detailSummary.setText(Item.summary);
+            }
+        }
+
+        // 감상평
+        if(modeStatus.equals("MY")) {
+            detailFeelingDiv.setVisibility(View.VISIBLE);
+            if(Item.comment != null && Item.comment.length() > 0) {
+                detailFeeling.setText(Item.comment);
+            }
         }
 
         // 이미지 로딩
         String imageUrl = Item.image;
         imageUrl = imageUrl.replace("/resize/", "/images/");
         Picasso.get().load(imageUrl).into(tempImgView);
-        /*Picasso.get().load(imageUrl).into(tempImgView, new com.squareup.picasso.Callback() {
-            @Override
-            public void onSuccess() {
-                appBar.setBackground(tempImgView.getDrawable());
-                progressDoalog.dismiss();
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.d(TAG, e.toString());
-                progressDoalog.dismiss();
-            }
-        });*/
-
     }
 
 
@@ -220,9 +260,16 @@ public class DetailActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
     }
 
+    @OnClick(R.id.detail_save_btn)
+    void click() {
 
+    }
 
-
-
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        softKeyboard.unRegisterSoftKeyboardCallback();
+    }
 
 }
