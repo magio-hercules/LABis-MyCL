@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,9 +19,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -66,12 +69,19 @@ public class CustomActivity extends AppCompatActivity {
 
     @BindView(R.id.switchTheater)
     Switch switchTheater;
+    @BindView(R.id.textTheater)
+    TextView textTheater;
 
     @BindView(R.id.editSummary)
     EditText editSummary;
 
     @BindView(R.id.saveBtn)
     Button saveBtn;
+
+    @BindView(R.id.Div4)
+    LinearLayout seasonDiv;
+    @BindView(R.id.Div6)
+    LinearLayout theaterDiv;
 
     SpinnerAdapter sAdapter;
 
@@ -122,7 +132,26 @@ public class CustomActivity extends AppCompatActivity {
         comboGenre.setAdapter(sAdapter);
         comboGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView parent, View view, int position, long id) {
-                //Toast.makeText(getApplicationContext(), ""+ sAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                switchTheater.setChecked(false);
+
+                String item = sAdapter.getItem(position).toString();
+                if(item.indexOf("드라마") != -1 || item.equals("TV") || item.equals("애니메이션")) {
+                    seasonDiv.setAlpha(1.0f);
+                    editSeason.setEnabled(true);
+                } else {
+                    seasonDiv.setAlpha(0.3f);
+                    editSeason.setEnabled(false);
+                }
+
+                if(item.equals("영화")) {
+                    textTheater.setAlpha(1.0f);
+                    switchTheater.setAlpha(1.0f);
+                    switchTheater.setEnabled(true);
+                } else {
+                    textTheater.setAlpha(0.3f);
+                    switchTheater.setAlpha(0.3f);
+                    switchTheater.setEnabled(false);
+                }
             }
             public void onNothingSelected(AdapterView parent) {
             }
@@ -250,7 +279,6 @@ public class CustomActivity extends AppCompatActivity {
     }
 
     // -- Event Function Section -- ////////////////////////////////////////
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

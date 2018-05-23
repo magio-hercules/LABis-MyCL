@@ -164,7 +164,7 @@
                     android:id="@+id/detail_title_div"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.25"
+                    android:layout_weight="0.3"
                     android:background="@drawable/border"
                     android:orientation="vertical"
                     android:padding="10dp">
@@ -197,9 +197,8 @@
 
                 <LinearLayout
                     android:id="@+id/detail_season_div"
-                    android:layout_width="match_parent"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.75"
                     android:visibility="gone"
                     android:orientation="vertical"
                     android:padding="10dp">
@@ -221,36 +220,33 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-            </LinearLayout>
 
-
-            <LinearLayout
-                android:id="@+id/detail_theater_div"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@drawable/border"
-                android:orientation="vertical"
-                android:layout_marginTop="-1dp"
-                android:visibility="gone"
-                android:padding="10dp">
-                <TextView
-                    android:id="@+id/detail_text_theater"
-                    android:layout_width="match_parent"
-                    android:layout_height="26dp"
-                    android:layout_weight="0.7"
-                    android:text="극장판"
-                    android:textSize="12sp" />
-                <Switch
-                    android:id="@+id/detail_switch_theater"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/detail_theater_div"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="-2dp"
-                    android:layout_weight="0.7"
-                    android:switchMinWidth="60dp"
-                    android:track="@drawable/bg_switch_track" />
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:padding="10dp">
+                    <TextView
+                        android:id="@+id/detail_text_theater"
+                        android:layout_width="match_parent"
+                        android:layout_height="26dp"
+                        android:layout_weight="0.7"
+                        android:text="극장판"
+                        android:textSize="12sp" />
+                    <Switch
+                        android:id="@+id/detail_switch_theater"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:clickable="false"
+                        android:layout_marginRight="-2dp"
+                        android:layout_weight="0.7"
+                        android:switchMinWidth="60dp"
+                        android:track="@drawable/bg_switch_track" />
+                </LinearLayout>
             </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/detail_summmary_div"
