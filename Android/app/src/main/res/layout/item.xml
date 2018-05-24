@@ -29,7 +29,7 @@
                 android:id="@+id/gentext"
                 android:layout_width="13dp"
                 android:layout_height="match_parent"
-                android:background="@color/colorAccent"
+                android:background="@color/colorPrimary"
                 android:gravity="center_vertical|center_horizontal"
                 android:textColor="#FFFFFFFF"
                 android:textSize="11sp" />

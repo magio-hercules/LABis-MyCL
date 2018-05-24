@@ -70,7 +70,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
         if(mActivity.modeStatus == "MY") {
             holder.mThirdDivTotal.setVisibility(View.GONE);
-            holder.mGen.setBackground(mActivity.getResources().getDrawable(R.color.colorAccent));
+            holder.mGen.setBackground(mActivity.getResources().getDrawable(R.color.colorPrimary));
             if(mItems.get(position).season > 0) {
                 holder.mSeason.setVisibility(View.VISIBLE);
                 holder.mSeason.setText("시즌" + mItems.get(position).season);
