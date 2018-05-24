@@ -143,8 +143,9 @@ public class DetailActivity extends AppCompatActivity {
         modeStatus = intent.getStringExtra("MODE");
 
         // -- ToolBar -- //
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("상세보기");
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        //toolbar.setVisibility(View.GONE);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -153,7 +154,7 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 finish();
             }
-        });
+        });*/
 
         // -- Chapter Button Event Add -- //
         minusBtn.setOnTouchListener(mTouchEvent);

@@ -11,8 +11,9 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/detail_appbar"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:background="@color/colorAccent"
+        android:layout_height="220dp"
+        android:background="#000000"
+        android:alpha="0.8"
         android:theme="@style/AppTheme.AppBarOverlay">
         <FrameLayout
             android:layout_width="match_parent"
@@ -26,8 +27,9 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:alpha="0.6"
-                android:background="@color/colorPrimary"
+                android:alpha="0.5"
+                android:background="#000000"
+                android:visibility="gone"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
         </FrameLayout>
     </android.support.design.widget.AppBarLayout>
@@ -87,6 +89,38 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/detail_title_div"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/border"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/detail_text_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:text="타이틀"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/detail_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/detail_org_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/detail_genre_fav_div"
@@ -122,11 +156,40 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/detail_season_div"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/detail_text_season"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:text="시즌"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/detail_season"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/detail_fav_div"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:background="@drawable/border"
+                    android:layout_marginLeft="-1dp"
                     android:orientation="vertical"
                     android:padding="10dp">
                     <TextView
@@ -149,85 +212,16 @@
                             android:scaleType="fitXY" />
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/deatail_title_season_div"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-1dp"
-                android:background="@drawable/border"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/detail_title_div"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.3"
-                    android:background="@drawable/border"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:id="@+id/detail_text_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:text="타이틀"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/detail_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="bottom"
-                        android:textColor="@color/colorPrimary"
-                        android:textStyle="bold"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/detail_org_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/detail_season_div"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:id="@+id/detail_text_season"
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:text="시즌"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/detail_season"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/detail_theater_div"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="0.5"
                     android:orientation="vertical"
-                    android:visibility="gone"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    android:visibility="gone">
+
                     <TextView
                         android:id="@+id/detail_text_theater"
                         android:layout_width="match_parent"
@@ -235,18 +229,21 @@
                         android:layout_weight="0.7"
                         android:text="극장판"
                         android:textSize="12sp" />
+
                     <Switch
                         android:id="@+id/detail_switch_theater"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="right"
-                        android:clickable="false"
                         android:layout_marginRight="-2dp"
                         android:layout_weight="0.7"
+                        android:clickable="false"
                         android:switchMinWidth="60dp"
                         android:track="@drawable/bg_switch_track" />
                 </LinearLayout>
+
             </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/detail_summmary_div"
@@ -321,6 +318,7 @@
                     android:scaleType="centerCrop" />
             </LinearLayout>
         </LinearLayout>
+
     </ScrollView>
 
     <LinearLayout
@@ -341,6 +339,7 @@
             android:text="확인"
             android:textSize="17sp" />
     </LinearLayout>
+
 
 
 
