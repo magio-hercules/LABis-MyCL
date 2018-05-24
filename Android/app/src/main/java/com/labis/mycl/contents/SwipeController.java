@@ -40,6 +40,9 @@ class SwipeController extends Callback {
 
     ContentsActivity mActivity;
 
+    private Canvas nowCanvas = null;
+
+
     public SwipeController(ContentsActivity Activity, SwipeControllerActions buttonsActions) {
         this.mActivity = Activity;
         this.buttonsActions = buttonsActions;
@@ -168,7 +171,7 @@ class SwipeController extends Callback {
         float buttonWidthWithoutPadding = buttonWidth;
         float corners = 16;
 
-        c.drawColor(Color.parseColor("#EEEEEE"));
+        c.drawColor(mActivity.getResources().getColor(R.color.recyclerView));
 
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
@@ -182,12 +185,11 @@ class SwipeController extends Callback {
             if (buttonShowedState == ButtonsState.LEFT_VISIBLE) buttonInstance = leftButton;
         } else if (mActivity.modeStatus == "TOTAL" && buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
             RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop() + 15, itemView.getRight() - 11, itemView.getBottom() - 15);
-            p.setColor(Color.parseColor("#041642"));
+            p.setColor(mActivity.getResources().getColor(R.color.actionBar));
             c.drawRoundRect(rightButton, corners, corners, p);
             drawText("추가", c, rightButton, p);
             if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) buttonInstance = rightButton;
         }
-
 
     }
 

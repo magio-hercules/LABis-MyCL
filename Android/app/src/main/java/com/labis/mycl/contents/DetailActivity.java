@@ -93,6 +93,8 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_save_btn)
     Button saveBtn;
 
+    @BindView(R.id.detail_fav_div)
+    LinearLayout detailFavoriteTotalDiv;
     @BindView(R.id.detail_fav_image_layout)
     LinearLayout detailFavoriteDiv;
     @BindView(R.id.detail_image_favorite)
@@ -181,7 +183,9 @@ public class DetailActivity extends AppCompatActivity {
         detailGenre.setText(ContentsActivity.genreMap.get(Item.gen_id));
 
         // 즐겨찾기
-
+        if(modeStatus.equals("MY")) {
+            detailFavoriteTotalDiv.setVisibility(View.VISIBLE);
+        }
 
         // 시즌
         if(Item.season > 0) {

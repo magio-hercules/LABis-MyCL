@@ -93,6 +93,8 @@ public class RegisterActivity extends AppCompatActivity {
     private final int  MULTIPLE_PERMISSIONS = 101;
     private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
+    private String selectImgPick;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -271,10 +273,12 @@ public class RegisterActivity extends AppCompatActivity {
                 boolean result = permission.checkPermissions(RegisterActivity.this);
 
                 if (items[item].equals("촬영하기")) {
+                    selectImgPick = "photo";
                     if (result) {
                         imgPicker.selectPhoto();
                     }
                 } else if (items[item].equals("가져오기")) {
+                    selectImgPick = "gallery";
                     if (result) {
                         imgPicker.selectGallery();
                     }
@@ -317,6 +321,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         if(deny) {
             Toast.makeText(getApplicationContext(), "퍼미션 인증 실패", Toast.LENGTH_SHORT).show();
+        } else {
+            if(selectImgPick.equals("photo")) {
+                imgPicker.selectPhoto();
+            } else if (selectImgPick.equals("gallery")) {
+                imgPicker.selectGallery();
+            }
         }
     }
 

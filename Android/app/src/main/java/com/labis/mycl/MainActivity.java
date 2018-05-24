@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(int code) {
                 Log.e(TAG, "FAIL");
                 progressDoalog.dismiss();
-                Toast.makeText(getApplicationContext(), "[" + code + "]에러 발생 - 로그인 실패", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "[" + code + "] 에러 발생 - 로그인 실패", Toast.LENGTH_SHORT).show();
             }
         });
     }
