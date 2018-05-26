@@ -48,11 +48,11 @@
                 android:layout_weight="0.5"
                 android:orientation="vertical"
                 android:padding="10dp">
+
                 <TextView
                     android:id="@+id/textThum"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
+                    android:layout_height="24dp"
                     android:text="타이틀이미지"
                     android:textSize="11sp" />
 
@@ -70,14 +70,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
-                android:orientation="vertical"
                 android:background="@drawable/border"
+                android:orientation="vertical"
                 android:padding="10dp">
+
                 <TextView
                     android:id="@+id/textGenre"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
+                    android:layout_height="24dp"
                     android:text="장르"
                     android:textSize="11sp" />
 
@@ -85,31 +85,26 @@
                     android:id="@+id/comboGenre"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:layout_weight="0.3"
-                    android:gravity="right" />
+                    android:layout_gravity="center"
+                    android:gravity="center" />
             </LinearLayout>
 
         </LinearLayout>
 
 
-
-
-
         <LinearLayout
             android:id="@+id/Div1"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/border"
+            android:layout_height="70dp"
             android:layout_marginTop="-1dp"
+            android:background="@drawable/border"
             android:orientation="vertical"
             android:padding="10dp">
 
             <TextView
                 android:id="@+id/textTitle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
+                android:layout_height="24dp"
                 android:text="타이틀"
                 android:textSize="12sp" />
 
@@ -117,7 +112,6 @@
                 android:id="@+id/editTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:inputType="textPersonName"
@@ -127,7 +121,7 @@
         <LinearLayout
             android:id="@+id/Div2"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="70dp"
             android:layout_marginTop="-1dp"
             android:background="@drawable/border"
             android:orientation="vertical"
@@ -136,8 +130,7 @@
             <TextView
                 android:id="@+id/textOriginal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
+                android:layout_height="24dp"
                 android:text="글로벌타이틀"
                 android:textSize="12sp" />
 
@@ -145,7 +138,6 @@
                 android:id="@+id/editOriginal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:inputType="textPersonName"
@@ -155,7 +147,7 @@
         <LinearLayout
             android:id="@+id/OptionDiv"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="70dp"
             android:layout_marginTop="-1dp"
             android:background="@drawable/border"
             android:orientation="horizontal">
@@ -171,8 +163,7 @@
                 <TextView
                     android:id="@+id/textSeason"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
+                    android:layout_height="24dp"
                     android:text="시즌"
                     android:textSize="12sp" />
 
@@ -180,12 +171,11 @@
                     android:id="@+id/editSeason"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.3"
                     android:background="@null"
                     android:gravity="bottom|right"
                     android:inputType="numberDecimal"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -193,17 +183,16 @@
                 android:id="@+id/Div6"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:orientation="vertical"
-                android:background="@drawable/border"
                 android:layout_marginLeft="-1dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/border"
+                android:orientation="vertical"
                 android:padding="10dp">
 
                 <TextView
                     android:id="@+id/textTheater"
                     android:layout_width="match_parent"
-                    android:layout_height="26dp"
-                    android:layout_weight="0.7"
+                    android:layout_height="24dp"
                     android:text="극장판"
                     android:textSize="12sp" />
 
@@ -213,7 +202,6 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
                     android:layout_marginRight="-2dp"
-                    android:layout_weight="0.7"
                     android:switchMinWidth="60dp"
                     android:track="@drawable/bg_switch_track" />
 
@@ -225,8 +213,8 @@
             android:id="@+id/Div7"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="-1dp"
             android:layout_marginBottom="50dp"
+            android:layout_marginTop="-1dp"
             android:background="@drawable/border"
             android:orientation="vertical"
             android:padding="10dp">
@@ -234,8 +222,7 @@
             <TextView
                 android:id="@+id/textSummary"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_weight="0.7"
+                android:layout_height="24dp"
                 android:text="감상평"
                 android:textSize="12sp" />
 
@@ -243,7 +230,6 @@
                 android:id="@+id/editSummary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
                 android:background="@color/cardview_light_background"
                 android:gravity="top"
                 android:inputType="textMultiLine"
@@ -256,7 +242,6 @@
         android:id="@+id/Div8"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_gravity="bottom"
         android:foregroundGravity="bottom"
@@ -268,7 +253,6 @@
             android:layout_height="50dp"
             android:layout_gravity="bottom"
             android:background="@color/pointColor"
-            android:textStyle="bold"
             android:text="저장"
             android:textSize="17sp" />
     </LinearLayout>

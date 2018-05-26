@@ -2,6 +2,6 @@
 <TextView
     android:id="@+id/textViewSpinnerItem"
     android:layout_width="match_parent"
-    android:layout_height="36dp"
+    android:layout_height="40dp"
     style="@style/SpinnerStyle"
     xmlns:android="http://schemas.android.com/apk/res/android" />

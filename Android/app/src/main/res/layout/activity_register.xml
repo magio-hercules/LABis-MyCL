@@ -42,15 +42,13 @@
             <TextView
                 android:id="@+id/textView_email"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
+                android:layout_height="24dp"
                 android:text="이메일"
                 android:textSize="12sp" />
             <EditText
                 android:id="@+id/register_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:inputType="textEmailAddress"
@@ -67,15 +65,13 @@
             <TextView
                 android:id="@+id/textView_pw"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
+                android:layout_height="24dp"
                 android:text="암호"
                 android:textSize="12sp" />
             <EditText
                 android:id="@+id/register_password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:inputType="textPassword"
@@ -92,15 +88,13 @@
             <TextView
                 android:id="@+id/textView_age"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
+                android:layout_height="24dp"
                 android:text="나이"
                 android:textSize="12sp" />
             <EditText
                 android:id="@+id/register_age"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:textSize="15sp" />
@@ -116,15 +110,13 @@
             <TextView
                 android:id="@+id/textView_gender"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
+                android:layout_height="24dp"
                 android:text="성별"
                 android:textSize="12sp" />
             <EditText
                 android:id="@+id/register_gender"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:textSize="15sp" />
@@ -140,15 +132,13 @@
             <TextView
                 android:id="@+id/textView_nickname"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
+                android:layout_height="24dp"
                 android:text="닉네임"
                 android:textSize="12sp" />
             <EditText
                 android:id="@+id/register_nickname"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:textSize="15sp" />
@@ -164,15 +154,13 @@
             <TextView
                 android:id="@+id/textView_phone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
+                android:layout_height="24dp"
                 android:text="연락처"
                 android:textSize="12sp" />
             <EditText
                 android:id="@+id/register_phone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:textSize="15sp" />
@@ -188,8 +176,7 @@
             <TextView
                 android:id="@+id/textView_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.7"
+                android:layout_height="24dp"
                 android:text="프로필 사진"
                 android:textSize="12sp" />
 
@@ -197,10 +184,8 @@
                 android:id="@+id/register_image"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_weight="0.3"
                 android:layout_gravity="right"
-                android:alpha="0.6"
-                android:background="@drawable/baseline_person_pin_black_48"
+                android:background="@mipmap/register_person"
                 android:scaleType="fitXY" />
         </LinearLayout>
     </LinearLayout>
@@ -220,7 +205,6 @@
             android:layout_height="50dp"
             android:layout_gravity="bottom"
             android:background="@color/pointColor"
-            android:textStyle="bold"
             android:text="등록"
             android:textSize="17sp" />
     </LinearLayout>
