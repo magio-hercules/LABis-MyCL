@@ -185,7 +185,7 @@ class SwipeController extends Callback {
             if (buttonShowedState == ButtonsState.LEFT_VISIBLE) buttonInstance = leftButton;
         } else if (mActivity.modeStatus == "TOTAL" && buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
             RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop() + 15, itemView.getRight() - 11, itemView.getBottom() - 15);
-            p.setColor(mActivity.getResources().getColor(R.color.actionBar));
+            p.setColor(Color.parseColor("#119EAB"));
             c.drawRoundRect(rightButton, corners, corners, p);
             drawText("추가", c, rightButton, p);
             if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) buttonInstance = rightButton;
