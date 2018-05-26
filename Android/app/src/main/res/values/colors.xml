@@ -3,8 +3,7 @@
     <color name="colorPrimary">#31445E</color>
     <color name="colorPrimaryDark">#212832</color>
     <color name="colorAccent">#041642</color>
-    <color name="pointColor">#FFC000</color>
-    <color name="pointColor2">#FFD34E</color>
+    <color name="pointColor">#D5D5D5</color>
     <color name="actionBar">#336B70</color>
     <color name="recyclerView">#EEEEEE</color>
 

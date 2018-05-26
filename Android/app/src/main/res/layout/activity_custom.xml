@@ -267,7 +267,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="bottom"
-            android:background="#FFC000"
+            android:background="@color/pointColor"
             android:textStyle="bold"
             android:text="저장"
             android:textSize="17sp" />

@@ -339,9 +339,8 @@
             android:layout_weight="0.5"
             android:layout_height="50dp"
             android:layout_gravity="bottom"
-            android:background="@color/pointColor2"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            android:background="#E5E5E5"
+            android:textSize="17sp" />
 
         <Button
             android:id="@+id/detail_ok_btn"
@@ -351,8 +350,7 @@
             android:layout_gravity="bottom"
             android:background="@color/pointColor"
             android:text="확인"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            android:textSize="17sp" />
 
     </LinearLayout>
 
