@@ -24,6 +24,8 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     public TextView mIndex;
     public LinearLayout mThirdDivMy;
 
+    public LinearLayout mTitleDiv;
+
     public LinearLayout mThirdDivTotal;
     public TextView mTotalListSeason;
 
@@ -33,8 +35,10 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         mGen = (TextView) itemView.findViewById(R.id.content_genre_text);
         mImgView = (ImageView) itemView.findViewById(R.id.content_image);
 
+        mTitleDiv = (LinearLayout)itemView.findViewById(R.id.secondDiv);
         mName = (TextView) itemView.findViewById(R.id.content_title);
         mNameOrg = (TextView) itemView.findViewById(R.id.content_sub_title);
+
         mConAddBtn = (TextView) itemView.findViewById(R.id.ConAddBtn);
         mConMinusBtn = (TextView) itemView.findViewById(R.id.ConMinusBtn);
 
