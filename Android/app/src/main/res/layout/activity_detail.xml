@@ -110,7 +110,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="bottom"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp" />
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/detail_org_title"
@@ -140,19 +141,18 @@
                     <TextView
                         android:id="@+id/detail_text_genre"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.33"
+                        android:layout_height="24dp"
                         android:text="장르"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/detail_genre"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.22"
-                        android:gravity="center_vertical|center_horizontal"
+                        android:gravity="center"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="16sp" />
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <LinearLayout
