@@ -9,10 +9,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -48,6 +51,10 @@ public class DetailActivity extends AppCompatActivity {
 
     @BindView(R.id.detail_appbar)
     AppBarLayout appBar;
+    @BindView(R.id.detail_zoom_btn)
+    ImageView detailZoom;
+    @BindView(R.id.temp_image)
+    ImageView tempImgView;
 
     @BindView(R.id.detail_minus_btn)
     TextView minusBtn;
@@ -89,11 +96,10 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_feeling)
     EditText detailFeeling;
 
-    @BindView(R.id.temp_image)
-    ImageView tempImgView;
-
-    @BindView(R.id.detail_save_btn)
-    Button saveBtn;
+    @BindView(R.id.detail_ok_btn)
+    Button okBtn;
+    @BindView(R.id.detail_option_btn)
+    Button optionBtn;
 
     @BindView(R.id.detail_fav_div)
     LinearLayout detailFavoriteTotalDiv;
@@ -110,6 +116,10 @@ public class DetailActivity extends AppCompatActivity {
     private SoftKeyboard softKeyboard;
 
     private boolean favoiteFlag = false;
+    private boolean posterImageFlag = true;
+
+    private int screenW = 0;
+    private int screenH = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +156,16 @@ public class DetailActivity extends AppCompatActivity {
         Content item = (Content) intent.getSerializableExtra("CONTENT");
         modeStatus = intent.getStringExtra("MODE");
 
+        // -- Screen Resolution -- //
+        AppBarLayout appbar = (AppBarLayout) findViewById(R.id.detail_appbar);
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        screenW = metrics.widthPixels;
+        screenH = metrics.heightPixels;
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)appBar.getLayoutParams();
+        lp.height = screenH / 3;
+
         // -- ToolBar -- //
         /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -169,6 +189,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void inflateContent(Content Item) {
+
+        // 버튼
+        if(modeStatus.equals("MY")) {
+            optionBtn.setText("삭제");
+        } else {
+            optionBtn.setText("추가");
+        }
 
         // 챕터
         if(Item.chapter > 0) {
@@ -271,8 +298,15 @@ public class DetailActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
     }
 
-    @OnClick(R.id.detail_save_btn)
-    void click() {
+    @OnClick(R.id.detail_ok_btn)
+    void okClick() {
+        finish();
+        overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
+        softKeyboard.unRegisterSoftKeyboardCallback();
+    }
+
+    @OnClick(R.id.detail_option_btn)
+    void optionClick() {
 
     }
 
@@ -280,6 +314,7 @@ public class DetailActivity extends AppCompatActivity {
     public void onDestroy()
     {
         super.onDestroy();
+        overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
         softKeyboard.unRegisterSoftKeyboardCallback();
     }
 
@@ -291,6 +326,28 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             favoiteFlag = true;
             favoriteImageView.setImageResource(R.mipmap.bookmark_favorite_on);
+        }
+
+    }
+
+    @OnClick(R.id.temp_image)
+    void AppBarClick() {
+        if(posterImageFlag) {
+            posterImageFlag = false;
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)appBar.getLayoutParams();
+            lp.height = screenH;
+            tempImgView.setAlpha(1.0f);
+            tempImgView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            detailZoom.setImageResource(R.mipmap.zoom_out);
+            detailZoom.setAlpha(0.5f);
+        } else {
+            posterImageFlag = true;
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)appBar.getLayoutParams();
+            lp.height = screenH / 3;
+            tempImgView.setAlpha(0.8f);
+            tempImgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            detailZoom.setImageResource(R.mipmap.zoom_in);
+            detailZoom.setAlpha(1.0f);
         }
     }
 
