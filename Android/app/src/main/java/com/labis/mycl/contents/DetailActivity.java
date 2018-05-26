@@ -359,7 +359,7 @@ public class DetailActivity extends AppCompatActivity {
             tempImgView.setAlpha(0.8f);
             tempImgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             detailZoom.setImageResource(R.mipmap.zoom_in);
-            detailZoom.setAlpha(1.0f);
+            detailZoom.setAlpha(0.8f);
         }
     }
 

@@ -69,6 +69,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         // -- ToolBar -- //
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("내 콘텐츠");
 
         // -- LoginData ( User , ArrayList<Gente> ) -- //
         LoginData logingData = (LoginData) getIntent().getExtras().getParcelable("LoingData");

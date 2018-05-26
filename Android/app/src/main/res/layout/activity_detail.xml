@@ -27,6 +27,9 @@
                 android:id="@+id/detail_zoom_btn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="4dp"
+                android:alpha="0.8"
                 android:layout_gravity="bottom|right"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/zoom_in" />
