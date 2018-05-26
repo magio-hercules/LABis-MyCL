@@ -333,9 +333,11 @@ public class DetailActivity extends AppCompatActivity {
         if(favoiteFlag) {
             favoiteFlag = false;
             favoriteImageView.setImageResource(R.mipmap.bookmark_favorite);
+            Toast.makeText(getApplicationContext(), "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
         } else {
             favoiteFlag = true;
             favoriteImageView.setImageResource(R.mipmap.bookmark_favorite_on);
+            Toast.makeText(getApplicationContext(), "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
         }
 
     }

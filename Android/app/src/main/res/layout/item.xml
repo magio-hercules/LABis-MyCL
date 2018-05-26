@@ -36,7 +36,7 @@
                 android:id="@+id/content_image"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:background="@mipmap/ic_default_thum"
+                android:background="@mipmap/default_image"
                 android:scaleType="fitXY" />
         </LinearLayout>
 
