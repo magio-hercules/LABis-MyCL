@@ -276,18 +276,28 @@ public class DetailActivity extends AppCompatActivity {
             Runnable plusAction = new Runnable() {
                 @Override
                 public void run() {
-                    chapterIndex++;
-                    chapterView.setText(String.valueOf(chapterIndex) + " 화");
-                    mHandler.postDelayed(this, 100);
+
+                    if(chapterIndex < 99) {
+                        chapterIndex++;
+                        chapterView.setText(String.valueOf(chapterIndex) + " 화");
+                        mHandler.postDelayed(this, 100);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             };
 
             Runnable minusAction = new Runnable() {
                 @Override
                 public void run() {
-                    chapterIndex--;
-                    chapterView.setText(String.valueOf(chapterIndex) + " 화");
-                    mHandler.postDelayed(this, 100);
+                    if(chapterIndex > 1) {
+                        chapterIndex--;
+                        chapterView.setText(String.valueOf(chapterIndex) + " 화");
+                        mHandler.postDelayed(this, 100);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
+                    }
                 }
             };
         };
