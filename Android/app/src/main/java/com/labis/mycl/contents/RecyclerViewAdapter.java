@@ -64,31 +64,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         }
         holder.mGen.setText(genreText);
         Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
-        holder.mName.setText(mItems.get(position).name);
+        holder.mName.setText(mItems.get(position).name + "  ");
         holder.mNameOrg.setText(mItems.get(position).name_org);
 
-
         if(mActivity.modeStatus == "MY") {
-            holder.mThirdDivTotal.setVisibility(View.GONE);
             holder.mGen.setBackground(mActivity.getResources().getDrawable(R.color.colorPrimary));
+
+            // My List Season Info
             if(mItems.get(position).season > 0) {
-                holder.mSeason.setVisibility(View.VISIBLE);
-                holder.mSeason.setText("시즌" + mItems.get(position).season);
+                holder.mMyListSeason.setVisibility(View.VISIBLE);
+                holder.mMyListSeason.setText("시즌" + String.valueOf(mItems.get(position).season));
             }
 
+            // Chapter Info
             if(mItems.get(position).chapter > 0) {
                 holder.mThirdDivMy.setVisibility(View.VISIBLE);
                 holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + "화");
-            } else {
-                holder.mThirdDivMy.setVisibility(View.GONE);
             }
 
         } else if(mActivity.modeStatus == "TOTAL") {
-            holder.mThirdDivMy.setVisibility(View.GONE);
             holder.mGen.setBackground(mActivity.getResources().getDrawable(R.color.actionBar));
+
+            // Total List Season Info
             if(mItems.get(position).season > 0) {
                 holder.mThirdDivTotal.setVisibility(View.VISIBLE);
-                holder.mSeasonTotal.setText("시즌" + mItems.get(position).season);
+                holder.mTotalListSeason.setText("시즌" + mItems.get(position).season);
             }
         }
 
