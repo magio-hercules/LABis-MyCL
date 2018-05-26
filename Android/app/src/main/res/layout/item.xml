@@ -65,6 +65,8 @@
                     android:id="@+id/content_mylist_season"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
                     android:gravity="center"
                     android:background="#EEEEEE"
                     android:textColor="@color/colorPrimary"
