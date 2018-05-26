@@ -27,10 +27,12 @@ import android.widget.Toast;
 
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
+import com.labis.mycl.util.PicassoTransformations;
 import com.labis.mycl.util.SoftKeyboard;
 import com.labis.mycl.util.Utility;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.squareup.picasso.Transformation;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

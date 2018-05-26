@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.rest.RetroCallback;
+import com.labis.mycl.util.PicassoTransformations;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         }
         holder.mGen.setText(genreText);
-        Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
+        Picasso.get().load(mItems.get(position).image).transform(PicassoTransformations.resizeTransformation).into(holder.mImgView);
         holder.mName.setText(mItems.get(position).name + "  ");
         holder.mNameOrg.setText(mItems.get(position).name_org);
 
