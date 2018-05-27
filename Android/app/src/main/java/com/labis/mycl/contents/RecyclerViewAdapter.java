@@ -33,6 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         mItems = itemList;
     }
 
+
     // 필수 오버라이드 : View 생성
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,7 +46,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
     // 필수 오버라이드 : 재활용되는 View 가 호출, Adapter 가 해당 position 에 해당하는 데이터를 결합
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
 
         // 해당 position에 해당하는 데이터 결합
         mPosition = position;
@@ -94,26 +95,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         }
 
         // 생성된 List 중 선택된 목록번호를 Toast로 출력
-        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });*/
+        });
 
         holder.mTitleDiv.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                Content data = mItems.get(position);
-                if (!data.equals(null)) {
-                    Intent i = new Intent(mActivity, DetailActivity.class);
-                    i.putExtra("CONTENT", mItems.get(position));
-                    i.putExtra("MODE", mActivity.modeStatus);
-                    mActivity.startActivity(i);
-                    mActivity.overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
-                } else {
-                    Toast.makeText(mContext, "선택한 항목에 데이터 오류가 있습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
+                if(mActivity.swipeController.buttonShowedState ==  ButtonsState.GONE) {
+                    Content data = mItems.get(position);
+                    if (!data.equals(null)) {
+                        Intent i = new Intent(mActivity, DetailActivity.class);
+                        i.putExtra("CONTENT", mItems.get(position));
+                        i.putExtra("MODE", mActivity.modeStatus);
+                        mActivity.startActivity(i);
+                        mActivity.overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
+                    } else {
+                        Toast.makeText(mContext, "선택한 항목에 데이터 오류가 있습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
+                    }
                 }
+                //holder.mTitleDiv.setOnClickListener(null);
             }
         });
 

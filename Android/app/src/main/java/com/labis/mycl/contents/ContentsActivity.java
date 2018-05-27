@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -60,6 +61,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     private ProgressDialog progressDoalog = null;
     Menu contentsMainMenu;
+
+    //public ButtonsState buttonShowedState = null;
+    public SwipeController swipeController = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,19 +216,21 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void drawSwipeMenu() {
-        final SwipeController swipeController = new SwipeController(this, new SwipeControllerActions() {
-            // MY콘텐츠 삭제
-            @Override
-            public void onLeftClicked(int position) {
-                delToMyContents(position);
-            }
+        if(swipeController == null) {
+            swipeController = new SwipeController(this, new SwipeControllerActions() {
+                // MY콘텐츠 삭제
+                @Override
+                public void onLeftClicked(int position) {
+                    delToMyContents(position);
+                }
 
-            // MY콘텐츠 추가
-            @Override
-            public void onRightClicked(int position) {
-                addToMyContents(position);
-            }
-        });
+                // MY콘텐츠 추가
+                @Override
+                public void onRightClicked(int position) {
+                    addToMyContents(position);
+                }
+            });
+        }
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         itemTouchhelper.attachToRecyclerView(mRecyclerView);
 
@@ -250,6 +256,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     public void loadTotalContent() {
         Log.d("EVOL","전체 리스트");
+        swipeController = null;
         progressDoalog.show();
         retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
@@ -292,6 +299,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     private void loadMyContents() {
         Log.d("EVOL","내 리스트 / " + modeStatus);
+        swipeController = null;
         progressDoalog.show();
         if(myContentsRefresh) {
             retroClient.postMyContents(userData.id, new RetroCallback() {
