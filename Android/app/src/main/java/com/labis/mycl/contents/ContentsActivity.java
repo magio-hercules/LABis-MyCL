@@ -45,14 +45,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     // -- Global Variable Section -- ////////////////////////////////////////
     public RetroClient retroClient;
-    public RecyclerView mRecyclerView;
-    LinearLayoutManager mLayoutManager;
+
     RecyclerViewAdapter mAdapter;
     Toolbar toolbar;
 
     public ArrayList<Content> myContents = new ArrayList();
     public ArrayList<Genre> genreList = new ArrayList();
-    static String modeStatus = "MY";
+    public static String modeStatus = "MY";
     public Content touchContentItem;
     public boolean myContentsRefresh = true;
 
@@ -62,8 +61,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private ProgressDialog progressDoalog = null;
     Menu contentsMainMenu;
 
-    //public ButtonsState buttonShowedState = null;
-    public SwipeController swipeController = null;
+    SwipeController swipeController = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,11 +89,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         // -- RecyclerView -- //
-        mRecyclerView = (RecyclerView)findViewById(R.id.myContentsView);
-        mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         drawSwipeMenu();
 
 
@@ -216,26 +210,28 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void drawSwipeMenu() {
-        if(swipeController == null) {
-            swipeController = new SwipeController(this, new SwipeControllerActions() {
-                // MY콘텐츠 삭제
-                @Override
-                public void onLeftClicked(int position) {
-                    delToMyContents(position);
-                }
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.myContentsView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        //recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
 
-                // MY콘텐츠 추가
-                @Override
-                public void onRightClicked(int position) {
-                    addToMyContents(position);
-                }
-            });
-        }
+        swipeController = new SwipeController(this, new SwipeControllerActions() {
+            // MY콘텐츠 삭제
+            @Override
+            public void onLeftClicked(int position) {
+                delToMyContents(position);
+            }
+
+            // MY콘텐츠 추가
+            @Override
+            public void onRightClicked(int position) {
+                addToMyContents(position);
+            }
+        });
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        itemTouchhelper.attachToRecyclerView(mRecyclerView);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
 
-
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
                 swipeController.onDraw(c);
@@ -244,10 +240,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void clearRecyclerView() {
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.myContentsView);
         ArrayList<Content> items = new ArrayList();
         mAdapter = new RecyclerViewAdapter(this, items);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.refreshDrawableState();
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.refreshDrawableState();
     }
 
     public void updateItemDataView(int updateIndex) {
@@ -256,7 +253,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     public void loadTotalContent() {
         Log.d("EVOL","전체 리스트");
-        swipeController = null;
         progressDoalog.show();
         retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
@@ -280,7 +276,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     ArrayList<Content> items = new ArrayList();
                     items.addAll(data);
                     mAdapter = new RecyclerViewAdapter(ContentsActivity.this, items);
-                    mRecyclerView.setAdapter(mAdapter);
                     drawSwipeMenu();
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
@@ -299,7 +294,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     private void loadMyContents() {
         Log.d("EVOL","내 리스트 / " + modeStatus);
-        swipeController = null;
         progressDoalog.show();
         if(myContentsRefresh) {
             retroClient.postMyContents(userData.id, new RetroCallback() {
@@ -326,7 +320,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     if (!data.isEmpty()) {
                         myContents.addAll(data);
                         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, myContents);
-                        mRecyclerView.setAdapter(mAdapter);
                         drawSwipeMenu();
                     } else {
                         Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
@@ -343,7 +336,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             });
         } else {
             mAdapter = new RecyclerViewAdapter(this, myContents);
-            mRecyclerView.setAdapter(mAdapter);
             drawSwipeMenu();
             progressDoalog.dismiss();
         }

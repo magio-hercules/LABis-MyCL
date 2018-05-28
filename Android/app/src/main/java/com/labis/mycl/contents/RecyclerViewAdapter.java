@@ -95,41 +95,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         }
 
         // 생성된 List 중 선택된 목록번호를 Toast로 출력
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });
+        });*/
 
-        holder.mTitleDiv.setOnClickListener(new View.OnClickListener() {
+        /*holder.mTitleDiv.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(mActivity.swipeController.buttonShowedState ==  ButtonsState.GONE) {
-                    Content data = mItems.get(position);
-                    if (!data.equals(null)) {
-                        Intent i = new Intent(mActivity, DetailActivity.class);
-                        i.putExtra("CONTENT", mItems.get(position));
-                        i.putExtra("MODE", mActivity.modeStatus);
-                        mActivity.startActivity(i);
-                        mActivity.overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
-                    } else {
-                        Toast.makeText(mContext, "선택한 항목에 데이터 오류가 있습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
-                    }
+                Content data = mItems.get(position);
+                if (!data.equals(null)) {
+                    Intent i = new Intent(mActivity, DetailActivity.class);
+                    i.putExtra("CONTENT", mItems.get(position));
+                    i.putExtra("MODE", mActivity.modeStatus);
+                    mActivity.startActivity(i);
+                    mActivity.overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
+                } else {
+                    Toast.makeText(mContext, "선택한 항목에 데이터 오류가 있습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
                 }
-                //holder.mTitleDiv.setOnClickListener(null);
             }
         });
 
-        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.d("EVOL", String.format("%d 선택", position + 1));
-                mActivity.touchContentItem = mItems.get(position);
-                return false;
-            }
-        });
 
         holder.mConMinusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +142,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                     Toast.makeText(mContext, "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
     }
 
     private void updateChapter(final int position, int value) {

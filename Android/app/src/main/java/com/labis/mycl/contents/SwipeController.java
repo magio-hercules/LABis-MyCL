@@ -26,6 +26,8 @@ enum ButtonsState {
 
 class SwipeController extends Callback {
 
+    private static final String TAG = "SwipeController";
+
     private boolean swipeBack = false;
 
     public ButtonsState buttonShowedState = ButtonsState.GONE;
@@ -39,9 +41,6 @@ class SwipeController extends Callback {
     private static final float buttonWidth = 300;
 
     ContentsActivity mActivity;
-
-    private Canvas nowCanvas = null;
-
 
     public SwipeController(ContentsActivity Activity, SwipeControllerActions buttonsActions) {
         this.mActivity = Activity;
@@ -80,12 +79,8 @@ class SwipeController extends Callback {
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ACTION_STATE_SWIPE) {
             if (buttonShowedState != ButtonsState.GONE) {
-
-                if (mActivity.modeStatus == "MY" && buttonShowedState == ButtonsState.LEFT_VISIBLE)
-                    dX = Math.max(dX, buttonWidth);
-                if (mActivity.modeStatus == "TOTAL" && buttonShowedState == ButtonsState.RIGHT_VISIBLE)
-                    dX = Math.min(dX, -buttonWidth);
-
+                if (buttonShowedState == ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
+                if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) dX = Math.min(dX, -buttonWidth);
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
             else {
@@ -171,24 +166,26 @@ class SwipeController extends Callback {
         float buttonWidthWithoutPadding = buttonWidth;
         float corners = 16;
 
-        c.drawColor(mActivity.getResources().getColor(R.color.recyclerView));
-
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
         buttonInstance = null;
-
-        if (mActivity.modeStatus == "MY" && buttonShowedState == ButtonsState.LEFT_VISIBLE) {
+        Log.d(TAG,"EVOL DRAW ENTRANCE");
+        Log.d(TAG,"EVOL" + mActivity.modeStatus);
+        Log.d(TAG,"EVOL" + buttonShowedState);
+       if (mActivity.modeStatus == "MY" || buttonShowedState == ButtonsState.LEFT_VISIBLE) {
+            Log.d(TAG,"EVOL DRAW LEFT");
             RectF leftButton = new RectF(itemView.getLeft() + 11, itemView.getTop() + 15, itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom() - 15);
             p.setColor(Color.RED);
             c.drawRoundRect(leftButton, corners, corners, p);
             drawText("삭제", c, leftButton, p);
-            if (buttonShowedState == ButtonsState.LEFT_VISIBLE) buttonInstance = leftButton;
-        } else if (mActivity.modeStatus == "TOTAL" && buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
+            buttonInstance = leftButton;
+        } else if (mActivity.modeStatus == "TOTAL" || buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
+            Log.d(TAG,"EVOL DRAW RIGHT");
             RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop() + 15, itemView.getRight() - 11, itemView.getBottom() - 15);
             p.setColor(Color.parseColor("#119EAB"));
             c.drawRoundRect(rightButton, corners, corners, p);
             drawText("추가", c, rightButton, p);
-            if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) buttonInstance = rightButton;
+            buttonInstance = rightButton;
         }
 
     }
