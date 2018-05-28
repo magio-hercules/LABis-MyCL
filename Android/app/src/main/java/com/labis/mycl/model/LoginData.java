@@ -37,8 +37,12 @@ public class LoginData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(this.user, flags);
-        dest.writeParcelableArray (this.genreList.toArray(new Parcelable[genreList.size()]), flags);
+        if (this.user != null) {
+            dest.writeParcelable(this.user, flags);
+        }
+        if (this.genreList != null) {
+            dest.writeParcelableArray (this.genreList.toArray(new Parcelable[genreList.size()]), flags);
+        }
     }
 
     @SuppressWarnings("rawtypes")

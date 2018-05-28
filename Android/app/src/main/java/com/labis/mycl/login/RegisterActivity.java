@@ -1,23 +1,12 @@
 package com.labis.mycl.login;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -36,18 +25,18 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.labis.mycl.R;
-import com.labis.mycl.contents.CustomActivity;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
+import com.labis.mycl.util.AuthManager;
 import com.labis.mycl.util.CheckPermission;
 import com.labis.mycl.util.ImagePicker;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,6 +84,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private String selectImgPick;
 
+    private AuthManager authManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,12 +121,43 @@ public class RegisterActivity extends AppCompatActivity {
 
         // 이미지 픽커
         imgPicker = new ImagePicker(RegisterActivity.this,CAMERA_CODE,GALLERY_CODE);
+
+        authManager = AuthManager.getInstance();
     }
 
 
     @OnClick(R.id.register_registerbtn)
     void onClick_register() {
-        storeImageToBucket();
+        Log.e(TAG, "onClick_register");
+
+        final String str_email = register_email.getText().toString();
+        final String str_pw = register_password.getText().toString();
+
+        if (str_email.equals("") || str_pw.equals("")) {
+            Toast.makeText(this, "필수 항목(이메일/암호)을 입력해주세요", Toast.LENGTH_SHORT).show();
+
+            return;
+        }
+        OnCompleteListener completeListener = new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                Log.e(TAG, "OnCompleteListener onComplete");
+
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "createUserWithEmail:success");
+//                    FirebaseUser user = mFirebaseAuth.getCurrentUser();
+
+                    storeImageToBucket();
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.d(TAG, "createUserWithEmail:failure", task.getException());
+                    Log.d(TAG, task.getException().getMessage());
+                }
+            }
+        };
+
+        authManager.createAccount(this, str_email, str_pw, completeListener);
     }
 
 
@@ -202,6 +224,13 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void storeImageToBucket() {
+        Log.d(TAG, "storeImageToBucket");
+
+        if (imgPicker.getCurrentPhotoPath() == null) {
+            registUser(null);
+            return ;
+        }
+
         final File currentPhotoFile = new File(imgPicker.getCurrentPhotoPath());
 
         final TransferObserver observer = transferUtility.upload(

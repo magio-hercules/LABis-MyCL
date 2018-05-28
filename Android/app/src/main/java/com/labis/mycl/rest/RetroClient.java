@@ -209,8 +209,26 @@ public class RetroClient {
         });
     }
 
-    public void postLogin(String id, String pw, final RetroCallback callback) {
-        apiService.postLogin(id, pw).enqueue(new Callback<List<User>>() {
+    public void postLogin(String id, String pw, String uid, final RetroCallback callback) {
+        apiService.postLogin(id, pw, uid).enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void postCheckIdToken(String id, String uid, String idToken, final RetroCallback callback) {
+        apiService.postCheckIdToken(id, uid, idToken).enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful()) {

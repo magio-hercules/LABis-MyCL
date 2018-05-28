@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "120460472721",
+    "firebase_url": "https://mycl-205006.firebaseio.com",
+    "project_id": "mycl-205006",
+    "storage_bucket": "mycl-205006.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120460472721:android:21eb1b100e9d9955",
+        "android_client_info": {
+          "package_name": "com.labis.mycl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "120460472721-uo35ffmukq185dde2hij71a95g3r6pvo.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "120460472721-2tq9rebo7utm7qj9v2jqdmvv2bg4sndu.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "120460472721-9vso15gflfj46ie69bdklvmakbeon9hu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.labis.mycl",
+            "certificate_hash": "21d234e32f54d8c6ebd0c25ab2bbbf9ed3b12d05"
+          }
+        },
+        {
+          "client_id": "120460472721-uo35ffmukq185dde2hij71a95g3r6pvo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALDLIXEJjX6Ak6HikWnJTgKxEavSxiGjA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "120460472721-uo35ffmukq185dde2hij71a95g3r6pvo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -25,6 +25,11 @@ router.get('/', function(req, res) {
 	res.send('Welcome to My Contents List');
 });
 
+//////////
+// AUTH //
+//////////
+
+
 /////////
 // GET //
 /////////
@@ -38,6 +43,7 @@ router.get('/total_genre', 		controller_genre.getTotalGenre);
 //////////
 router.post('/login', 					controller_login.postLogin);
 router.post('/register', 				controller_login.postRegister);
+router.post('/check_id_token', 			controller_login.postCheckIdToken);
 router.post('/user',					controller_user.postUser);
 router.post('/genre', 					controller_genre.postGenre);
 router.post('/favorite', 				controller_favorite.postFavorite);

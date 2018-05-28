@@ -28,7 +28,11 @@ public interface RetroBaseApiService {
     /// POST API ////////////////////////////////////////////////////////////////
     @FormUrlEncoded
     @POST("login")
-    Call<List<User>> postLogin(@Field("id") String id, @Field("pw") String pw);
+    Call<List<User>> postLogin(@Field("id") String id, @Field("pw") String pw, @Field("uid") String uid);
+
+    @FormUrlEncoded
+    @POST("check_id_token")
+    Call<List<User>> postCheckIdToken(@Field("id") String id, @Field("uid") String uid, @Field("idToken") String idToken);
 
     @FormUrlEncoded
     @POST("register")

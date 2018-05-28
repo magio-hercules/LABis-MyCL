@@ -2,6 +2,8 @@
     <string name="app_name">MyCL</string>
     <string name="action_settings">Settings</string>
 
+    <string name="server_client_id">120460472721-9vso15gflfj46ie69bdklvmakbeon9hu.apps.googleusercontent.com</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>

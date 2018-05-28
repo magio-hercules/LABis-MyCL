@@ -11,8 +11,9 @@ public class User implements Parcelable {
     public final String nickname;
     public final String phone;
     public final String image;
+    public final String token;
 
-    public User(String id, String pw, String age, String gender, String nickname,String phone, String image) {
+    public User(String id, String pw, String age, String gender, String nickname,String phone, String image, String token) {
         this.id = id;
         this.pw = pw;
         this.age = age;
@@ -20,6 +21,7 @@ public class User implements Parcelable {
         this.nickname = nickname;
         this.phone = phone;
         this.image = image;
+        this.token = token;
     }
 
     public User(Parcel in) {
@@ -30,6 +32,7 @@ public class User implements Parcelable {
         this.nickname = in.readString();
         this.phone = in.readString();
         this.image = in.readString();
+        this.token = in.readString();
     }
 
     @Override
@@ -46,6 +49,7 @@ public class User implements Parcelable {
         dest.writeString(this.nickname);
         dest.writeString(this.phone);
         dest.writeString(this.image);
+        dest.writeString(this.token);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

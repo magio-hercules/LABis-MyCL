@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "mail: " + str_email +", pw: "+str_pw);
 
         progressDoalog.show();
-        retroClient.postLogin(str_email, str_pw, new RetroCallback() {
+        retroClient.postLogin(str_email, str_pw, null, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, t.toString());
@@ -145,6 +145,12 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.login_registerbtn)
     void onClick_register(){
         Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
+        startActivity(i);
+    }
+
+    @OnClick(R.id.login_testbtn)
+    void onClick_loginTest(){
+        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(i);
     }
 }
