@@ -3,15 +3,7 @@ var common = require('./common')();
 var auth = require('./auth')();
 var authAdmin = auth.init();
 
-// var admin = require('firebase-admin');
-// var serviceAccount = require('/home/ubuntu/MyCL/mycl-205006-firebase-adminsdk-iv1t4-0cb8ee4c44.json');
-
-// var appInfo = null;
-
 var idToken = null;
-
-var authTest = true;
-
 var currentUid = null;
 
 exports.postLogin = function(req, res) {
@@ -19,13 +11,12 @@ exports.postLogin = function(req, res) {
 
 	var query = mysql_query.postLogin();
 	var params = [ req.body.id ];
-	
+
 	if (req.body.uid != undefined) {
 		console.log("[INFO][TEST] req.body.uid : " + req.body.uid);
 		authAdmin.auth().createCustomToken(req.body.uid)
 					.then(function(customToken) {
-						// Send token back to client
-						console.log("[INFO][TEST] customToken : " + customToken);
+						// console.log("[INFO][TEST] customToken : " + customToken);
 						idToken = customToken;
 
 						common.doQuery(req, res, query, params, _callback_login);
@@ -66,7 +57,7 @@ exports.postCheckIdToken = function(req, res) {
 
 	console.log("[INFO][TEST] req.body.id : " + req.body.id);
 	console.log("[INFO][TEST] req.body.uid : " + req.body.uid);
-	console.log("[INFO][TEST] req.body.idToken : " + req.body.idToken);
+	// console.log("[INFO][TEST] req.body.idToken : " + req.body.idToken);
 
 	if (false) {
 		authAdmin.auth().verifyIdToken(""+req.body.idtoken)
@@ -92,8 +83,6 @@ exports.postCheckIdToken = function(req, res) {
 		var query = mysql_query.postLogin();
 		var params = [ req.body.id ];
 
-		// Send token back to client
-		console.log("[INFO][TEST] customToken : " + req.body.idToken);
 		idToken = req.body.idToken;
 
 		common.doQuery(req, res, query, params, _callback_login);
@@ -118,18 +107,11 @@ function _callback_login(req, res, params, error, result) {
 			// if (result[0].pw == req.body.pw) {
 			if (result[0].pw == req.body.pw || result[0].uid == req.body.uid) {
 				console.log("[INFO][TEST] result[0].pw == req.body.pw || result[0].uid == req.body.uid true");
+				// console.log('[DEBUG] idToken : ', idToken);
 
 				res.writeHead(200, {'Content-Type': 'application/json'});
 				
-				if (authTest) {
-					console.log('[DEBUG] idToken : ', idToken);
-					var jsonData = JSON.stringify(result);
-					console.log("[INFO][TEST] jsonData 11 : " + jsonData);
-					result[0]['token'] = idToken;
-					jsonData = JSON.stringify(result);
-					console.log("[INFO][TEST] jsonData 22 : " + jsonData);
-				}
-
+				result[0]['token'] = idToken;
 				var jsonData = JSON.stringify(result);
 				res.end(jsonData);
 			} else {
