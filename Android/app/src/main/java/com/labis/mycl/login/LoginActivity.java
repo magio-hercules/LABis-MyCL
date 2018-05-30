@@ -106,9 +106,10 @@ public class LoginActivity extends Activity {
                     Log.d(TAG, "onAuthStateChanged:signed_in : UID (" + mFirebaseUser.getUid() + ")");
 //                    Log.d(TAG, "onAuthStateChanged:signed_in : IdToken (" + mFirebaseUser.getIdToken(true).getResult().getToken() + ")");
 
-//                    String token = mFirebaseUser.getIdToken(false).getResult().getToken();
-//                    signIn(token);
+                    showProgressDialog();
+
 //                    autoLogin();
+                    autoLogin2();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -131,11 +132,10 @@ public class LoginActivity extends Activity {
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         if (mFirebaseUser != null) {
             boolean emailVerified = mFirebaseUser.isEmailVerified();
-            Log.d(TAG, "로그인 된 사용자 (" + mFirebaseUser.getUid() + ")");
-            Log.d(TAG, "emailVerified (" + emailVerified + ")");
+            Log.i(TAG, "로그인 된 사용자 (" + mFirebaseUser.getUid() + ")");
+            Log.i(TAG, "emailVerified (" + emailVerified + ")");
             updateUI(mFirebaseUser);
-//            autoLogin();
-            doLogin();
+//            doLogin();
         }
     }
 
@@ -150,39 +150,12 @@ public class LoginActivity extends Activity {
 
     @OnClick(R.id.login_loginbtn)
     void onClick_login(){
-        String str_email = edit_email.getText().toString();
-        String str_pw = edit_password.getText().toString();
+        String email = edit_email.getText().toString();
+        String password = edit_password.getText().toString();
 
-        String str_uid = "";
-        if (mFirebaseUser != null) {
-            str_uid = mFirebaseUser.getUid();
-        }
+        Log.d(TAG, "email : " + email + ", password : " + password);
 
-        // TODO 로직 변경하기
-        // signIn(email, password);
-
-        Log.e(TAG, "mail: " + str_email +", pw: " + str_pw + ", uid: " + str_uid);
-
-        retroClient.postLogin(str_email, str_pw, str_uid, new RetroCallback() {
-            @Override
-            public void onError(Throwable t) {
-                Log.e(TAG, t.toString());
-                Toast.makeText(LoginActivity.this, "Login Error", Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onFailure(int code) {
-                Log.e(TAG, "FAIL");
-                Toast.makeText(LoginActivity.this, "Login Fail", Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onSuccess(int code, Object receivedData) {
-                Log.e(TAG, "SUCCESS");
-                Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-
-                userData = ((List<User>)receivedData).get(0);
-                signIn(userData);
-            }
-        });
+        signIn(email, password);
     }
 
     private void loadGenreData() {
@@ -220,39 +193,11 @@ public class LoginActivity extends Activity {
     }
 
 
-    // for test
+    // for S3 URL 변경기능
     @OnClick(R.id.login_s3)
     void onClick_login_s3(){
         Intent i = new Intent(LoginActivity.this, UrlActivity.class);
         startActivity(i);
-    }
-
-    // for auth
-    @OnClick(R.id.login_createAccount)
-    void onClick_login_CreateAccount(){
-        String email = edit_email.getText().toString();
-        String password = edit_password.getText().toString();
-
-        Log.d(TAG, "email : " + email + ", password : " + password);
-
-        createAccount(email, password);
-    }
-
-    // for auth
-    @OnClick(R.id.login_signin)
-    void onClick_login_signin(){
-        String email = edit_email.getText().toString();
-        String password = edit_password.getText().toString();
-
-        Log.d(TAG, "email : " + email + ", password : " + password);
-
-        signIn(email, password);
-    }
-
-    // for auth
-    @OnClick(R.id.login_signout)
-    void onClick_login_signout(){
-        signOut();
     }
 
 
@@ -264,7 +209,9 @@ public class LoginActivity extends Activity {
             mProgressDialog.setIndeterminate(true);
         }
 
-        mProgressDialog.show();
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
     }
 
     public void hideProgressDialog() {
@@ -280,18 +227,18 @@ public class LoginActivity extends Activity {
 
         String email = edit_email.getText().toString();
         if (TextUtils.isEmpty(email)) {
-//            mEmailField.setError("Required.");
             Toast.makeText(LoginActivity.this, "Email Required.", Toast.LENGTH_SHORT).show();
             valid = false;
+            edit_email.setError("Required.");
         } else {
 //            mEmailField.setError(null);
         }
 
         String password = edit_password.getText().toString();
         if (TextUtils.isEmpty(password)) {
-//            mPasswordField.setError("Required.");
             Toast.makeText(LoginActivity.this, "Email Required.", Toast.LENGTH_SHORT).show();
             valid = false;
+            edit_password.setError("Required.");
         } else {
 //            mPasswordField.setError(null);
         }
@@ -347,7 +294,6 @@ public class LoginActivity extends Activity {
 
                             Toast.makeText(getApplicationContext(), mFirebaseUser.getEmail() + "님 로그인 성공", Toast.LENGTH_SHORT).show();
 
-
                             LoginData loginData = new LoginData(userData, genreData);
                             Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
                             i.putExtra("LoingData", loginData);
@@ -378,15 +324,16 @@ public class LoginActivity extends Activity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCustomToken:success");
                             mFirebaseUser = mFirebaseAuth.getCurrentUser();
-                            updateUI(mFirebaseUser);
-
-                            Toast.makeText(getApplicationContext(), mFirebaseUser.getEmail() + "님 로그인 성공", Toast.LENGTH_SHORT).show();
-
-                            LoginData loginData = new LoginData(userData, genreData);
-                            Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
-                            i.putExtra("LoingData", loginData);
-                            startActivity(i);
-                            finish();
+//                            updateUI(mFirebaseUser);
+//
+//                            Toast.makeText(getApplicationContext(), mFirebaseUser.getEmail() + "님 로그인 성공", Toast.LENGTH_SHORT).show();
+//
+//                            LoginData loginData = new LoginData(userData, genreData);
+//                            Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
+//                            i.putExtra("LoingData", loginData);
+//                            startActivity(i);
+//                            finish();
+                            doLogin(mFirebaseUser.getEmail(), null, mFirebaseUser.getUid());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCustomToken:failure", task.getException());
@@ -399,7 +346,7 @@ public class LoginActivity extends Activity {
     }
 
 
-    private void signIn(String email, String password) {
+    private void signIn(final String email, final String password) {
         Log.d(TAG, "signIn() email: " + email + ", password: " + password);
         if (!validateForm()) {
             return;
@@ -407,7 +354,6 @@ public class LoginActivity extends Activity {
 
         showProgressDialog();
 
-        // [START sign_in_with_email]
         mFirebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -416,25 +362,23 @@ public class LoginActivity extends Activity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             mFirebaseUser = mFirebaseAuth.getCurrentUser();
-                            updateUI(mFirebaseUser);
+//                            updateUI(mFirebaseUser);
+                            doLogin(email, password, null);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+//                            updateUI(null);
                         }
 
-                        // [START_EXCLUDE]
                         if (!task.isSuccessful()) {
 //                            mStatusTextView.setText(R.string.auth_failed);
                             Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                         hideProgressDialog();
-                        // [END_EXCLUDE]
                     }
                 });
-        // [END sign_in_with_email]
     }
 
     private void signOut() {
@@ -474,15 +418,15 @@ public class LoginActivity extends Activity {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
                         Log.d(TAG, "autoLogin onComplete");
                         if (task.isSuccessful()) {
-                            String idToken = task.getResult().getToken();
+                            final String str_idToken = task.getResult().getToken();
                             Log.d(TAG, "id : " + str_email);
                             Log.d(TAG, "uid : " + str_uid);
-                            Log.d(TAG, "idToken : " + idToken);
+                            Log.d(TAG, "idToken : " + str_idToken);
                             // Send token to your backend via HTTPS
                             // TODO
                             // uid와 idToken을 보내 백엔드에서 유저 확인
 
-                            retroClient.postCheckIdToken(str_email, str_uid, idToken, new RetroCallback() {
+                            retroClient.postCheckIdToken(str_email, str_uid, str_idToken, new RetroCallback() {
                                 @Override
                                 public void onError(Throwable t) {
                                     Log.e(TAG, t.toString());
@@ -500,10 +444,10 @@ public class LoginActivity extends Activity {
                                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
 
                                     userData = ((List<User>)receivedData).get(0);
-                                    doLogin();
+//                                    doLogin(str_email, "", str_uid);
+                                    signIn(userData.token);
                                 }
                             });
-
                         } else {
                             // Handle error -> task.getException();
                             Log.d(TAG, "getIdToken:failure", task.getException());
@@ -512,12 +456,13 @@ public class LoginActivity extends Activity {
                 });
     }
 
-    private void doLogin() {
-//        Toast.makeText(getApplicationContext(), mFirebaseUser.getEmail() + "님 로그인 성공", Toast.LENGTH_SHORT).show();
+    private void autoLogin2() {
+        Log.d(TAG, "autoLogin2");
 
-        showProgressDialog();
+        final String str_email = mFirebaseUser.getEmail();
+        final String str_uid   = mFirebaseUser.getUid();
 
-        retroClient.postLogin(mFirebaseUser.getEmail(), "", mFirebaseUser.getUid(), new RetroCallback() {
+        retroClient.postLogin(str_email, null, str_uid, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, t.toString());
@@ -536,9 +481,48 @@ public class LoginActivity extends Activity {
                 Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
 
                 userData = ((List<User>)receivedData).get(0);
-                signIn(userData);
 
-//                hideProgressDialog();
+                LoginData loginData = new LoginData(userData, genreData);
+                Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
+                i.putExtra("LoingData", loginData);
+                startActivity(i);
+                finish();
+                hideProgressDialog();
+            }
+        });
+    }
+
+    private void doLogin(String email, String pw, String uid) {
+        Log.i(TAG, "doLogin()");
+        Log.i(TAG, "email: " + email +", pw: " + pw + ", uid: " + uid);
+        showProgressDialog();
+
+        retroClient.postLogin(email, pw, uid, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Log.e(TAG, t.toString());
+                Toast.makeText(LoginActivity.this, "Login Error", Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
+            }
+            @Override
+            public void onFailure(int code) {
+                Log.e(TAG, "FAIL");
+                Toast.makeText(LoginActivity.this, "Login Fail", Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
+            }
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                Log.e(TAG, "SUCCESS");
+                Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+
+                userData = ((List<User>)receivedData).get(0);
+
+                LoginData loginData = new LoginData(userData, genreData);
+                Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
+                i.putExtra("LoingData", loginData);
+                startActivity(i);
+                finish();
+                hideProgressDialog();
             }
         });
     }

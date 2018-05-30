@@ -133,6 +133,13 @@ public class RegisterActivity extends AppCompatActivity {
         final String str_email = register_email.getText().toString();
         final String str_pw = register_password.getText().toString();
 
+        if (str_email.equals("")) {
+            register_email.setError("Required.");
+        }
+        if (str_pw.equals("")) {
+            register_password.setError("Required.");
+        }
+
         if (str_email.equals("") || str_pw.equals("")) {
             Toast.makeText(this, "필수 항목(이메일/암호)을 입력해주세요", Toast.LENGTH_SHORT).show();
 
@@ -153,10 +160,10 @@ public class RegisterActivity extends AppCompatActivity {
                     // If sign in fails, display a message to the user.
                     Log.d(TAG, "createUserWithEmail:failure", task.getException());
                     Log.d(TAG, task.getException().getMessage());
+                    Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         };
-
         authManager.createAccount(this, str_email, str_pw, completeListener);
     }
 
@@ -194,10 +201,16 @@ public class RegisterActivity extends AppCompatActivity {
         String str_nickname = register_nickname.getText().toString();
         String str_phone = register_phone.getText().toString();
 
-        Log.e(TAG, "email: " + str_email + ", pw: " + str_pw + ", age: " + str_age
-                + ", gender: " + str_gender + ", nick: " + str_nickname + ", phone: " + str_phone + ", image: " + url);
+        AuthManager authManager = AuthManager.getInstance();
+        String str_uid = authManager.getmFirebaseUser().getUid();
 
-        retroClient.postRegister(str_email, str_pw, str_age, str_gender, str_nickname, str_phone, url, new RetroCallback<Register>() {
+        // TODO
+        // UID 추가하기기
+
+       Log.e(TAG, "email: " + str_email + ", pw: " + str_pw + ", age: " + str_age
+                + ", gender: " + str_gender + ", nick: " + str_nickname + ", phone: " + str_phone + ", image: " + url + ", str_uid: " + str_uid);
+
+        retroClient.postRegister(str_email, str_pw, str_age, str_gender, str_nickname, str_phone, url, str_uid, new RetroCallback<Register>() {
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, t.toString());

@@ -246,8 +246,8 @@ public class RetroClient {
     }
 
     public void postRegister(String id, String pw, String age, String gender,
-                               String nickname, String phone, String image, final RetroCallback callback) {
-        apiService.postRegister(id, pw, age, gender, nickname, phone, image).enqueue(new Callback<Register>() {
+                               String nickname, String phone, String image, String uid, final RetroCallback callback) {
+        apiService.postRegister(id, pw, age, gender, nickname, phone, image, uid).enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
                 if (response.isSuccessful()) {

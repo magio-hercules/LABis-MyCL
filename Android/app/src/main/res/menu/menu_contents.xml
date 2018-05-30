@@ -16,6 +16,10 @@
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_search_contents"
-        android:title="검색"
+    android:title="검색"
+    app:showAsAction="never"/>
+
+    <item android:id="@+id/action_sign_out"
+        android:title="로그아웃"
         app:showAsAction="never"/>
 </menu>

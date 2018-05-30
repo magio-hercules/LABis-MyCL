@@ -20,15 +20,6 @@ exports.postLogin = function(req, res) {
 	var query = mysql_query.postLogin();
 	var params = [ req.body.id ];
 	
-	// console.log("[INFO][TEST] !! appInfo !! : " + appInfo);
-	// if (appInfo == null) {
-	// 	appInfo = admin.initializeApp({
-	// 		credential: admin.credential.cert(serviceAccount),
-	// 		databaseURL: 'https://mycl-205006.firebaseio.com'
-	// 	  });
-	// 	console.log("[INFO][TEST] appInfo : " + appInfo);
-	// }
-
 	if (req.body.uid != undefined) {
 		console.log("[INFO][TEST] req.body.uid : " + req.body.uid);
 		authAdmin.auth().createCustomToken(req.body.uid)
@@ -62,7 +53,8 @@ exports.postRegister = function(req, res) {
 		gender: req.body.gender,
 		nickname: req.body.nickname,
 		phone: req.body.phone,
-		image : req.body.image
+		image : req.body.image,
+		uid : req.body.uid
 	};
 	
 	common.doRequest(req, res, query, user);
@@ -75,37 +67,38 @@ exports.postCheckIdToken = function(req, res) {
 	console.log("[INFO][TEST] req.body.id : " + req.body.id);
 	console.log("[INFO][TEST] req.body.uid : " + req.body.uid);
 	console.log("[INFO][TEST] req.body.idToken : " + req.body.idToken);
-	// authAdmin.auth().createCustomToken(req.body.uid)
-	// 			.then(function(customToken) {
-	// 				// Send token back to client
-	// 				console.log("[INFO][TEST] customToken : " + customToken);
-	// 				idToken = customToken;
 
-					
-	// 			})
-	// 			.catch(function(error) {
-	// 				console.log("Error creating custom token:", error);
-	// 			});
+	if (false) {
+		authAdmin.auth().verifyIdToken(""+req.body.idtoken)
+		.then(function(decodedToken) {
+			currentUid = decodedToken.uid;
+			// ...
+			
+			console.log("[INFO][TEST] verifyIdToken()");
+			console.log("[INFO][TEST] decodedToken.uid : " + uid);
+			// 유저 정보 return 하기
+			if (req.body.uid == uid) {
+				console.log("[INFO][TEST] decodedToken.uid : " + uid);
+				var query = mysql_query.postLogin();
+				var params = [ req.body.id ];
 
-	authAdmin.auth().verifyIdToken(""+req.body.idtoken)
-				.then(function(decodedToken) {
-					currentUid = decodedToken.uid;
-					// ...
-					
-					console.log("[INFO][TEST] verifyIdToken()");
-					console.log("[INFO][TEST] decodedToken.uid : " + uid);
-					// 유저 정보 return 하기
-					if (req.body.uid == uid) {
-						console.log("[INFO][TEST] decodedToken.uid : " + uid);
-						var query = mysql_query.postLogin();
-						var params = [ req.body.id ];
+				common.doQuery(req, res, query, params, _callback_login);
+			}
+		}).catch(function(error) {
+			// Handle error
+				console.log("Error verifyIdToken:", error);
+		});
+	} else {
+		var query = mysql_query.postLogin();
+		var params = [ req.body.id ];
 
-						common.doQuery(req, res, query, params, _callback_login);
-					}
-				}).catch(function(error) {
-					// Handle error
-						console.log("Error verifyIdToken:", error);
-				});
+		// Send token back to client
+		console.log("[INFO][TEST] customToken : " + req.body.idToken);
+		idToken = req.body.idToken;
+
+		common.doQuery(req, res, query, params, _callback_login);
+	}
+	
 };
 
 

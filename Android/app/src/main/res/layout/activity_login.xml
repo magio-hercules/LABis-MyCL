@@ -89,40 +89,9 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="50dp"
                 android:background="@android:color/holo_orange_dark"
-                android:text="URL 변경"
-                android:textAlignment="center"
-                android:textColor="#ffffff" />
-
-            <Button
-                android:id="@+id/login_createAccount"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/holo_orange_dark"
-                android:text="Create Account"
-                android:textAlignment="center"
-                android:textColor="#ffffff" />
-            <Button
-                android:id="@+id/login_signin"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/holo_orange_dark"
-                android:text="Sign In"
-                android:textAlignment="center"
-                android:textColor="#ffffff" />
-            <Button
-                android:id="@+id/login_signout"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/holo_orange_dark"
-                android:text="Sign Out"
+                android:text="S3 URL 변경"
                 android:textAlignment="center"
                 android:textColor="#ffffff" />
         </LinearLayout>

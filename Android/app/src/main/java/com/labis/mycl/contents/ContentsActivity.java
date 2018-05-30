@@ -2,19 +2,13 @@ package com.labis.mycl.contents;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,17 +17,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import com.labis.mycl.R;
+import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.LoginData;
 import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
-import com.labis.mycl.model.Content;
+import com.labis.mycl.util.AuthManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -143,6 +136,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         }  else if (id == R.id.action_search_contents) {
             // 검색 기능 활성화
             return true;
+        } else if (id == R.id.action_sign_out) {
+            AuthManager authManager = AuthManager.getInstance();
+            authManager.signOut();
         }
 
         return super.onOptionsItemSelected(item);

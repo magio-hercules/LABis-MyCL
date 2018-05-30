@@ -33,8 +33,7 @@ public class AuthManager {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged()");
                     Log.d(TAG, "onAuthStateChanged:signed_in : UID (" + mFirebaseUser.getUid() + ")");
-                    Log.d(TAG, "onAuthStateChanged:signed_in : IdToken (" + mFirebaseUser.getIdToken(false).getResult().getToken() + ")");
-
+//                    Log.d(TAG, "onAuthStateChanged:signed_in : IdToken (" + mFirebaseUser.getIdToken(false).getResult().getToken() + ")");
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -86,7 +85,7 @@ public class AuthManager {
                 .addOnCompleteListener(activity, listener);
     }
 
-    private void signOut() {
+    public void signOut() {
         Log.d(TAG, "signOut()");
         mFirebaseAuth.signOut();
     }

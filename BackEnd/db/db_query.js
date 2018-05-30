@@ -30,7 +30,7 @@ module.exports = function () {
             return 'SELECT * FROM User WHERE `id`=?';
         },
         postRegister: function () {
-            // .../MyCL/register (id,pw,age,gender,nickname,phone,image)
+            // .../MyCL/register (id,pw,age,gender,nickname,phone,image,uid)
             return 'INSERT INTO User SET ?';
         },
         postUser: function () {
