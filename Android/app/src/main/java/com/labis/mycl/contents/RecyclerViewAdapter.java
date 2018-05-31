@@ -102,7 +102,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         });*/
 
-        /*holder.mTitleDiv.setOnClickListener(new View.OnClickListener() {
+        holder.mTitleDiv.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -142,7 +142,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                     Toast.makeText(mContext, "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
                 }
             }
-        });*/
+        });
     }
 
     private void updateChapter(final int position, int value) {
