@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent i = new Intent(MainActivity.this, LoginActivity.class);
                             startActivity(i);
                             overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+                            finish();
                         }
                     }
                 }, 1000);
@@ -199,12 +200,14 @@ public class MainActivity extends AppCompatActivity {
     void onClick_register(){
         Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
         startActivity(i);
+        finish();
     }
 
     @OnClick(R.id.login_testbtn)
     void onClick_loginTest(){
         Intent i = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(i);
+        finish();
     }
 
     public void showProgressDialog() {
@@ -257,8 +260,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
                 i.putExtra("LoingData", loginData);
                 startActivity(i);
+                overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
                 finish();
-            }
-        });
+            }});
     }
 }

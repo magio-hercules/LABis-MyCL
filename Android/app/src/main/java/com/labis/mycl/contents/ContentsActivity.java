@@ -14,9 +14,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.labis.mycl.R;
@@ -57,6 +59,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     Menu contentsMainMenu;
 
     SwipeController swipeController = null;
+
+    private long lastTimeBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +154,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             Intent i = new Intent(ContentsActivity.this, LoginActivity.class);
             startActivity(i);
+            finish();
         } else if (id == R.id.action_s3_url) {
             Intent i = new Intent(ContentsActivity.this, UrlActivity.class);
             startActivity(i);
@@ -376,7 +381,17 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             myContentsRefresh = true;
             loadMyContents();
         } else if (modeStatus.equals("MY")) {
-            loadTotalContent();
+            if (System.currentTimeMillis() - lastTimeBackPressed < 1500) {
+//            finish();
+                finishAffinity();
+                return;
+            }
+
+            Toast toast = Toast.makeText(this, "뒤로가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT);
+            TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+            if( v != null) v.setGravity(Gravity.CENTER);
+            toast.show();
+            lastTimeBackPressed = System.currentTimeMillis();
         } else {
             super.onBackPressed();
         }

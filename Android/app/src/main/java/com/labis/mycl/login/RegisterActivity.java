@@ -57,6 +57,8 @@ public class RegisterActivity extends AppCompatActivity {
     EditText register_email;
     @BindView(R.id.register_password)
     EditText register_password;
+    @BindView(R.id.register_password_verify)
+    EditText register_password_verify;
     @BindView(R.id.register_age)
     EditText register_age;
     @BindView(R.id.register_gender)
@@ -132,6 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         final String str_email = register_email.getText().toString();
         final String str_pw = register_password.getText().toString();
+        final String str_pw_verify = register_password_verify.getText().toString();
 
         if (str_email.equals("")) {
             register_email.setError("Required.");
@@ -140,9 +143,13 @@ public class RegisterActivity extends AppCompatActivity {
             register_password.setError("Required.");
         }
 
-        if (str_email.equals("") || str_pw.equals("")) {
-            Toast.makeText(this, "필수 항목(이메일/암호)을 입력해주세요", Toast.LENGTH_SHORT).show();
+        if (!str_pw.equals(str_pw_verify)) {
+            Toast.makeText(this, "비밀번호 재확인 필요", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        if (str_email.equals("") || str_pw.equals("")) {
+            Toast.makeText(this, "필수 항목(이메일/비밀번호) 입력 필요", Toast.LENGTH_SHORT).show();
             return;
         }
         OnCompleteListener completeListener = new OnCompleteListener<AuthResult>() {
@@ -164,7 +171,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         };
-        authManager.createAccount(this, str_email, str_pw, completeListener);
+        authManager.createAccount(this, completeListener, str_email, str_pw);
     }
 
 
