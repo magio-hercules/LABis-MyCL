@@ -1,7 +1,6 @@
 package com.labis.mycl.util;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,24 +24,24 @@ public class AuthManager {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                mFirebaseUser = firebaseAuth.getCurrentUser();
-                if (mFirebaseUser != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged()");
-                    Log.d(TAG, "onAuthStateChanged:signed_in : UID (" + mFirebaseUser.getUid() + ")");
-//                    Log.d(TAG, "onAuthStateChanged:signed_in : IdToken (" + mFirebaseUser.getIdToken(false).getResult().getToken() + ")");
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
-
-
-        mFirebaseAuth.addAuthStateListener(mAuthListener);
+//        mAuthListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                mFirebaseUser = firebaseAuth.getCurrentUser();
+//                if (mFirebaseUser != null) {
+//                    // User is signed in
+//                    Log.d(TAG, "onAuthStateChanged()");
+//                    Log.d(TAG, "onAuthStateChanged:signed_in : UID (" + mFirebaseUser.getUid() + ")");
+////                    Log.d(TAG, "onAuthStateChanged:signed_in : IdToken (" + mFirebaseUser.getIdToken(false).getResult().getToken() + ")");
+//                } else {
+//                    // User is signed out
+//                    Log.d(TAG, "onAuthStateChanged:signed_out");
+//                }
+//            }
+//        };
+//
+//
+//        mFirebaseAuth.addAuthStateListener(mAuthListener);
     }
 
     public static synchronized  AuthManager getInstance(){
@@ -60,6 +59,19 @@ public class AuthManager {
 
     public FirebaseUser getmFirebaseUser() {
         return mFirebaseUser;
+    }
+
+    public void addAuthStateListener(FirebaseAuth.AuthStateListener listener) {
+        if (listener == null) {
+            return;
+        }
+
+        mAuthListener = listener;
+        mFirebaseAuth.addAuthStateListener(mAuthListener);
+    }
+
+    public void removeAuthStateListener() {
+        mFirebaseAuth.removeAuthStateListener(mAuthListener);
     }
 
     public void createAccount(Activity activity, String email, String password, OnCompleteListener listener) {

@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.labis.mycl.R;
+import com.labis.mycl.login.LoginActivity;
+import com.labis.mycl.login.UrlActivity;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.LoginData;
@@ -114,6 +116,12 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         MenuItem item = menu.findItem(R.id.action_my_contents);
         item.setVisible(false);
+
+        if (userData.id.equals("labis@labis.com")) {
+            item = menu.findItem(R.id.action_s3_url);
+            item.setVisible(true);
+        }
+
         return true;
     }
 
@@ -139,6 +147,12 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.action_sign_out) {
             AuthManager authManager = AuthManager.getInstance();
             authManager.signOut();
+
+            Intent i = new Intent(ContentsActivity.this, LoginActivity.class);
+            startActivity(i);
+        } else if (id == R.id.action_s3_url) {
+            Intent i = new Intent(ContentsActivity.this, UrlActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
@@ -361,6 +375,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         } else if (modeStatus.equals("TOTAL")) {
             myContentsRefresh = true;
             loadMyContents();
+        } else if (modeStatus.equals("MY")) {
+            loadTotalContent();
         } else {
             super.onBackPressed();
         }

@@ -1,13 +1,16 @@
 package com.labis.mycl.login;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.NavigationView;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,7 +20,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.labis.mycl.R;
 import com.labis.mycl.contents.ContentsActivity;
 import com.labis.mycl.model.Genre;
@@ -39,7 +41,7 @@ import butterknife.OnClick;
 //import org.apache.http.message.BasicNameValuePair;
 
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "[LOGIN]";
 
     RetroClient retroClient;
@@ -50,16 +52,16 @@ public class LoginActivity extends Activity {
     EditText edit_email;
     @BindView(R.id.login_password)
     EditText edit_password;
-    @BindView(R.id.login_detail)
-    EditText edit_detail;
+//    @BindView(R.id.login_detail)
+//    EditText edit_detail;
     @BindView(R.id.login_loginbtn)
     Button btn_login;
     @BindView(R.id.login_registerbtn)
     Button btn_register;
 
-    // for S3 url
-    @BindView(R.id.login_s3)
-    Button btn_login_s3;
+    // for S3 url -> move to Contents Menu
+//    @BindView(R.id.login_s3)
+//    Button btn_login_s3;
 
     ArrayList<Genre> genreData = null;
     User userData = null;
@@ -69,8 +71,9 @@ public class LoginActivity extends Activity {
     private FirebaseUser mFirebaseUser;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    @VisibleForTesting
     public ProgressDialog mProgressDialog;
+
+    private long lastTimeBackPressed;
 
 
     @Override
@@ -79,6 +82,19 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("사용자 로그인");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                finish();
+            }
+        });
 
         retroClient = RetroClient.getInstance(this).createBaseApi();
 
@@ -106,19 +122,14 @@ public class LoginActivity extends Activity {
                     Log.d(TAG, "onAuthStateChanged:signed_in : UID (" + mFirebaseUser.getUid() + ")");
 //                    Log.d(TAG, "onAuthStateChanged:signed_in : IdToken (" + mFirebaseUser.getIdToken(true).getResult().getToken() + ")");
 
-                    showProgressDialog();
-
-//                    autoLogin();
-                    autoLogin2();
+//                    showProgressDialog();
+//                    autoLogin2();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
             }
         };
-
-
-        // [END initialize_auth]
     }
 
     @Override
@@ -193,12 +204,12 @@ public class LoginActivity extends Activity {
     }
 
 
-    // for S3 URL 변경기능
-    @OnClick(R.id.login_s3)
-    void onClick_login_s3(){
-        Intent i = new Intent(LoginActivity.this, UrlActivity.class);
-        startActivity(i);
-    }
+    // for S3 URL 변경기능 -> move to Contents Menu
+//    @OnClick(R.id.login_s3)
+//    void onClick_login_s3(){
+//        Intent i = new Intent(LoginActivity.this, UrlActivity.class);
+//        startActivity(i);
+//    }
 
 
     public void showProgressDialog() {
@@ -396,65 +407,17 @@ public class LoginActivity extends Activity {
 //                    user.getEmail(), user.isEmailVerified()));
             Log.d(TAG, "user != null");
             edit_email.setText(user.getEmail().toString());
-            edit_detail.setText(user.getUid() + ", "  + user.getIdToken(true));
+//            edit_detail.setText(user.getUid() + ", "  + user.getIdToken(true));
 //            edit_detail.setText(user.getUid() + ", "  + user.getIdToken(true).getResult().getToken());
 //            edit_detail.setText(user.getUid());
         } else {
             Log.d(TAG, "user == null");
             edit_email.setText("");
             edit_password.setText("");
-            edit_detail.setText("");
+//            edit_detail.setText("");
         }
     }
 
-    private void autoLogin() {
-        Log.d(TAG, "autoLogin");
-
-        final String str_email = mFirebaseUser.getEmail();
-        final String str_uid   = mFirebaseUser.getUid();
-
-        mFirebaseUser.getIdToken(true)
-                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                    public void onComplete(@NonNull Task<GetTokenResult> task) {
-                        Log.d(TAG, "autoLogin onComplete");
-                        if (task.isSuccessful()) {
-                            final String str_idToken = task.getResult().getToken();
-                            Log.d(TAG, "id : " + str_email);
-                            Log.d(TAG, "uid : " + str_uid);
-                            Log.d(TAG, "idToken : " + str_idToken);
-                            // Send token to your backend via HTTPS
-                            // TODO
-                            // uid와 idToken을 보내 백엔드에서 유저 확인
-
-                            retroClient.postCheckIdToken(str_email, str_uid, str_idToken, new RetroCallback() {
-                                @Override
-                                public void onError(Throwable t) {
-                                    Log.e(TAG, t.toString());
-                                    Toast.makeText(LoginActivity.this, "Login Error", Toast.LENGTH_SHORT).show();
-                                }
-                                @Override
-                                public void onFailure(int code) {
-                                    Log.e(TAG, "FAIL");
-                                    Toast.makeText(LoginActivity.this, "Login Fail", Toast.LENGTH_SHORT).show();
-                                }
-
-                                @Override
-                                public void onSuccess(int code, Object receivedData) {
-                                    Log.e(TAG, "postCheckIdToken SUCCESS");
-                                    Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-
-                                    userData = ((List<User>)receivedData).get(0);
-//                                    doLogin(str_email, "", str_uid);
-                                    signIn(userData.token);
-                                }
-                            });
-                        } else {
-                            // Handle error -> task.getException();
-                            Log.d(TAG, "getIdToken:failure", task.getException());
-                        }
-                    }
-                });
-    }
 
     private void autoLogin2() {
         Log.d(TAG, "autoLogin2");
@@ -525,5 +488,27 @@ public class LoginActivity extends Activity {
                 hideProgressDialog();
             }
         });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Log.d(TAG, "onNavigationItemSelected()");
+
+        return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed()");
+
+        if (System.currentTimeMillis() - lastTimeBackPressed < 1500) {
+//            finish();
+            finishAffinity();
+            return;
+        }
+
+        Toast.makeText(this, "뒤로가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        lastTimeBackPressed = System.currentTimeMillis();
+//        super.onBackPressed();
     }
 }
