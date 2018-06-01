@@ -58,7 +58,7 @@ router.post('/filter_my_contents', 		controller_contents.postFilterMyContents);
 router.post('/delete_my_contents', 		controller_contents.postDeleteMyContents);
 
 router.post('/insert_contents_list', 	controller_contents.postInsertContentsList);
-router.post('/filter_contents_jenre',   controller_contents.postFilterContentsJenre);
+router.post('/filter_contents_list',   	controller_contents.postFilterContentsList);
 
 router.post('/non_auth_contents_list', 	controller_contents.postNonAuthContentsList);
 router.post('/set_auth_contents_list', 	controller_contents.postSetAuthContentsList);

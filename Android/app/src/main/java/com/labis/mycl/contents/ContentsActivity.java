@@ -62,6 +62,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     private long lastTimeBackPressed;
 
+    private String selectedGenreId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,11 +120,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         menuInflater.inflate(R.menu.menu_contents, menu);
         contentsMainMenu = menu;
 
-        MenuItem item = menu.findItem(R.id.action_my_contents);
+        MenuItem item = contentsMainMenu.findItem(R.id.action_my_contents);
         item.setVisible(false);
 
         if (userData.id.equals("labis@labis.com")) {
-            item = menu.findItem(R.id.action_s3_url);
+            item = contentsMainMenu.findItem(R.id.action_s3_url);
             item.setVisible(true);
         }
 
@@ -305,6 +307,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 progressDoalog.dismiss();
             }
         });
+
+        resetDrawerCheckedItem();
     }
 
     private void loadMyContents() {
@@ -354,22 +358,89 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             drawSwipeMenu();
             progressDoalog.dismiss();
         }
+
+        resetDrawerCheckedItem();
     }
 
     // -- Drawer Section -- ////////////////////////////////////////
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        Log.e(TAG, "onNavigationItemSelected");
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.usadrama) {
-            // Handle the camera action
-        } else if (id == R.id.koreadrama) {
+        String title = item.getTitle().toString();
+        String genreId = null;
 
+        switch (id) {
+            case R.id.favorite:
+                genreId = "";
+                // TODO
+                // 선호장르 조회하기
+                break;
+            case R.id.usadrama:
+                genreId = "B06";
+                break;
+            case R.id.koreadrama:
+                genreId = "B05";
+                break;
+            case R.id.japandrama:
+                genreId = "B07";
+                break;
+            case R.id.movie:
+                genreId = "B02";
+                break;
+            case R.id.cartoon:
+                genreId = "A01";
+                break;
+            case R.id.animation:
+                genreId = "B01";
+                break;
+            case R.id.tv:
+                genreId = "B08";
+                break;
+            case R.id.book:
+                genreId = "A00";
+                break;
+            case R.id.etc:
+                genreId = "Z00";
+                break;
+            default:
+                break;
         }
+
+        if (selectedGenreId != genreId) {
+            selectedGenreId = genreId;
+            item.setChecked(true);
+        } else {
+            title = "";
+            selectedGenreId = genreId = null;
+            item.setChecked(false);
+        }
+
+        Log.e(TAG, "title : " + title + ", genreId : " + genreId);
+        if (modeStatus.equals("MY")) {
+            filterJenreMyContents(title, userData.id, genreId);
+        } else if (modeStatus.equals("TOTAL")) {
+            filterJenreContentsList(title, genreId);
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void resetDrawerCheckedItem() {
+        Log.e(TAG, "resetDrawerCheckedItem()");
+
+        selectedGenreId = null;
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        int size = navigationView.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            navigationView.getMenu().getItem(i).setChecked(false);
+        }
     }
 
     @Override
@@ -395,5 +466,94 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void filterJenreMyContents(final String title, String userId, String gen_id) {
+        Log.e(TAG, "filterJenreMyContents");
+        Log.e(TAG, "doFilter() title : " + title);
+        Log.e(TAG, "doFilter() user_id : " + userId);
+        Log.e(TAG, "doFilter() gen_id : " + gen_id);
+
+        progressDoalog.show();
+        retroClient.postFilterMyContents(userId, gen_id, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Log.e(TAG, t.toString());
+                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                clearRecyclerView(); //initialize
+//                modeStatus = "TOTAL";
+
+                getSupportActionBar().setTitle("내 콘텐츠" + (title.equals("") ? "" : " (" + title + ")"));
+//                getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
+
+                myContentsRefresh = false;
+
+                List<Content> data = (List<Content>) receivedData;
+                myContents.clear();
+                if (!data.isEmpty()) {
+                    myContents.addAll(data);
+                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, myContents);
+                    drawSwipeMenu();
+                } else {
+                    Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
+                }
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int code) {
+                Log.e(TAG, "FAIL");
+                Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+        });
+    }
+
+    private void filterJenreContentsList(final String title, String gen_id) {
+        Log.e(TAG, "filterJenreContentsList");
+        Log.e(TAG, "doFilter() title : " + title);
+        Log.e(TAG, "doFilter() gen_id : " + gen_id);
+
+        progressDoalog.show();
+        retroClient.postFilterContentsList(gen_id, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Log.e(TAG, t.toString());
+                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                clearRecyclerView(); //initialize
+//                modeStatus = "TOTAL";
+
+                getSupportActionBar().setTitle("모든 콘텐츠" + (title.equals("") ? "" : " (" + title + ")"));
+//                getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
+
+                List<Content> data = (List<Content>) receivedData;
+                if (!data.isEmpty()) {
+                    ArrayList<Content> items = new ArrayList();
+                    items.addAll(data);
+                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, items);
+                    drawSwipeMenu();
+                } else {
+                    Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
+                }
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int code) {
+                Log.e(TAG, "FAIL");
+                Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+        });
     }
 }

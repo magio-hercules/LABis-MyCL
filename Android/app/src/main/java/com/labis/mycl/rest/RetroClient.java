@@ -281,4 +281,40 @@ public class RetroClient {
             }
         });
     }
+
+    public void postFilterMyContents(String user_id, String gen_id, final RetroCallback callback) {
+        apiService.postFilterMyContents(user_id, gen_id).enqueue(new Callback<List<Content>>() {
+            @Override
+            public void onResponse(Call<List<Content>> call, Response<List<Content>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Content>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void postFilterContentsList(String gen_id, final RetroCallback callback) {
+        apiService.postFilterContentsList(gen_id).enqueue(new Callback<List<Content>>() {
+            @Override
+            public void onResponse(Call<List<Content>> call, Response<List<Content>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Content>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
 }

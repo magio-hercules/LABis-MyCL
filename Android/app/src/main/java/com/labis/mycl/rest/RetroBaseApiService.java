@@ -65,6 +65,10 @@ public interface RetroBaseApiService {
     Call<Register> postDeleteMyContents(@Field("user_id") String user_id, @Field("id") String id);
 
     @FormUrlEncoded
+    @POST("filter_my_contents")
+    Call<List<Content>> postFilterMyContents(@Field("user_id") String user_id, @Field("gen_id") String gen_id);
+
+    @FormUrlEncoded
     @POST("insert_contents_list")
     Call<Register> postInserCustomContents(@Field("gen_id") String gen_id, @Field("season") int season,
                                            @Field("name") String name, @Field("name_org") String name_org,
@@ -76,6 +80,10 @@ public interface RetroBaseApiService {
     @FormUrlEncoded
     @POST("update_contents_image")
     Call<Register> updateContentsImage(@Field("id") String id, @Field("url") String url);
+
+    @FormUrlEncoded
+    @POST("filter_contents_list")
+    Call<List<Content>> postFilterContentsList(@Field("gen_id") String gen_id);
 
 
     /// GET API ////////////////////////////////////////////////////////////////

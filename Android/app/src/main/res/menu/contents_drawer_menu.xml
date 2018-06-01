@@ -5,40 +5,40 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/heart"
+            android:id="@+id/favorite"
             android:title="★" />
         <item
             android:id="@+id/usadrama"
-            android:title="영화" />
+            android:title="미국 드라마" />
         <item
             android:id="@+id/koreadrama"
-            android:title="애니메이션" />
+            android:title="한국 드라마" />
         <item
             android:id="@+id/japandrama"
-            android:title="만화" />
-
-        <item
-            android:id="@+id/movie"
-            android:title="한국 드라마" />
-
-        <item
-            android:id="@+id/cartoon"
-            android:title="미국 드라마" />
-
-        <item
-            android:id="@+id/animation"
             android:title="일본 드라마" />
 
         <item
-            android:id="@+id/etc1"
+            android:id="@+id/movie"
+            android:title="영화" />
+
+        <item
+            android:id="@+id/cartoon"
+            android:title="만화" />
+
+        <item
+            android:id="@+id/animation"
+            android:title="애니메이션" />
+
+        <item
+            android:id="@+id/tv"
             android:title="TV" />
 
         <item
-            android:id="@+id/etc2"
+            android:id="@+id/book"
             android:title="책" />
 
         <item
-            android:id="@+id/etc3"
+            android:id="@+id/etc"
             android:title="기타" />
 
     </group>

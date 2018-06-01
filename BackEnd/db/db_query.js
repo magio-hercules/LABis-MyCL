@@ -77,8 +77,8 @@ module.exports = function () {
         //     // .../MyCL/insert_contents_list (id,user_id,score,comment,chapter)
         //     return 'INSERT INTO Contents_my SET';
         // },
-        postFilterContentsJenre: function () {
-            // .../MyCL/filter_contents_jenre (gen_id)
+        postFilterContentsList: function () {
+            // .../MyCL/filter_contents_list (gen_id)
             return 'SELECT * FROM Contents_list';
         },
         postNonAuthContentsList: function () {

@@ -171,10 +171,10 @@ exports.postInsertContentsList = function(req, res) {
 };
 
 
-exports.postFilterContentsJenre = function(req, res) {
-	console.log("[INFO] call postFilterContentsJenre");
+exports.postFilterContentsList = function(req, res) {
+	console.log("[INFO] call postFilterContentsList");
 
-	var query = mysql_query.postFilterContentsJenre();
+	var query = mysql_query.postFilterContentsList();
 	var params = [];
 	query = _checkParams(query, params, req.body.gen_id, table.Contents_list.gen_id);
 	
