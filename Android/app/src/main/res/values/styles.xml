@@ -6,6 +6,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionModeStyle">@style/LStyled.ActionMode</item>
+        <item name="android:actionModeCloseDrawable">@mipmap/ic_close</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -26,8 +29,10 @@
         <item name="android:textSize">16sp</item>
         <item name="android:padding">10dp</item>
         <item name="android:textColor">#212121</item>
-
     </style>
 
+    <style name="LStyled.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/colorPrimary</item>
+    </style>
 
 </resources>
