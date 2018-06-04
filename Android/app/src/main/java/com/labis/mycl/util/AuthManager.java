@@ -35,12 +35,16 @@ public class AuthManager {
         return instance;
     }
 
-    public FirebaseAuth getmFirebaseAuth() {
+    public FirebaseAuth getFirebaseAuth() {
         return mFirebaseAuth;
     }
 
     public FirebaseUser getmFirebaseUser() {
         return mFirebaseUser;
+    }
+
+    public void setFirebaseUser(FirebaseUser user) {
+        mFirebaseUser = user;
     }
 
     public void addAuthStateListener(FirebaseAuth.AuthStateListener listener) {
