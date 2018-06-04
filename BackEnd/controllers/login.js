@@ -105,8 +105,9 @@ function _callback_login(req, res, params, error, result) {
 			console.log("[INFO][TEST] result[0].uid : " + result[0].uid);
 			
 			// if (result[0].pw == req.body.pw) {
-			if (result[0].pw == req.body.pw || result[0].uid == req.body.uid) {
-				console.log("[INFO][TEST] result[0].pw == req.body.pw || result[0].uid == req.body.uid true");
+			// if (result[0].pw == req.body.pw || result[0].uid == req.body.uid) {
+			if (result[0].uid == req.body.uid) {
+				console.log("[INFO][TEST] result[0].uid == req.body.uid : true");
 				// console.log('[DEBUG] idToken : ', idToken);
 
 				res.writeHead(200, {'Content-Type': 'application/json'});

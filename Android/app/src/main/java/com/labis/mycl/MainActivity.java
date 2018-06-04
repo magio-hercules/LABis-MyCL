@@ -83,33 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         animFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
 
-        authManager = AuthManager.getInstance();
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = authManager.getmFirebaseUser();
-//                firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    bAutoLogin = true;
-
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged()");
-                    Log.d(TAG, "onAuthStateChanged:signed_in : UID (" + user.getUid() + ")");
-//                    Log.d(TAG, "onAuthStateChanged:signed_in : IdToken (" + mFirebaseUser.getIdToken(true).getResult().getToken() + ")");
-
-                    Log.d(TAG, "authManager.getmFirebaseUser() : " + authManager.getmFirebaseUser());
-
-                    showProgressDialog();
-//                    autoLogin(user.getEmail(), user.getUid());
-                    doLogin(user.getEmail(), null, user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
-        authManager.addAuthStateListener(mAuthListener);
+        initAuth();
 
         // for test
         edit_email.setText("labis@labis.com");
@@ -140,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
 
                 genreData = (ArrayList<Genre>) receivedData;
 
+                initAuth();
+
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
@@ -167,11 +143,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void initAuth() {
+        authManager = AuthManager.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = authManager.getmFirebaseUser();
+//                firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    bAutoLogin = true;
+
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged()");
+                    Log.d(TAG, "onAuthStateChanged:signed_in : UID (" + user.getUid() + ")");
+//                    Log.d(TAG, "onAuthStateChanged:signed_in : IdToken (" + mFirebaseUser.getIdToken(true).getResult().getToken() + ")");
+
+                    Log.d(TAG, "authManager.getmFirebaseUser() : " + authManager.getmFirebaseUser());
+
+                    showProgressDialog();
+//                    autoLogin(user.getEmail(), user.getUid());
+                    doLogin(user.getEmail(), null, user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
+        authManager.addAuthStateListener(mAuthListener);
+    }
+
     @OnClick(R.id.login_loginbtn)
     void onClick_login(){
         String str_email = edit_email.getText().toString();
         String str_pw = edit_password.getText().toString();
-        Log.e(TAG, "mail: " + str_email +", pw: "+str_pw);
+        Log.e(TAG, "mail: " + str_email + ", pw: " + anonymizePassword(str_pw));
 
         signIn(str_email, str_pw);
     }
@@ -236,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signIn(final String email, final String password) {
-        Log.d(TAG, "signIn() email: " + email + ", password: " + password);
+        Log.d(TAG, "signIn() email: " + email + ", password: " + anonymizePassword(password));
         if (!validateForm()) {
             return;
         }
@@ -256,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                     authManager.setFirebaseUser(task.getResult().getUser());
                     Log.d(TAG, "authManager.getmFirebaseUser() : " + authManager.getmFirebaseUser());
 
-                    doLogin(email, password, null);
+                    doLogin(email, password, task.getResult().getUser().getUid());
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -277,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void doLogin(String email, String pw, String uid) {
         Log.i(TAG, "doLogin()");
-        Log.i(TAG, "email: " + email +", pw: " + pw + ", uid: " + uid);
+        Log.i(TAG, "email: " + email +", pw: " + anonymizePassword(pw) + ", uid: " + uid);
         showProgressDialog();
 
         retroClient.postLogin(email, pw, uid, new RetroCallback() {
@@ -310,5 +316,17 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private String anonymizePassword(String password) {
+        if (password == null) {
+            return "null";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < password.length(); i++) {
+            sb.append('*');
+        }
+        return sb.toString();
     }
 }
