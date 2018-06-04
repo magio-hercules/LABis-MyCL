@@ -1,10 +1,13 @@
 package com.labis.mycl.contents;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -62,6 +65,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     private ProgressDialog progressDoalog = null;
     Menu contentsMainMenu;
+    Menu contentsEditMenu;
     ActionMode mActionMode;
     boolean isMultiSelect = false;
     RecyclerView recyclerView;
@@ -101,12 +105,23 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+
             @Override
             public void onItemClick(View view, int position) {
-                if (isMultiSelect)
+                if (isMultiSelect) {
                     multi_select(position);
-                else
-                    Toast.makeText(getApplicationContext(), "Details Page", Toast.LENGTH_SHORT).show();
+                } else {
+                    Content data = myContents.get(position);
+                    if (!data.equals(null)) {
+                        Intent i = new Intent(getApplicationContext(), DetailActivity.class);
+                        i.putExtra("CONTENT", data);
+                        i.putExtra("MODE", modeStatus);
+                        startActivity(i);
+                        overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "선택한 항목에 데이터 오류가 있습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
 
             @Override
@@ -215,14 +230,27 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
+    public void ResetMenuInflater() {
+
+    }
+
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             // Inflate a menu resource providing context menu items
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.menu_contents_edit, menu);
-            contentsMainMenu = menu;
+            MenuInflater menuInflater = getMenuInflater();
+            menuInflater.inflate(R.menu.menu_contents_edit, menu);
+            contentsEditMenu = menu;
+
+            if(modeStatus == "MY") {
+                MenuItem item = contentsEditMenu.findItem(R.id.action_add_contents);
+                item.setVisible(false);
+            } else {
+                MenuItem item = contentsEditMenu.findItem(R.id.action_delete_contents);
+                item.setVisible(false);
+            }
+
             return true;
         }
 
