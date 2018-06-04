@@ -90,7 +90,7 @@ module.exports = function () {
             return 'UPDATE Contents_list SET ';
         },
         postDeleteMyContents: function () {
-            // .../MyCL/delete_my_contents (user_id, id)
+            // .../MyCL/delete_my_contents (user_id,id_list:[id])
             return 'DELETE FROM Contents_my';
         },
         postUpdateContentsImage: function () {
