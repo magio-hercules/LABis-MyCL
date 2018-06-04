@@ -1,20 +1,13 @@
 package com.labis.mycl.contents;
 
-import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,19 +21,16 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
-import com.labis.mycl.util.PicassoTransformations;
 import com.labis.mycl.util.SoftKeyboard;
-import com.labis.mycl.util.Utility;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-import com.squareup.picasso.Transformation;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -121,6 +111,8 @@ public class DetailActivity extends AppCompatActivity {
     private int screenW = 0;
     private int screenH = 0;
 
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,6 +178,11 @@ public class DetailActivity extends AppCompatActivity {
 
         // -- Inflate Content -- //
         inflateContent(item);
+
+        // for AD
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private void inflateContent(Content Item) {

@@ -108,10 +108,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         loadGenreData();
 
         authManager = AuthManager.getInstance();
-
-        // for test
-        edit_email.setText("labis@labis.com");
-        edit_password.setText("123456");
     }
 
 

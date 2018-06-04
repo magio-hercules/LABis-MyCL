@@ -313,12 +313,22 @@
                     android:layout_height="24dp"
                     android:text="광고"
                     android:textSize="12sp" />
-                <ImageView
-                    android:id="@+id/deatal_ad_image"
+                <!--<ImageView-->
+                    <!--android:id="@+id/deatal_ad_image"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@mipmap/temp_ad"-->
+                    <!--android:scaleType="centerCrop" />-->
+                <com.google.android.gms.ads.AdView
+                    xmlns:ads="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/adView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/temp_ad"
-                    android:scaleType="centerCrop" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    ads:adSize="BANNER"
+                    ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+                </com.google.android.gms.ads.AdView>
             </LinearLayout>
         </LinearLayout>
 

@@ -21,8 +21,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.labis.mycl.MainActivity;
 import com.labis.mycl.R;
-import com.labis.mycl.login.LoginActivity;
 import com.labis.mycl.login.UrlActivity;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
@@ -153,10 +153,15 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.action_sign_out) {
             AuthManager authManager = AuthManager.getInstance();
             authManager.signOut();
+            authManager.setFirebaseUser(null);
 
-            Intent i = new Intent(ContentsActivity.this, LoginActivity.class);
+            myContentsRefresh = true;
+            modeStatus = "MY";
+
+            Intent i = new Intent(ContentsActivity.this, MainActivity.class);
             startActivity(i);
-            finish();
+//            finish();
+            finishAffinity();
         } else if (id == R.id.action_s3_url) {
             Intent i = new Intent(ContentsActivity.this, UrlActivity.class);
             startActivity(i);
