@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_add_contents"
+        android:title="추가"
+        android:icon="@mipmap/ic_add"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_delete_contents"
+        android:title="삭제"
+        android:icon="@mipmap/ic_delete"
+        app:showAsAction="always" />
+
+</menu>

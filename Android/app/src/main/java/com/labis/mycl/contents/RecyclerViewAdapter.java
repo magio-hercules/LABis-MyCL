@@ -94,15 +94,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         }
 
-        // 생성된 List 중 선택된 목록번호를 Toast로 출력
-        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });*/
-
-        holder.mTitleDiv.setOnClickListener(new View.OnClickListener() {
+       /* holder.mTitleDiv.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -117,7 +109,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                     Toast.makeText(mContext, "선택한 항목에 데이터 오류가 있습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
 
 
         holder.mConMinusBtn.setOnClickListener(new View.OnClickListener() {
