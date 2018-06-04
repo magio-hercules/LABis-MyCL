@@ -6,5 +6,6 @@
     <color name="pointColor">#D5D5D5</color>
     <color name="actionBar">#336B70</color>
     <color name="recyclerView">#EEEEEE</color>
+    <color name="editColor">#6200F0</color>
 
 </resources>
