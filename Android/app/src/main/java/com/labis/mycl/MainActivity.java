@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     void onClick_login(){
         String str_email = edit_email.getText().toString();
         String str_pw = edit_password.getText().toString();
-        Log.e(TAG, "mail: " + str_email +", pw: "+str_pw);
+        Log.e(TAG, "mail: " + str_email + ", pw: " + anonymizePassword(str_pw));
 
         signIn(str_email, str_pw);
     }
@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signIn(final String email, final String password) {
-        Log.d(TAG, "signIn() email: " + email + ", password: " + password);
+        Log.d(TAG, "signIn() email: " + email + ", password: " + anonymizePassword(password));
         if (!validateForm()) {
             return;
         }
@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                     authManager.setFirebaseUser(task.getResult().getUser());
                     Log.d(TAG, "authManager.getmFirebaseUser() : " + authManager.getmFirebaseUser());
 
-                    doLogin(email, password, null);
+                    doLogin(email, password, task.getResult().getUser().getUid());
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void doLogin(String email, String pw, String uid) {
         Log.i(TAG, "doLogin()");
-        Log.i(TAG, "email: " + email +", pw: " + pw + ", uid: " + uid);
+        Log.i(TAG, "email: " + email +", pw: " + anonymizePassword(pw) + ", uid: " + uid);
         showProgressDialog();
 
         retroClient.postLogin(email, pw, uid, new RetroCallback() {
@@ -310,5 +310,17 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private String anonymizePassword(String password) {
+        if (password == null) {
+            return "null";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < password.length(); i++) {
+            sb.append('*');
+        }
+        return sb.toString();
     }
 }

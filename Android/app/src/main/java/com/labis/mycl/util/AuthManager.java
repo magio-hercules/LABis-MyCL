@@ -68,7 +68,7 @@ public class AuthManager {
     }
 
     public void signIn(Activity activity, OnCompleteListener listener, String email, String password) {
-        Log.d(TAG, "signIn() email : " + email + ", password : " + password);
+        Log.d(TAG, "signIn() email : " + email + ", password : " + anonymizePassword(password));
 
         mFirebaseAuth.signInWithEmailAndPassword(email, password)
                        .addOnCompleteListener(activity, listener);
@@ -77,5 +77,17 @@ public class AuthManager {
     public void signOut() {
         Log.d(TAG, "signOut()");
         mFirebaseAuth.signOut();
+    }
+
+    private String anonymizePassword(String password) {
+        if (password == null) {
+            return "null";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < password.length(); i++) {
+            sb.append('*');
+        }
+        return sb.toString();
     }
 }
