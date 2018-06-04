@@ -22,15 +22,17 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     public TextView mConMinusBtn;
     public TextView mMyListSeason;
     public TextView mIndex;
+
+    public LinearLayout mContentItemDiv;
     public LinearLayout mThirdDivMy;
-
     public LinearLayout mTitleDiv;
-
     public LinearLayout mThirdDivTotal;
     public TextView mTotalListSeason;
 
     public RecyclerViewHolder(View itemView) {
         super(itemView);
+
+        mContentItemDiv = (LinearLayout)itemView.findViewById(R.id.contentItemDiv);
 
         mGen = (TextView) itemView.findViewById(R.id.content_genre_text);
         mImgView = (ImageView) itemView.findViewById(R.id.content_image);

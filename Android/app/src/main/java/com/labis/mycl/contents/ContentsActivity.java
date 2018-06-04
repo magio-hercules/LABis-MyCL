@@ -54,8 +54,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     RecyclerViewAdapter mAdapter;
     Toolbar toolbar;
 
-    public ArrayList<Content> myContents = new ArrayList();
-    public ArrayList<Genre> genreList = new ArrayList();
+    public ArrayList<Content> ContentsList = new ArrayList();
+    public ArrayList<Content> myContentsBackup = new ArrayList();
+    public ArrayList<Content> editContents = new ArrayList();
     public static String modeStatus = "MY";
     public Content touchContentItem;
     public boolean myContentsRefresh = true;
@@ -67,7 +68,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     Menu contentsMainMenu;
     Menu contentsEditMenu;
     ActionMode mActionMode;
-    boolean isMultiSelect = false;
+    public boolean isMultiSelect = false;
     RecyclerView recyclerView;
 
     private long lastTimeBackPressed;
@@ -100,43 +101,27 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         // -- RecyclerView -- //
-        recyclerView = (RecyclerView)findViewById(R.id.myContentsView);
+        recyclerView = (RecyclerView) findViewById(R.id.myContentsView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-
             @Override
             public void onItemClick(View view, int position) {
                 if (isMultiSelect) {
-                    multi_select(position);
-                } else {
-                    Content data = myContents.get(position);
-                    if (!data.equals(null)) {
-                        Intent i = new Intent(getApplicationContext(), DetailActivity.class);
-                        i.putExtra("CONTENT", data);
-                        i.putExtra("MODE", modeStatus);
-                        startActivity(i);
-                        overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "선택한 항목에 데이터 오류가 있습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
-                    }
+                    multiSelectItem(position);
                 }
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
                 if (!isMultiSelect) {
-                   // multiselect_list = new ArrayList<SampleModel>();
                     isMultiSelect = true;
-
                     if (mActionMode == null) {
                         mActionMode = startActionMode(mActionModeCallback);
                     }
                 }
-
-                multi_select(position);
-
+                multiSelectItem(position);
             }
         }));
 
@@ -151,13 +136,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         // -- RetroClient -- //
         retroClient = RetroClient.getInstance(this).createBaseApi();
-
-        if(modeStatus == "MY") {
+        if (modeStatus == "MY") {
             loadMyContents();
-        } else if(modeStatus == "TOTAL") {
+        } else if (modeStatus == "TOTAL") {
             loadTotalContent();
         }
-
     }
 
     @Override
@@ -185,7 +168,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             loadTotalContent();
             return true;
         } else if (id == R.id.action_my_contents) {
-            myContentsRefresh = true;
+            Log.d(TAG, "EVOL REQUEST #1-1");
             loadMyContents();
             return true;
         } else if (id == R.id.action_custom_contents) {
@@ -203,13 +186,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             AuthManager authManager = AuthManager.getInstance();
             authManager.signOut();
             authManager.setFirebaseUser(null);
-
             myContentsRefresh = true;
             modeStatus = "MY";
-
             Intent i = new Intent(ContentsActivity.this, MainActivity.class);
             startActivity(i);
-//            finish();
             finishAffinity();
         } else if (id == R.id.action_s3_url) {
             Intent i = new Intent(ContentsActivity.this, UrlActivity.class);
@@ -220,18 +200,25 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
 
-
     // -- User Function Section -- ////////////////////////////////////////
 
-    public void multi_select(int position) {
+    public void multiSelectItem(int position) {
         if (mActionMode != null) {
 
+            if (editContents.contains(ContentsList.get(position))) {
+                editContents.remove(ContentsList.get(position));
+            } else {
+                editContents.add(ContentsList.get(position));
+            }
 
+            if (editContents.size() > 0) {
+                mActionMode.setTitle("" + editContents.size());
+            } else {
+                mActionMode.setTitle("");
+            }
+
+            //refreshAdapter();
         }
-    }
-
-    public void ResetMenuInflater() {
-
     }
 
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -243,7 +230,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             menuInflater.inflate(R.menu.menu_contents_edit, menu);
             contentsEditMenu = menu;
 
-            if(modeStatus == "MY") {
+            if (modeStatus == "MY") {
                 MenuItem item = contentsEditMenu.findItem(R.id.action_add_contents);
                 item.setVisible(false);
             } else {
@@ -279,26 +266,25 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         }
     };
 
-
     private void delToMyContents(int position) {
         progressDoalog.show();
-        final int pos= position;
+        final int pos = position;
         retroClient.postDeleteMyContents(userData.id, mAdapter.mItems.get(position).id, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
                 progressDoalog.dismiss();
             }
+
             @Override
             public void onSuccess(int code, Object receivedData) {
                 Toast.makeText(getApplicationContext(), "DELETE SUCCESS : " + code, Toast.LENGTH_SHORT).show();
                 mAdapter.mItems.remove(pos);
                 mAdapter.notifyItemRemoved(pos);
                 mAdapter.notifyItemRangeChanged(pos, mAdapter.getItemCount());
-
-                myContentsRefresh = true;
                 progressDoalog.dismiss();
             }
+
             @Override
             public void onFailure(int code) {
                 Toast.makeText(getApplicationContext(), "DELETE FAIL : " + code, Toast.LENGTH_SHORT).show();
@@ -333,7 +319,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 progressDoalog.dismiss();
             }
         });
-
     }
 
     private void drawSwipeMenu() {
@@ -367,7 +352,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void clearRecyclerView() {
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.myContentsView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.myContentsView);
         ArrayList<Content> items = new ArrayList();
         mAdapter = new RecyclerViewAdapter(this, items);
         recyclerView.setAdapter(mAdapter);
@@ -379,7 +364,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     public void loadTotalContent() {
-        Log.d("EVOL","전체 리스트");
         progressDoalog.show();
         retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
@@ -400,9 +384,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 contentsMainMenu.findItem(R.id.action_my_contents).setVisible(true);
                 List<Content> data = (List<Content>) receivedData;
                 if (!data.isEmpty()) {
-                    ArrayList<Content> items = new ArrayList();
-                    items.addAll(data);
-                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, items);
+                    ContentsList.clear();
+                    ContentsList.addAll(data);
+                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
                     recyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
@@ -422,9 +406,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void loadMyContents() {
-        Log.d("EVOL","내 리스트 / " + modeStatus);
         progressDoalog.show();
-        if(myContentsRefresh) {
+        if (myContentsRefresh) {
+            Log.d(TAG, "EVOL REQUEST #2");
             retroClient.postMyContents(userData.id, new RetroCallback() {
                 @Override
                 public void onError(Throwable t) {
@@ -445,10 +429,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
 
                     List<Content> data = (List<Content>) receivedData;
-                    myContents.clear();
                     if (!data.isEmpty()) {
-                        myContents.addAll(data);
-                        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, myContents);
+                        ContentsList.clear();
+                        myContentsBackup.clear();
+
+                        ContentsList.addAll(data);
+                        myContentsBackup.addAll(data);
+
+                        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
                         recyclerView.setAdapter(mAdapter);
                     } else {
                         Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
@@ -464,7 +452,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 }
             });
         } else {
-            mAdapter = new RecyclerViewAdapter(this, myContents);
+            clearRecyclerView(); // Initialize
+            modeStatus = "MY";
+            getSupportActionBar().setTitle("내 콘텐츠");
+            getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.colorPrimary)));
+            contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
+            contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
+            mAdapter = new RecyclerViewAdapter(this, myContentsBackup);
             recyclerView.setAdapter(mAdapter);
             progressDoalog.dismiss();
         }
@@ -559,18 +553,17 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (modeStatus.equals("TOTAL")) {
-            myContentsRefresh = true;
+            Log.d(TAG, "EVOL REQUEST #1-3");
             loadMyContents();
         } else if (modeStatus.equals("MY")) {
             if (System.currentTimeMillis() - lastTimeBackPressed < 1500) {
-//            finish();
                 finishAffinity();
                 return;
             }
 
             Toast toast = Toast.makeText(this, "뒤로가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT);
             TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-            if( v != null) v.setGravity(Gravity.CENTER);
+            if (v != null) v.setGravity(Gravity.CENTER);
             toast.show();
             lastTimeBackPressed = System.currentTimeMillis();
         } else {
@@ -604,10 +597,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 myContentsRefresh = false;
 
                 List<Content> data = (List<Content>) receivedData;
-                myContents.clear();
                 if (!data.isEmpty()) {
-                    myContents.addAll(data);
-                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, myContents);
+                    ContentsList.clear();
+                    ContentsList.addAll(data);
+                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
                     recyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();

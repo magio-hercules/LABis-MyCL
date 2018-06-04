@@ -3,6 +3,9 @@ package com.labis.mycl.contents;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -40,13 +43,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
         mContext = parent.getContext();
 
-        RecyclerViewHolder holder = new RecyclerViewHolder(v);
-        return holder;
+        return new RecyclerViewHolder(v);
     }
 
     // 필수 오버라이드 : 재활용되는 View 가 호출, Adapter 가 해당 position 에 해당하는 데이터를 결합
     @Override
-    public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
+
+        if (mActivity.editContents.contains(mItems.get(position))) {
+            //holder.mTitleDiv.setBackgroundColor(ContextCompat.getColor(mContext, R.color.actionBar));
+        } else {
+          //  holder.mTitleDiv.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        }
 
         // 해당 position에 해당하는 데이터 결합
         mPosition = position;
@@ -94,23 +102,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         }
 
-       /* holder.mTitleDiv.setOnClickListener(new View.OnClickListener() {
-
+       holder.mTitleDiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Content data = mItems.get(position);
-                if (!data.equals(null)) {
-                    Intent i = new Intent(mActivity, DetailActivity.class);
-                    i.putExtra("CONTENT", mItems.get(position));
-                    i.putExtra("MODE", mActivity.modeStatus);
-                    mActivity.startActivity(i);
-                    mActivity.overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
-                } else {
-                    Toast.makeText(mContext, "선택한 항목에 데이터 오류가 있습니다. 새로고침 해주세요", Toast.LENGTH_SHORT).show();
-                }
+                enterDetailPage(position);
             }
-        });*/
+        });
 
+        holder.mImgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterDetailPage(position);
+            }
+        });
 
         holder.mConMinusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +139,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 }
             }
         });
+    }
+
+    private void enterDetailPage(int position) {
+        Content data = mItems.get(position);
+        if (!data.equals(null) && !mActivity.isMultiSelect) {
+            Intent i = new Intent(mActivity, DetailActivity.class);
+            i.putExtra("CONTENT", mItems.get(position));
+            i.putExtra("MODE", mActivity.modeStatus);
+            mActivity.startActivity(i);
+            mActivity.overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
+        }
     }
 
     private void updateChapter(final int position, int value) {
