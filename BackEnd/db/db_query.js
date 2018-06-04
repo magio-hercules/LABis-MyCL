@@ -58,8 +58,8 @@ module.exports = function () {
             return 'SELECT * FROM Contents_my JOIN Contents_list USING(id)';
         },
         postInsertMyContents: function () {
-            // .../MyCL/insert_my_contents (id,user_id,score,comment,chapter)
-            return 'INSERT INTO Contents_my SET ';
+            // .../MyCL/insert_my_contents (user_id,id_list:[id])
+            return 'INSERT INTO Contents_my (user_id, id) VALUES ';
         },
         postUpdateMyContents: function () {
             // .../MyCL/update_my_contents (id,user_id,score,comment,chapter)
