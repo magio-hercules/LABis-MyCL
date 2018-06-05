@@ -58,7 +58,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public ArrayList<Content> myContentsBackup = new ArrayList();
     public ArrayList<Content> editContents = new ArrayList();
     public static String modeStatus = "MY";
-    public Content touchContentItem;
     public boolean myContentsRefresh = true;
 
     public static User userData;
@@ -119,7 +118,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             @Override
             public void onItemLongClick(View view, int position) {
-                    if (!isMultiSelect) {
+                if (!isMultiSelect) {
                     isMultiSelect = true;
                     if (mActionMode == null) {
                         mActionMode = startActionMode(mActionModeCallback);
@@ -185,6 +184,18 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             return true;
         } else if (id == R.id.action_edit_contents) {
             // 추가 삭제
+            if(modeStatus == "MY") {
+                if (mActionMode == null) {
+                    isMultiSelect = true;
+                    mActionMode = startActionMode(mActionModeCallback);
+                }
+            } else if(modeStatus == "TOTAL") {
+                if (mActionMode == null) {
+                    isMultiSelect = true;
+                    mActionMode = startActionMode(mActionModeCallback);
+                }
+            }
+
             return true;
         } else if (id == R.id.action_sign_out) {
             AuthManager authManager = AuthManager.getInstance();
@@ -263,13 +274,15 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         });
     }
 
-    private void addToMyContents(int position) {
-        int chapterCnt = 0;
-        if (touchContentItem.chapter_end > 0) {
-            chapterCnt = 1;
-        }
+    private void addToMyContents() {
         progressDoalog.show();
-        retroClient.postInsertMyContents(touchContentItem.id, userData.id, chapterCnt, new RetroCallback() {
+        ArrayList<String> addList = new ArrayList<String>();
+        for(Content item : editContents) {
+            addList.add(item.id);
+            Log.d(TAG,"EVOL Item ID : " + item.id);
+        }
+
+        retroClient.postInsertMyContents(userData.id, addList, 1, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
@@ -278,9 +291,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             @Override
             public void onSuccess(int code, Object receivedData) {
-                Toast.makeText(getApplicationContext(), "INSERT SUCCESS : " + code, Toast.LENGTH_SHORT).show();
                 myContentsRefresh = true;
+
+                if (mActionMode != null) {
+                    editContents.clear();
+                    mActionMode.finish();
+                }
                 progressDoalog.dismiss();
+                Toast.makeText(getApplicationContext(), "추가 완료", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -362,6 +380,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 if(contentsMainMenu != null) {
                     contentsMainMenu.findItem(R.id.action_total_contents).setVisible(false);
                     contentsMainMenu.findItem(R.id.action_my_contents).setVisible(true);
+                    contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("추가");
                 }
                 progressDoalog.dismiss();
             }
@@ -415,6 +434,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     if(contentsMainMenu != null) {
                         contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
                         contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
+                        contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("삭제");
                     }
                     progressDoalog.dismiss();
                 }
@@ -433,10 +453,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             getSupportActionBar().setTitle("내 콘텐츠");
             getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.colorPrimary)));
-            contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
-            contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
             mAdapter = new RecyclerViewAdapter(this, ContentsList);
             recyclerView.setAdapter(mAdapter);
+            contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
+            contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
+            contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("삭제");
             progressDoalog.dismiss();
         }
 
@@ -675,7 +696,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete_contents:
-                    if(editContents.size() > 0) {
+                    if (editContents.size() > 0) {
                         alertDialogHelper.setAlertDialogListener(new AlertDialogHelper.AlertDialogListener() {
                             @Override
                             public void onPositiveClick(int from) {
@@ -695,6 +716,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                         alertDialogHelper.showAlertDialog("", "Delete Contact", "DELETE", "CANCEL", 1, false);
                     } else {
                         Toast.makeText(getApplicationContext(), "삭제할 항목을 선택해 주세요", Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+
+                case R.id.action_add_contents:
+                    if (editContents.size() > 0) {
+                        addToMyContents();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "추가할 항목을 선택해 주세요", Toast.LENGTH_SHORT).show();
                     }
                     return true;
                 default:
