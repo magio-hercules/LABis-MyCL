@@ -606,6 +606,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 List<Content> data = (List<Content>) receivedData;
                 if (!data.isEmpty()) {
                     ContentsList.clear();
+                    editContents.clear();
                     ContentsList.addAll(data);
                     mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
                     recyclerView.setAdapter(mAdapter);
@@ -648,9 +649,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
                 List<Content> data = (List<Content>) receivedData;
                 if (!data.isEmpty()) {
-                    ArrayList<Content> items = new ArrayList();
-                    items.addAll(data);
-                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, items);
+                    ContentsList.clear();
+                    editContents.clear();
+                    ContentsList.addAll(data);
+                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
                     recyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
