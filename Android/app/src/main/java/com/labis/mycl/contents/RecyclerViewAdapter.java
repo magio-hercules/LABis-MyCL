@@ -50,7 +50,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
 
         if (mActivity.editContents.contains(mItems.get(position))) {
-            holder.mContentItemDiv.setBackgroundColor(Color.parseColor("#F4F4F4"));
+            holder.mContentItemDiv.setBackgroundColor(Color.parseColor("#F0F0F0"));
         } else {
             holder.mContentItemDiv.setBackgroundColor(Color.parseColor("#FFFFFF"));
         }
