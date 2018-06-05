@@ -8,6 +8,7 @@ import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -171,8 +172,8 @@ public class RetroClient {
         });
     }
 
-    public void postDeleteMyContents(String userid, String id, final RetroCallback callback) {
-        apiService.postDeleteMyContents(userid, id).enqueue(new Callback<Register>() {
+    public void postDeleteMyContents(String userid, ArrayList<String> id_list, final RetroCallback callback) {
+        apiService.postDeleteMyContents(userid, id_list).enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
                 if (response.isSuccessful()) {

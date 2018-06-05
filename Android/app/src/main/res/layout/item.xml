@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="6dp"
     android:layout_marginRight="6dp"
-    android:background="@color/colorAccent"
     android:clickable="true"
     android:focusable="true"
     card_view:cardElevation="1dp"

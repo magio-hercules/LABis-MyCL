@@ -5,6 +5,7 @@ import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -62,7 +63,7 @@ public interface RetroBaseApiService {
 
     @FormUrlEncoded
     @POST("delete_my_contents")
-    Call<Register> postDeleteMyContents(@Field("user_id") String user_id, @Field("id") String id);
+    Call<Register> postDeleteMyContents(@Field("user_id") String user_id, @Field("id_list") ArrayList<String> id_list);
 
     @FormUrlEncoded
     @POST("filter_my_contents")

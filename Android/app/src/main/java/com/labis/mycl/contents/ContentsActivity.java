@@ -2,8 +2,11 @@ package com.labis.mycl.contents;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,6 +15,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -24,6 +28,7 @@ import android.widget.Toast;
 
 import com.labis.mycl.MainActivity;
 import com.labis.mycl.R;
+import com.labis.mycl.login.LoginActivity;
 import com.labis.mycl.login.UrlActivity;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
@@ -31,6 +36,7 @@ import com.labis.mycl.model.LoginData;
 import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
+import com.labis.mycl.util.AlertDialogHelper;
 import com.labis.mycl.util.AuthManager;
 import com.labis.mycl.util.RecyclerItemClickListener;
 
@@ -42,7 +48,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     private static final String TAG = "ContentsActivity";
 
-    // -- Global Variable Section -- ////////////////////////////////////////
+    // -- Choi Uk / Global Variable Section -- ////////////////////////////////////////
     public RetroClient retroClient;
 
     RecyclerViewAdapter mAdapter;
@@ -64,15 +70,19 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     ActionMode mActionMode;
     public boolean isMultiSelect = false;
     RecyclerView recyclerView;
+    AlertDialogHelper alertDialogHelper;
 
+    // -- Kim Jong Min / Global Variable Section -- ////////////////////////////////////////
     private long lastTimeBackPressed;
-
     private String selectedGenreId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contents);
+
+        // -- Edit Mode Dialog --//
+        alertDialogHelper = new AlertDialogHelper(this);
 
         // -- ToolBar -- //
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -109,7 +119,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             @Override
             public void onItemLongClick(View view, int position) {
-                if (!isMultiSelect) {
+                    if (!isMultiSelect) {
                     isMultiSelect = true;
                     if (mActionMode == null) {
                         mActionMode = startActionMode(mActionModeCallback);
@@ -215,55 +225,15 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            // Inflate a menu resource providing context menu items
-            MenuInflater menuInflater = getMenuInflater();
-            menuInflater.inflate(R.menu.menu_contents_edit, menu);
-            contentsEditMenu = menu;
-
-            if (modeStatus == "MY") {
-                MenuItem item = contentsEditMenu.findItem(R.id.action_add_contents);
-                item.setVisible(false);
-            } else {
-                MenuItem item = contentsEditMenu.findItem(R.id.action_delete_contents);
-                item.setVisible(false);
-            }
-
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false; // Return false if nothing is done
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.action_delete_contents:
-                    //alertDialogHelper.showAlertDialog("","Delete Contact","DELETE","CANCEL",1,false);
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            mActionMode = null;
-            isMultiSelect = false;
-            editContents.clear();
-            mAdapter.notifyDataSetChanged();
-        }
-    };
-
-    private void delToMyContents(int position) {
+    private void delToMyContents() {
         progressDoalog.show();
-        final int pos = position;
-        retroClient.postDeleteMyContents(userData.id, mAdapter.mItems.get(position).id, new RetroCallback() {
+        ArrayList<String> deleteList = new ArrayList<String>();
+        for(Content item : editContents) {
+            deleteList.add(item.id);
+            Log.d(TAG,"EVOL Item ID : " + item.id);
+        }
+
+        retroClient.postDeleteMyContents(userData.id, deleteList, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
@@ -272,11 +242,17 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             @Override
             public void onSuccess(int code, Object receivedData) {
-                Toast.makeText(getApplicationContext(), "DELETE SUCCESS : " + code, Toast.LENGTH_SHORT).show();
-                mAdapter.mItems.remove(pos);
-                mAdapter.notifyItemRemoved(pos);
-                mAdapter.notifyItemRangeChanged(pos, mAdapter.getItemCount());
+                for(Content item : editContents) {
+                    ContentsList.remove(item);
+                }
+
+                mAdapter.notifyDataSetChanged();
+                if (mActionMode != null) {
+                    editContents.clear();
+                    mActionMode.finish();
+                }
                 progressDoalog.dismiss();
+                Toast.makeText(getApplicationContext(), "삭제 완료", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -669,4 +645,76 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             }
         });
     }
+
+    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Inflate a menu resource providing context menu items
+            MenuInflater menuInflater = getMenuInflater();
+            menuInflater.inflate(R.menu.menu_contents_edit, menu);
+            contentsEditMenu = menu;
+
+            if (modeStatus == "MY") {
+                MenuItem item = contentsEditMenu.findItem(R.id.action_add_contents);
+                item.setVisible(false);
+            } else {
+                MenuItem item = contentsEditMenu.findItem(R.id.action_delete_contents);
+                item.setVisible(false);
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false; // Return false if nothing is done
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_delete_contents:
+                    if(editContents.size() > 0) {
+                        alertDialogHelper.setAlertDialogListener(new AlertDialogHelper.AlertDialogListener() {
+                            @Override
+                            public void onPositiveClick(int from) {
+                                delToMyContents();
+                            }
+
+                            @Override
+                            public void onNegativeClick(int from) {
+
+                            }
+
+                            @Override
+                            public void onNeutralClick(int from) {
+
+                            }
+                        });
+                        alertDialogHelper.showAlertDialog("", "Delete Contact", "DELETE", "CANCEL", 1, false);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "삭제할 항목을 선택해 주세요", Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mActionMode = null;
+            isMultiSelect = false;
+            editContents.clear();
+            mAdapter.notifyDataSetChanged();
+        }
+    };
+
+
+
+
+
+
+
 }

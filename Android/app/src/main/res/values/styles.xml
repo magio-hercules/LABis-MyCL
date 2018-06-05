@@ -32,7 +32,7 @@
     </style>
 
     <style name="LStyled.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/editBarColor</item>
+        <item name="background">@color/colorAccent</item>
     </style>
 
 </resources>
