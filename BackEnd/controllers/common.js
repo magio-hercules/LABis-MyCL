@@ -26,11 +26,11 @@ module.exports = function () {
                     } else {
                         if (callback != undefined) {
                             console.log('[INFO][DEBUG] callback');
-                            console.log(error);
-                            console.log('------');
-                            console.log(result);
-                            console.log('------');
-                            console.log(params);
+                            // console.log(error);
+                            // console.log('------');
+                            // console.log(result);
+                            // console.log('------');
+                            // console.log(params);
     
                             callback(req, res, params, error, result);
                         } else {

@@ -78,17 +78,26 @@ exports.postInsertMyContents = function(req, res) {
 
 	var query = mysql_query.postInsertMyContents();
 	var params = [];
-	var len = req.body.id_list.length;
+
 	var user_id = req.body.user_id;
 	var id;
 	var tQuery;
-	for(i =  0; i < len; i++) {
-		if (i > 0) {
-			query += ',';
-		}
-		id = req.body.id_list[i];
+	
+	console.log("typeof(req.body.id_list) : " + typeof(req.body.id_list)); 
+	if (typeof(req.body.id_list) != 'string') {
+		var len = req.body.id_list.length;
 		
-		tQuery = '("' + user_id + '", "' + id + '")';
+		for(i =  0; i < len; i++) {
+			if (i > 0) {
+				query += ',';
+			}
+			id = req.body.id_list[i];
+			
+			tQuery = '("' + user_id + '", "' + id + '")';
+			query += tQuery;
+		}
+	} else {
+		tQuery = '("' + user_id + '", "' + req.body.id_list + '")';
 		query += tQuery;
 	}
 	// console.log("[INFO][TEST] postInsertMyContents() query : " + query);
