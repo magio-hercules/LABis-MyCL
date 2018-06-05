@@ -217,7 +217,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 mActionMode.setTitle("");
             }
 
-            //refreshAdapter();
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -261,8 +261,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
             isMultiSelect = false;
-            //multiselect_list = new ArrayList<SampleModel>();
-            //refreshAdapter();
+            editContents.clear();
+            mAdapter.notifyDataSetChanged();
         }
     };
 

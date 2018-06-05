@@ -29,7 +29,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     Context mContext;
     private ContentsActivity mActivity;
     RecyclerViewHolder mHolder;
-    int mPosition;
 
     public RecyclerViewAdapter(ContentsActivity activity, ArrayList itemList) {
         mActivity = activity;
@@ -51,13 +50,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
 
         if (mActivity.editContents.contains(mItems.get(position))) {
-            //holder.mTitleDiv.setBackgroundColor(ContextCompat.getColor(mContext, R.color.actionBar));
+            holder.mContentItemDiv.setBackgroundColor(Color.parseColor("#F4F4F4"));
         } else {
-          //  holder.mTitleDiv.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+            holder.mContentItemDiv.setBackgroundColor(Color.parseColor("#FFFFFF"));
         }
-
-        // 해당 position에 해당하는 데이터 결합
-        mPosition = position;
 
         // 스페셜 줄임말 처리
         String genreText = mActivity.genreMap.get(mItems.get(position).gen_id);
@@ -73,7 +69,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         }
         holder.mGen.setText(genreText);
-        Picasso.get().load(mItems.get(position).image).transform(PicassoTransformations.resizeTransformation).into(holder.mImgView);
+        //Picasso.get().load(mItems.get(position).image).transform(PicassoTransformations.resizeTransformation).into(holder.mImgView);
+        Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
         holder.mName.setText(mItems.get(position).name + "  ");
         holder.mNameOrg.setText(mItems.get(position).name_org);
 
@@ -84,12 +81,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             if(mItems.get(position).season > 0) {
                 holder.mMyListSeason.setVisibility(View.VISIBLE);
                 holder.mMyListSeason.setText("시즌" + String.valueOf(mItems.get(position).season));
+            } else {
+                holder.mMyListSeason.setVisibility(View.GONE);
             }
 
             // Chapter Info
             if(mItems.get(position).chapter > 0) {
                 holder.mThirdDivMy.setVisibility(View.VISIBLE);
                 holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + "화");
+            } else {
+                holder.mThirdDivMy.setVisibility(View.GONE);
             }
 
         } else if(mActivity.modeStatus == "TOTAL") {
@@ -99,6 +100,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             if(mItems.get(position).season > 0) {
                 holder.mThirdDivTotal.setVisibility(View.VISIBLE);
                 holder.mTotalListSeason.setText("시즌" + mItems.get(position).season);
+            } else {
+                holder.mThirdDivTotal.setVisibility(View.GONE);
             }
         }
 
