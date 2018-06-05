@@ -50,6 +50,7 @@ router.post('/favorite', 				controller_favorite.postFavorite);
 router.post('/prefer', 					controller_prefer.postPrefer);
 
 router.post('/total_contents', 			controller_contents.postTotalContents);
+router.post('/total_new_contents', 		controller_contents.postTotalNewContents);
 router.post('/my_contents', 			controller_contents.postMyContents);
 
 router.post('/insert_my_contents', 		controller_contents.postInsertMyContents);
@@ -65,7 +66,7 @@ router.post('/set_auth_contents_list', 	controller_contents.postSetAuthContentsL
 
 router.post('/update_contents_image',	controller_contents.postUpdateContentsImage);
 
-router.post('/search_all_contents',		controller_contents.postSearchAllContents);
+router.post('/search_contents_list',	controller_contents.postSearchContentsList);
 router.post('/search_my_contents', 		controller_contents.postSearchMyContents);
 
 module.exports = router;

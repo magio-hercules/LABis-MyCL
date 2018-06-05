@@ -44,7 +44,14 @@
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".login.UrlActivity" />
-        <activity android:name=".contents.ContentsActivity" />
+        <activity android:name=".contents.ContentsActivity"
+            android:launchMode="singleTop">
+            <meta-data android:name="android.app.searchable"
+                         android:resource="@xml/searchable" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
         <activity android:name=".contents.DetailActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".contents.CustomActivity"></activity>

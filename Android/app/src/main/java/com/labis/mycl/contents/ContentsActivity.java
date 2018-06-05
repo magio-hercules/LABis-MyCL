@@ -1,12 +1,11 @@
 package com.labis.mycl.contents;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,7 +14,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -23,12 +21,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.labis.mycl.MainActivity;
 import com.labis.mycl.R;
-import com.labis.mycl.login.LoginActivity;
 import com.labis.mycl.login.UrlActivity;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
@@ -147,6 +145,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d(TAG, "onNewIntent()");
+        super.onNewIntent(intent);
+
+        searchTitle(intent);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_contents, menu);
@@ -159,6 +165,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             item = contentsMainMenu.findItem(R.id.action_s3_url);
             item.setVisible(true);
         }
+
+        initSearchView(menu);
 
         return true;
     }
@@ -742,10 +750,79 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         }
     };
 
+    private void initSearchView(Menu menu) {
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search_contents).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+    }
 
+    private void searchTitle(Intent intent) {
+        Log.d(TAG, "searchTitle()");
 
+        String query = intent.getStringExtra(SearchManager.QUERY);
+        Log.d(TAG, "query : " + query);
 
+        if (modeStatus.equals("MY")) {
+            retroClient.postSearchMyContents(userData.id, query, new RetroCallback() {
+                @Override
+                public void onError(Throwable t) {
+                    Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                    progressDoalog.dismiss();
+                }
 
+                @Override
+                public void onSuccess(int code, Object receivedData) {
+                    myContentsRefresh = false;
 
+                    List<Content> data = (List<Content>) receivedData;
+                    if (!data.isEmpty()) {
+                        ContentsList.clear();
+                        ContentsList.addAll(data);
+                        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
+                        recyclerView.setAdapter(mAdapter);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
+                    }
+                    progressDoalog.dismiss();
+                }
 
+                @Override
+                public void onFailure(int code) {
+                    Toast.makeText(getApplicationContext(), "DELETE FAIL : " + code, Toast.LENGTH_SHORT).show();
+                    progressDoalog.dismiss();
+                }
+            });
+        } else {
+            retroClient.postSearchContentsList(query, new RetroCallback() {
+                @Override
+                public void onError(Throwable t) {
+                    Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                    progressDoalog.dismiss();
+                }
+
+                @Override
+                public void onSuccess(int code, Object receivedData) {
+                    clearRecyclerView(); //initialize
+//                modeStatus = "TOTAL";
+
+                    List<Content> data = (List<Content>) receivedData;
+                    if (!data.isEmpty()) {
+                        ArrayList<Content> items = new ArrayList();
+                        items.addAll(data);
+                        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, items);
+                        recyclerView.setAdapter(mAdapter);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
+                    }
+                    progressDoalog.dismiss();
+                }
+
+                @Override
+                public void onFailure(int code) {
+                    Toast.makeText(getApplicationContext(), "DELETE FAIL : " + code, Toast.LENGTH_SHORT).show();
+                    progressDoalog.dismiss();
+                }
+            });
+        }
+    }
 }

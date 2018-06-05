@@ -1,7 +1,7 @@
 module.exports = (function () {
     return {
       Config: {
-        public_publisher: "labis",
+        public_publisher: "labis@labis.com",
         auth: "1",
         non_auth: "0",
         favorite: "1",

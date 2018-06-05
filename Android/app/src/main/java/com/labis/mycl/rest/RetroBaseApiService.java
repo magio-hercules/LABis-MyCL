@@ -66,6 +66,10 @@ public interface RetroBaseApiService {
     Call<List<Content>> postTotalContents(@Field("user_id") String user_id);
 
     @FormUrlEncoded
+    @POST("total_new_contents")
+    Call<List<Content>> postTotalNewContents(@Field("user_id") String user_id);
+
+    @FormUrlEncoded
     @POST("filter_my_contents")
     Call<List<Content>> postFilterMyContents(@Field("user_id") String user_id, @Field("gen_id") String gen_id);
 
@@ -85,6 +89,14 @@ public interface RetroBaseApiService {
     @FormUrlEncoded
     @POST("filter_contents_list")
     Call<List<Content>> postFilterContentsList(@Field("gen_id") String gen_id);
+
+    @FormUrlEncoded
+    @POST("search_contents_list")
+    Call<List<Content>> postSearchContentsList(@Field("name") String name);
+
+    @FormUrlEncoded
+    @POST("search_my_contents")
+    Call<List<Content>> postSearchMyContents(@Field("user_id") String user_id, @Field("name") String name);
 
 
     /// GET API ////////////////////////////////////////////////////////////////

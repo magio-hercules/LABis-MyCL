@@ -57,6 +57,20 @@ exports.postTotalContents = function(req, res) {
 };
 
 
+exports.postTotalNewContents = function(req, res) {
+	console.log("[INFO] call postTotalNewContents");
+	// console.log("req.body : " + JSON.stringify(req.body));
+	
+	var query = mysql_query.postTotalNewContents();
+	var params = [];
+	query = _checkParams(query, params, table.Config.public_publisher, table.Contents_list.publisher);
+	query += " AND `image` not like 'https://s3%' order by name desc, season asc;";
+
+	bFirst = true;
+	common.doQuery(req, res, query, params);
+};
+
+
 exports.postMyContents = function(req, res) {
 	console.log("[INFO] call postMyContents");
 
@@ -254,10 +268,10 @@ exports.postUpdateContentsImage = function(req, res) {
 };
 
 
-exports.postSearchAllContents = function(req, res) {
-	console.log("[INFO] call postSearchAllContents");
+exports.postSearchContentsList = function(req, res) {
+	console.log("[INFO] call postSearchContentsList");
 
-	var query = mysql_query.postSearchAllContents();
+	var query = mysql_query.postSearchContentsList();
 	var params = [];
 	
 	query = _searchParams(query, params, req.body.name, table.Contents_list.name);

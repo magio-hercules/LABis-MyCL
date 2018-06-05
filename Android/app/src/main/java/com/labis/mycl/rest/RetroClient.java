@@ -118,6 +118,24 @@ public class RetroClient {
         });
     }
 
+    public void postTotalNewContents(String userid, final RetroCallback callback) {
+        apiService.postTotalNewContents(userid).enqueue(new Callback<List<Content>>() {
+            @Override
+            public void onResponse(Call<List<Content>> call, Response<List<Content>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Content>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
     public void postMyContents(String userid, final RetroCallback callback) {
         apiService.postMyContents(userid).enqueue(new Callback<List<Content>>() {
             @Override
@@ -312,6 +330,40 @@ public class RetroClient {
                 }
             }
 
+            @Override
+            public void onFailure(Call<List<Content>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void postSearchContentsList(String name, final RetroCallback callback) {
+        apiService.postSearchContentsList(name).enqueue(new Callback<List<Content>>() {
+            @Override
+            public void onResponse(Call<List<Content>> call, Response<List<Content>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Content>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void postSearchMyContents(String user_id, String name, final RetroCallback callback) {
+        apiService.postSearchMyContents(user_id, name).enqueue(new Callback<List<Content>>() {
+            @Override
+            public void onResponse(Call<List<Content>> call, Response<List<Content>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
             @Override
             public void onFailure(Call<List<Content>> call, Throwable t) {
                 callback.onError(t);

@@ -83,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
         animFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
 
-        initAuth();
-
         // for test
         edit_email.setText("labis@labis.com");
         edit_password.setText("123456");

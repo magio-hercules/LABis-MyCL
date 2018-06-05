@@ -53,6 +53,10 @@ module.exports = function () {
             // .../MyCL/total_contents (user_id)
             return 'SELECT * FROM Contents_list';
         },
+        postTotalNewContents: function () {
+            // .../MyCL/total_new_contents (user_id)
+            return 'SELECT * FROM Contents_list';
+        },
         postMyContents: function () {
             // .../MyCL/my_contents (user_id)
             return 'SELECT * FROM Contents_my JOIN Contents_list USING(id)';
@@ -97,8 +101,8 @@ module.exports = function () {
             // .../MyCL/update_contents_image (id, url)
             return 'UPDATE Contents_list SET ';
         },
-        postSearchAllContents: function () {
-            // .../MyCL/search_all_contents (name)
+        postSearchContentsList: function () {
+            // .../MyCL/search_contents_list (name)
             return 'SELECT * FROM Contents_list ';
         },
         postSearchMyContents: function () {

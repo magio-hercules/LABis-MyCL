@@ -486,7 +486,7 @@ public class UrlActivity extends Activity {
     }
 
     private void initList() {
-        retroClient.postTotalContents("labis", new RetroCallback() {
+        retroClient.postTotalNewContents("labis", new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, t.toString());
