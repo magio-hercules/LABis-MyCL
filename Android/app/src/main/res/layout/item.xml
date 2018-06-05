@@ -15,7 +15,7 @@
     <LinearLayout
         android:id="@+id/contentItemDiv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:orientation="horizontal"
         android:padding="0dp">
 
@@ -49,37 +49,32 @@
             android:gravity="center_vertical"
             android:layout_marginRight="4dp"
             android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/content_mylist_season"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/content_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="16sp" />
-                <TextView
-                    android:id="@+id/content_mylist_season"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:gravity="center"
-                    android:background="#EEEEEE"
-                    android:textColor="@color/colorPrimary"
-                    android:visibility="gone"
-                    android:textSize="11sp" />
-            </LinearLayout>
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:gravity="center"
+                android:background="#EEEEEE"
+                android:textColor="@color/colorPrimary"
+                android:visibility="gone"
+                android:textStyle="bold"
+                android:textSize="11sp" />
+            <TextView
+                android:id="@+id/content_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/content_sub_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:textColor="@color/colorPrimary"
-                android:textSize="12sp" />
+                android:textSize="11sp" />
         </LinearLayout>
 
 
@@ -109,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/actionBar"
                     android:textSize="15sp"
                     android:textStyle="bold" />
                 <TextView

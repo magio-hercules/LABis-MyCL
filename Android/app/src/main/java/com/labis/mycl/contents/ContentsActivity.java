@@ -20,7 +20,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,10 +70,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public boolean isMultiSelect = false;
     RecyclerView recyclerView;
     AlertDialogHelper alertDialogHelper;
+    private float x1,x2;
+    static final int MIN_DISTANCE = 250;
 
     // -- Kim Jong Min / Global Variable Section -- ////////////////////////////////////////
     private long lastTimeBackPressed;
     private String selectedGenreId;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +112,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(ContentsActivity.this,this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (isMultiSelect) {
@@ -124,7 +130,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 }
                 multiSelectItem(position);
             }
+
         }));
+
 
         // -- DrawerLayout View -- //
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -142,7 +150,37 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         } else if (modeStatus == "TOTAL") {
             loadTotalContent();
         }
+
+        // -- MainLayout SwipeEvent -- //
+        findViewById(R.id.main_layout).setOnTouchListener(
+                new LinearLayout.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                x1 = event.getX();
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                x2 = event.getX();
+                                float deltaX = x2 - x1;
+                                if (Math.abs(deltaX) > MIN_DISTANCE) {
+                                    if (modeStatus == "MY") {
+                                        loadTotalContent();
+                                    } else if (modeStatus == "TOTAL") {
+                                        loadMyContents();
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                }
+        );
+
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -405,7 +443,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         resetDrawerCheckedItem();
     }
 
-    private void loadMyContents() {
+    public void loadMyContents() {
         progressDoalog.show();
         if (myContentsRefresh) {
             Log.d(TAG, "EVOL REQUEST #2");

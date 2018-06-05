@@ -2,8 +2,8 @@
 <resources>
     <color name="colorPrimary">#31445E</color>
     <color name="colorPrimaryDark">#212832</color>
-    <color name="colorAccent">#F63164</color>
+    <color name="colorAccent">#212832</color>
     <color name="pointColor">#D5D5D5</color>
-    <color name="actionBar">#336B70</color>
+    <color name="actionBar">#B71D45</color>
     <color name="recyclerView">#EEEEEE</color>
 </resources>
