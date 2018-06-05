@@ -51,7 +51,11 @@ public interface RetroBaseApiService {
 
     @FormUrlEncoded
     @POST("insert_my_contents")
-    Call<Register> postInsertMyContents(@Field("user_id") String user_id, @Field("id_list") ArrayList<String> id_list, @Field("chapter") int chapter);
+    Call<Register> postInsertMyContents(@Field("user_id") String user_id, @Field("id_list") ArrayList<String> id_list);
+
+    @FormUrlEncoded
+    @POST("delete_my_contents")
+    Call<Register> postDeleteMyContents(@Field("user_id") String user_id, @Field("id_list") ArrayList<String> id_list);
 
     @FormUrlEncoded
     @POST("update_my_contents")
@@ -60,10 +64,6 @@ public interface RetroBaseApiService {
     @FormUrlEncoded
     @POST("total_contents")
     Call<List<Content>> postTotalContents(@Field("user_id") String user_id);
-
-    @FormUrlEncoded
-    @POST("delete_my_contents")
-    Call<Register> postDeleteMyContents(@Field("user_id") String user_id, @Field("id_list") ArrayList<String> id_list);
 
     @FormUrlEncoded
     @POST("filter_my_contents")

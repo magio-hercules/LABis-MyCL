@@ -136,8 +136,8 @@ public class RetroClient {
         });
     }
 
-    public void postInsertMyContents(String userid, ArrayList<String> id_list, int chapter, final RetroCallback callback) {
-        apiService.postInsertMyContents(userid, id_list, chapter).enqueue(new Callback<Register>() {
+    public void postInsertMyContents(String userid, ArrayList<String> id_list, final RetroCallback callback) {
+        apiService.postInsertMyContents(userid, id_list).enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
                 if (response.isSuccessful()) {

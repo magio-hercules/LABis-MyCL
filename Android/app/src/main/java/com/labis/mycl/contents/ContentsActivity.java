@@ -282,7 +282,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             Log.d(TAG,"EVOL Item ID : " + item.id);
         }
 
-        retroClient.postInsertMyContents(userData.id, addList, 1, new RetroCallback() {
+        retroClient.postInsertMyContents(userData.id, addList, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
