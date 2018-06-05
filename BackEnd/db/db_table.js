@@ -3,7 +3,9 @@ module.exports = (function () {
       Config: {
         public_publisher: "labis",
         auth: "1",
-        non_auth: "0"
+        non_auth: "0",
+        favorite: "1",
+        non_favorite: "0"
       },
       User: {
         id: "`id`",
@@ -19,7 +21,9 @@ module.exports = (function () {
         user_id: "`user_id`",
         score: "`score`",
         comment: "`comment`",
-        chapter: "`chapter`"
+        chapter: "`chapter`",
+        favorite: "`favorite`",
+        time: "`time`"
       },
       Contents_list: { 
         id: "`id`",

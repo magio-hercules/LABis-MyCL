@@ -1,13 +1,9 @@
 package com.labis.mycl.contents;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,7 +12,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -29,7 +24,6 @@ import android.widget.Toast;
 
 import com.labis.mycl.MainActivity;
 import com.labis.mycl.R;
-import com.labis.mycl.login.LoginActivity;
 import com.labis.mycl.login.UrlActivity;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
@@ -404,6 +398,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
+        setDrawerItem(false, R.id.favorite);
         resetDrawerCheckedItem();
     }
 
@@ -469,6 +464,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             progressDoalog.dismiss();
         }
 
+        setDrawerItem(true, R.id.favorite);
         resetDrawerCheckedItem();
     }
 
@@ -485,9 +481,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         switch (id) {
             case R.id.favorite:
-                genreId = "";
-                // TODO
-                // 선호장르 조회하기
+                genreId = "FAV";
                 break;
             case R.id.usadrama:
                 genreId = "B06";
@@ -539,6 +533,16 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setDrawerItem(boolean bShow, int id) {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        if (bShow) {
+            navigationView.getMenu().findItem(id).setVisible(true);
+        } else {
+            navigationView.getMenu().findItem(id).setVisible(false);
+        }
     }
 
     private void resetDrawerCheckedItem() {

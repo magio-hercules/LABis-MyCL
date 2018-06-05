@@ -22,9 +22,10 @@ public class Content implements Serializable {
     public String score;
     public String comment;
     public int chapter;
+    public int favorite;
 
     public Content(String id, String gen_id, int season, String name, String name_org, int chapter_end, int theatrical, String series_id, String summary,
-                   String publisher, int auth, String image, String user_id, String score, String comment, int chapter) {
+                   String publisher, int auth, String image, String user_id, String score, String comment, int chapter, int favorite) {
         this.id = id;
         this.gen_id = gen_id;
         this.season = season;
@@ -42,6 +43,7 @@ public class Content implements Serializable {
         this.score = score;
         this.comment = comment;
         this.chapter = chapter;
+        this.favorite = favorite;
     }
 
     public Content(String gen_id, int season, String name, String name_org, int theatrical, String summary,

@@ -211,6 +211,14 @@ public class DetailActivity extends AppCompatActivity {
         // 즐겨찾기
         if(modeStatus.equals("MY")) {
             detailFavoriteTotalDiv.setVisibility(View.VISIBLE);
+
+            if (Item.favorite == 1) {
+                favoiteFlag = true;
+                favoriteImageView.setImageResource(R.mipmap.bookmark_favorite_on);
+            } else {
+                favoiteFlag = false;
+                favoriteImageView.setImageResource(R.mipmap.bookmark_favorite);
+            }
         }
 
         // 시즌

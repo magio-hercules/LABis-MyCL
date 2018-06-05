@@ -124,7 +124,13 @@ exports.postFilterMyContents = function(req, res) {
 	var query = mysql_query.postFilterMyContents();
 	var params = [];
 	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);
-	query = _checkParams(query, params, req.body.gen_id, table.Contents_list.gen_id);
+	
+	// gen_id or favorite
+	if (req.body.gen_id == "FAV") {
+		query = _checkParams(query, params, table.Config.favorite, table.Contents_my.favorite);
+	} else {
+		query = _checkParams(query, params, req.body.gen_id, table.Contents_list.gen_id);
+	}
 	
 	bFirst = true;
 	common.doQuery(req, res, query, params);
