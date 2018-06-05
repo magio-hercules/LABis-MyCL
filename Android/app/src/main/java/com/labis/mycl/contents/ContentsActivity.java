@@ -352,9 +352,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void clearRecyclerView() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.myContentsView);
-        ArrayList<Content> items = new ArrayList();
-        mAdapter = new RecyclerViewAdapter(this, items);
+        ContentsList.clear();
+        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
         recyclerView.setAdapter(mAdapter);
         recyclerView.refreshDrawableState();
     }
@@ -380,8 +379,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 getSupportActionBar().setTitle("모든 콘텐츠");
                 getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
 
-                contentsMainMenu.findItem(R.id.action_total_contents).setVisible(false);
-                contentsMainMenu.findItem(R.id.action_my_contents).setVisible(true);
+                editContents.clear();
                 List<Content> data = (List<Content>) receivedData;
                 if (!data.isEmpty()) {
                     ContentsList.clear();
@@ -390,6 +388,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     recyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
+                }
+                if(contentsMainMenu != null) {
+                    contentsMainMenu.findItem(R.id.action_total_contents).setVisible(false);
+                    contentsMainMenu.findItem(R.id.action_my_contents).setVisible(true);
                 }
                 progressDoalog.dismiss();
             }
@@ -425,9 +427,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.colorPrimary)));
 
                     myContentsRefresh = false;
-                    contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
-                    contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
-
+                    editContents.clear();
                     List<Content> data = (List<Content>) receivedData;
                     if (!data.isEmpty()) {
                         ContentsList.clear();
@@ -441,6 +441,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     } else {
                         Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
                     }
+                    if(contentsMainMenu != null) {
+                        contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
+                        contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
+                    }
                     progressDoalog.dismiss();
                 }
 
@@ -452,13 +456,15 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 }
             });
         } else {
-            clearRecyclerView(); // Initialize
             modeStatus = "MY";
+            ContentsList.clear();
+            ContentsList.addAll(myContentsBackup);
+
             getSupportActionBar().setTitle("내 콘텐츠");
             getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.colorPrimary)));
             contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
             contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
-            mAdapter = new RecyclerViewAdapter(this, myContentsBackup);
+            mAdapter = new RecyclerViewAdapter(this, ContentsList);
             recyclerView.setAdapter(mAdapter);
             progressDoalog.dismiss();
         }
