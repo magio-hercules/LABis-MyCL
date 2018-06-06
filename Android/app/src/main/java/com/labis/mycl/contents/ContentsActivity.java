@@ -50,19 +50,18 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     // -- Choi Uk / Global Variable Section -- ////////////////////////////////////////
     public RetroClient retroClient;
-
-    RecyclerViewAdapter mAdapter;
-    Toolbar toolbar;
-
+    // Content Data Variable
     public ArrayList<Content> ContentsList = new ArrayList();
     public ArrayList<Content> myContentsBackup = new ArrayList();
     public ArrayList<Content> editContents = new ArrayList();
     public static String modeStatus = "MY";
     public boolean myContentsRefresh = true;
-
+    // Login Data Variable
     public static User userData;
     public static HashMap<String, String> genreMap = new HashMap<String, String>();
-
+    // UI Variable
+    RecyclerViewAdapter mAdapter;
+    Toolbar toolbar;
     private ProgressDialog progressDoalog = null;
     Menu contentsMainMenu;
     Menu contentsEditMenu;
@@ -70,16 +69,16 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public boolean isMultiSelect = false;
     RecyclerView recyclerView;
     AlertDialogHelper alertDialogHelper;
-    private float x1,x2;
-    static final int MIN_DISTANCE = 250;
     public static final int PICK_EDIT_REQUEST = 1;
     public int editPosition = -1;
+    // Swipe Gestures Variable
+    private float x1,x2;
+    static final int MIN_DISTANCE = 250;
 
 
     // -- Kim Jong Min / Global Variable Section -- ////////////////////////////////////////
     private long lastTimeBackPressed;
     private String selectedGenreId;
-
 
 
     @Override
@@ -181,91 +180,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     }
                 }
         );
-
-    }
-
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        Log.d(TAG, "onNewIntent()");
-        super.onNewIntent(intent);
-
-        searchTitle(intent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_contents, menu);
-        contentsMainMenu = menu;
-
-        MenuItem item = contentsMainMenu.findItem(R.id.action_my_contents);
-        item.setVisible(false);
-
-        if (userData.id.equals("labis@labis.com")) {
-            item = contentsMainMenu.findItem(R.id.action_s3_url);
-            item.setVisible(true);
-        }
-
-        initSearchView(menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_total_contents) {
-            loadTotalContent();
-            return true;
-        } else if (id == R.id.action_my_contents) {
-            Log.d(TAG, "EVOL REQUEST #1-1");
-            loadMyContents();
-            return true;
-        } else if (id == R.id.action_custom_contents) {
-            Intent i = new Intent(getApplicationContext(), CustomActivity.class);
-            startActivity(i);
-            overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
-            return true;
-        } else if (id == R.id.action_search_contents) {
-            // 검색 기능 활성화
-            return true;
-        } else if (id == R.id.action_edit_contents) {
-            // 추가 삭제
-            if(modeStatus == "MY") {
-                if (mActionMode == null) {
-                    isMultiSelect = true;
-                    mActionMode = startActionMode(mActionModeCallback);
-                }
-            } else if(modeStatus == "TOTAL") {
-                if (mActionMode == null) {
-                    isMultiSelect = true;
-                    mActionMode = startActionMode(mActionModeCallback);
-                }
-            }
-
-            return true;
-        } else if (id == R.id.action_sign_out) {
-            AuthManager authManager = AuthManager.getInstance();
-            authManager.signOut();
-            authManager.setFirebaseUser(null);
-            myContentsRefresh = true;
-            modeStatus = "MY";
-            Intent i = new Intent(ContentsActivity.this, MainActivity.class);
-            startActivity(i);
-            finishAffinity();
-        } else if (id == R.id.action_s3_url) {
-            Intent i = new Intent(ContentsActivity.this, UrlActivity.class);
-            startActivity(i);
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 
     // -- User Function Section -- ////////////////////////////////////////
-
     public void multiSelectItem(int position) {
         if (mActionMode != null) {
 
@@ -356,36 +274,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 progressDoalog.dismiss();
             }
         });
-    }
-
-    private void drawSwipeMenu() {
-        /*RecyclerView recyclerView = (RecyclerView)findViewById(R.id.myContentsView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        //recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-
-        swipeController = new SwipeController(this, new SwipeControllerActions() {
-            // MY콘텐츠 삭제
-            @Override
-            public void onLeftClicked(int position) {
-                delToMyContents(position);
-            }
-
-            // MY콘텐츠 추가
-            @Override
-            public void onRightClicked(int position) {
-                addToMyContents(position);
-            }
-        });
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        itemTouchhelper.attachToRecyclerView(recyclerView);
-
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                swipeController.onDraw(c);
-            }
-        });*/
     }
 
     private void clearRecyclerView() {
@@ -514,6 +402,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         resetDrawerCheckedItem();
     }
 
+
     // -- Drawer Section -- ////////////////////////////////////////
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -603,30 +492,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (modeStatus.equals("TOTAL")) {
-            Log.d(TAG, "EVOL REQUEST #1-3");
-            loadMyContents();
-        } else if (modeStatus.equals("MY")) {
-            if (System.currentTimeMillis() - lastTimeBackPressed < 1500) {
-                finishAffinity();
-                return;
-            }
-
-            Toast toast = Toast.makeText(this, "뒤로가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT);
-            TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-            if (v != null) v.setGravity(Gravity.CENTER);
-            toast.show();
-            lastTimeBackPressed = System.currentTimeMillis();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     private void filterJenreMyContents(final String title, String userId, String gen_id) {
         Log.e(TAG, "filterJenreMyContents");
         Log.e(TAG, "doFilter() title : " + title);
@@ -691,10 +556,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onSuccess(int code, Object receivedData) {
                 clearRecyclerView(); //initialize
-//                modeStatus = "TOTAL";
+                //modeStatus = "TOTAL";
 
                 getSupportActionBar().setTitle("모든 콘텐츠" + (title.equals("") ? "" : " (" + title + ")"));
-//                getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
+                //getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
 
                 List<Content> data = (List<Content>) receivedData;
                 if (!data.isEmpty()) {
@@ -718,101 +583,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         });
     }
 
-    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            // Inflate a menu resource providing context menu items
-            MenuInflater menuInflater = getMenuInflater();
-            menuInflater.inflate(R.menu.menu_contents_edit, menu);
-            contentsEditMenu = menu;
-
-            if (modeStatus == "MY") {
-                MenuItem item = contentsEditMenu.findItem(R.id.action_add_contents);
-                item.setVisible(false);
-            } else {
-                MenuItem item = contentsEditMenu.findItem(R.id.action_delete_contents);
-                item.setVisible(false);
-            }
-
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false; // Return false if nothing is done
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.action_delete_contents:
-                    if (editContents.size() > 0) {
-                        alertDialogHelper.setAlertDialogListener(new AlertDialogHelper.AlertDialogListener() {
-                            @Override
-                            public void onPositiveClick(int from) {
-                                delToMyContents();
-                            }
-
-                            @Override
-                            public void onNegativeClick(int from) {
-
-                            }
-
-                            @Override
-                            public void onNeutralClick(int from) {
-
-                            }
-                        });
-                        alertDialogHelper.showAlertDialog("", "삭제할까요?", "DELETE", "CANCEL", 1, false);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "삭제할 항목을 선택해 주세요", Toast.LENGTH_SHORT).show();
-                    }
-                    return true;
-
-                case R.id.action_add_contents:
-                    if (editContents.size() > 0) {
-                        addToMyContents();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "추가할 항목을 선택해 주세요", Toast.LENGTH_SHORT).show();
-                    }
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            mActionMode = null;
-            isMultiSelect = false;
-            editContents.clear();
-            mAdapter.notifyDataSetChanged();
-        }
-    };
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_EDIT_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                if (modeStatus.equals("MY")) {
-                    if(editPosition > -1) {
-                        editContents.add(ContentsList.get(editPosition));
-                        delToMyContents();
-                    }
-                } else if(modeStatus.equals("TOTAL")) {
-                    if(editPosition > -1) {
-                        editContents.add(ContentsList.get(editPosition));
-                        addToMyContents();
-                    }
-                }
-
-                editPosition = -1;
-            }
-        }
-    }
 
 
+    // -- Search Function Section -- ////////////////////////////////////////
     private void initSearchView(Menu menu) {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search_contents).getActionView();
@@ -866,7 +639,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 @Override
                 public void onSuccess(int code, Object receivedData) {
                     clearRecyclerView(); //initialize
-//                modeStatus = "TOTAL";
+                    //modeStatus = "TOTAL";
 
                     List<Content> data = (List<Content>) receivedData;
                     if (!data.isEmpty()) {
@@ -888,4 +661,205 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             });
         }
     }
+
+
+
+    // -- Event Override Section -- ////////////////////////////////////////
+    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Inflate a menu resource providing context menu items
+            MenuInflater menuInflater = getMenuInflater();
+            menuInflater.inflate(R.menu.menu_contents_edit, menu);
+            contentsEditMenu = menu;
+
+            if (modeStatus == "MY") {
+                MenuItem item = contentsEditMenu.findItem(R.id.action_add_contents);
+                item.setVisible(false);
+            } else {
+                MenuItem item = contentsEditMenu.findItem(R.id.action_delete_contents);
+                item.setVisible(false);
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false; // Return false if nothing is done
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_delete_contents:
+                    if (editContents.size() > 0) {
+                        alertDialogHelper.setAlertDialogListener(new AlertDialogHelper.AlertDialogListener() {
+                            @Override
+                            public void onPositiveClick(int from) {
+                                delToMyContents();
+                            }
+
+                            @Override
+                            public void onNegativeClick(int from) {
+
+                            }
+
+                            @Override
+                            public void onNeutralClick(int from) {
+
+                            }
+                        });
+                        alertDialogHelper.showAlertDialog("", "삭제할까요?", "예", "아니요", 1, false);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "삭제할 항목을 선택해 주세요", Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+
+                case R.id.action_add_contents:
+                    if (editContents.size() > 0) {
+                        addToMyContents();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "추가할 항목을 선택해 주세요", Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mActionMode = null;
+            isMultiSelect = false;
+            editContents.clear();
+            mAdapter.notifyDataSetChanged();
+        }
+    };
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (modeStatus.equals("TOTAL")) {
+            Log.d(TAG, "EVOL REQUEST #1-3");
+            loadMyContents();
+        } else if (modeStatus.equals("MY")) {
+            if (System.currentTimeMillis() - lastTimeBackPressed < 1500) {
+                finishAffinity();
+                return;
+            }
+            Toast toast = Toast.makeText(this, "뒤로가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT);
+            TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+            if (v != null) v.setGravity(Gravity.CENTER);
+            toast.show();
+            lastTimeBackPressed = System.currentTimeMillis();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_EDIT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                if (modeStatus.equals("MY")) {
+                    if(editPosition > -1) {
+                        editContents.add(ContentsList.get(editPosition));
+                        delToMyContents();
+                    }
+                } else if(modeStatus.equals("TOTAL")) {
+                    if(editPosition > -1) {
+                        editContents.add(ContentsList.get(editPosition));
+                        addToMyContents();
+                    }
+                }
+
+                editPosition = -1;
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d(TAG, "onNewIntent()");
+        super.onNewIntent(intent);
+
+        searchTitle(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_contents, menu);
+        contentsMainMenu = menu;
+
+        MenuItem item = contentsMainMenu.findItem(R.id.action_my_contents);
+        item.setVisible(false);
+
+        if (userData.id.equals("labis@labis.com")) {
+            item = contentsMainMenu.findItem(R.id.action_s3_url);
+            item.setVisible(true);
+        }
+
+        initSearchView(menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_total_contents) {
+            loadTotalContent();
+            return true;
+        } else if (id == R.id.action_my_contents) {
+            Log.d(TAG, "EVOL REQUEST #1-1");
+            loadMyContents();
+            return true;
+        } else if (id == R.id.action_custom_contents) {
+            Intent i = new Intent(getApplicationContext(), CustomActivity.class);
+            startActivity(i);
+            overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
+            return true;
+        } else if (id == R.id.action_search_contents) {
+            // 검색 기능 활성화
+            return true;
+        } else if (id == R.id.action_edit_contents) {
+            // 추가 삭제
+            if(modeStatus == "MY") {
+                if (mActionMode == null) {
+                    isMultiSelect = true;
+                    mActionMode = startActionMode(mActionModeCallback);
+                }
+            } else if(modeStatus == "TOTAL") {
+                if (mActionMode == null) {
+                    isMultiSelect = true;
+                    mActionMode = startActionMode(mActionModeCallback);
+                }
+            }
+
+            return true;
+        } else if (id == R.id.action_sign_out) {
+            AuthManager authManager = AuthManager.getInstance();
+            authManager.signOut();
+            authManager.setFirebaseUser(null);
+            myContentsRefresh = true;
+            modeStatus = "MY";
+            Intent i = new Intent(ContentsActivity.this, MainActivity.class);
+            startActivity(i);
+            finishAffinity();
+        } else if (id == R.id.action_s3_url) {
+            Intent i = new Intent(ContentsActivity.this, UrlActivity.class);
+            startActivity(i);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
 }

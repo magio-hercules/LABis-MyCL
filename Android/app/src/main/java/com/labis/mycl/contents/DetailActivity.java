@@ -344,7 +344,7 @@ public class DetailActivity extends AppCompatActivity {
                 @Override
                 public void onNeutralClick(int from){}
             });
-            alertDialogHelper.showAlertDialog("", "삭제할까요?", "DELETE", "CANCEL", 1, false);
+            alertDialogHelper.showAlertDialog("", "삭제할까요?", "예", "아니요", 1, false);
         } else if(modeStatus.equals("TOTAL")) { //추가
             Intent returnIntent = new Intent();
             setResult(Activity.RESULT_OK, returnIntent);
