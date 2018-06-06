@@ -43,6 +43,8 @@ import com.labis.mycl.util.CheckPermission;
 import com.labis.mycl.util.ImagePicker;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -182,8 +184,15 @@ public class CustomActivity extends AppCompatActivity {
     // -- User Function Section -- ////////////////////////////////////////
 
     private String getGenreID(String genreName) {
-        if(ContentsActivity.genreMap != null) {
-            return ContentsActivity.genreMap.get(genreName);
+        if (ContentsActivity.genreMap != null) {
+            Set key = ContentsActivity.genreMap.keySet();
+            for (Iterator iterator = key.iterator(); iterator.hasNext(); ) {
+                String keyName = (String) iterator.next();
+                String valueName = (String) ContentsActivity.genreMap.get(keyName);
+                if (valueName.equals(genreName)) {
+                    return keyName;
+                }
+            }
         }
         return null;
     }
