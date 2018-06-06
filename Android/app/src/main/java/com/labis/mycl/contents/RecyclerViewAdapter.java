@@ -145,12 +145,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     }
 
     private void enterDetailPage(int position) {
+        mActivity.editPosition = position;
         Content data = mItems.get(position);
         if (!data.equals(null) && !mActivity.isMultiSelect) {
             Intent i = new Intent(mActivity, DetailActivity.class);
             i.putExtra("CONTENT", mItems.get(position));
             i.putExtra("MODE", mActivity.modeStatus);
-            mActivity.startActivity(i);
+            mActivity.startActivityForResult(i, mActivity.PICK_EDIT_REQUEST);
             mActivity.overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
         }
     }

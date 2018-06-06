@@ -1,5 +1,6 @@
 package com.labis.mycl.contents;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +9,9 @@ import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.ActionMode;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -25,6 +28,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
+import com.labis.mycl.util.AlertDialogHelper;
 import com.labis.mycl.util.SoftKeyboard;
 import com.squareup.picasso.Picasso;
 
@@ -113,11 +117,16 @@ public class DetailActivity extends AppCompatActivity {
 
     private AdView mAdView;
 
+    AlertDialogHelper alertDialogHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
+
+        // -- Delete Dialog --//
+        alertDialogHelper = new AlertDialogHelper(this);
 
         // -- KeyPad Event Control -- //
         InputMethodManager controlManager = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
@@ -322,7 +331,25 @@ public class DetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.detail_option_btn)
     void optionClick() {
-
+        if(modeStatus.equals("MY")) { //삭제
+            alertDialogHelper.setAlertDialogListener(new AlertDialogHelper.AlertDialogListener() {
+                @Override
+                public void onPositiveClick(int from) {
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                }
+                @Override
+                public void onNegativeClick(int from){}
+                @Override
+                public void onNeutralClick(int from){}
+            });
+            alertDialogHelper.showAlertDialog("", "삭제할까요?", "DELETE", "CANCEL", 1, false);
+        } else if(modeStatus.equals("TOTAL")) { //추가
+            Intent returnIntent = new Intent();
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+        }
     }
 
     @Override

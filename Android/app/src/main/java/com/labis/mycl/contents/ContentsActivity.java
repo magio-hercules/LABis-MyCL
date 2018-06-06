@@ -72,6 +72,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     AlertDialogHelper alertDialogHelper;
     private float x1,x2;
     static final int MIN_DISTANCE = 250;
+    public static final int PICK_EDIT_REQUEST = 1;
+    public int editPosition = -1;
+
 
     // -- Kim Jong Min / Global Variable Section -- ////////////////////////////////////////
     private long lastTimeBackPressed;
@@ -84,7 +87,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contents);
 
-        // -- Edit Mode Dialog --//
+        // -- Delete Dialog --//
         alertDialogHelper = new AlertDialogHelper(this);
 
         // -- ToolBar -- //
@@ -282,12 +285,12 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-    private void delToMyContents() {
+    public void delToMyContents() {
         progressDoalog.show();
         ArrayList<String> deleteList = new ArrayList<String>();
-        for(Content item : editContents) {
+        for (Content item : editContents) {
             deleteList.add(item.id);
-            Log.d(TAG,"EVOL Item ID : " + item.id);
+            Log.d(TAG, "EVOL Item ID : " + item.id);
         }
 
         retroClient.postDeleteMyContents(userData.id, deleteList, new RetroCallback() {
@@ -761,7 +764,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
                             }
                         });
-                        alertDialogHelper.showAlertDialog("", "Delete Contact", "DELETE", "CANCEL", 1, false);
+                        alertDialogHelper.showAlertDialog("", "삭제할까요?", "DELETE", "CANCEL", 1, false);
                     } else {
                         Toast.makeText(getApplicationContext(), "삭제할 항목을 선택해 주세요", Toast.LENGTH_SHORT).show();
                     }
@@ -787,6 +790,28 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             mAdapter.notifyDataSetChanged();
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_EDIT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                if (modeStatus.equals("MY")) {
+                    if(editPosition > -1) {
+                        editContents.add(ContentsList.get(editPosition));
+                        delToMyContents();
+                    }
+                } else if(modeStatus.equals("TOTAL")) {
+                    if(editPosition > -1) {
+                        editContents.add(ContentsList.get(editPosition));
+                        addToMyContents();
+                    }
+                }
+
+                editPosition = -1;
+            }
+        }
+    }
+
 
     private void initSearchView(Menu menu) {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
