@@ -509,12 +509,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             @Override
             public void onSuccess(int code, Object receivedData) {
-                clearRecyclerView(); //initialize
-//                modeStatus = "TOTAL";
-
-                getSupportActionBar().setTitle("내 콘텐츠" + (title.equals("") ? "" : " (" + title + ")"));
-//                getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
-
+                clearRecyclerView();
+                getSupportActionBar().setTitle("내 콘텐츠");
+                if(title.length() > 0) {
+                    getSupportActionBar().setSubtitle("( " + title + " )");
+                } else {
+                    getSupportActionBar().setSubtitle(null);
+                }
                 myContentsRefresh = false;
 
                 List<Content> data = (List<Content>) receivedData;
@@ -555,11 +556,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             @Override
             public void onSuccess(int code, Object receivedData) {
-                clearRecyclerView(); //initialize
-                //modeStatus = "TOTAL";
-
-                getSupportActionBar().setTitle("모든 콘텐츠" + (title.equals("") ? "" : " (" + title + ")"));
-                //getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
+                clearRecyclerView();
+                getSupportActionBar().setTitle("모든 콘텐츠");
+                if(title.length() > 0) {
+                    getSupportActionBar().setSubtitle("( " + title + " )");
+                } else {
+                    getSupportActionBar().setSubtitle(null);
+                }
 
                 List<Content> data = (List<Content>) receivedData;
                 if (!data.isEmpty()) {
