@@ -115,7 +115,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mProfileImage = (ImageView) findViewById(R.id.profile_image);
         mNickName = (TextView) findViewById(R.id.nick_name);
         mLoginEmail = (TextView) findViewById(R.id.login_email);
-        if(userData.image != null) {
+        if(userData.image != null && userData.image.length() > 10) {
             Picasso.get().load(userData.image).transform(new CircleTransform()).into(mProfileImage);
         }
         mNickName.setText(userData.nickname);

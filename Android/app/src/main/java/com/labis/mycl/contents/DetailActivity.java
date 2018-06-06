@@ -260,8 +260,10 @@ public class DetailActivity extends AppCompatActivity {
 
         // 이미지 로딩
         String imageUrl = Item.image;
-        imageUrl = imageUrl.replace("/resize/", "/images/");
-        Picasso.get().load(imageUrl).into(tempImgView);
+        if(imageUrl != null && imageUrl.length() > 10) {
+            imageUrl = imageUrl.replace("/resize/", "/images/");
+            Picasso.get().load(imageUrl).into(tempImgView);
+        }
     }
 
 

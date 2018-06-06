@@ -24,7 +24,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
     private OnItemClickListener mListener;
     private GestureDetector mGestureDetector;
     private ContentsActivity mActivity;
-    private float x1,x2;
+    private float x1,x2,y1,y2;
     static final int MIN_DISTANCE = 250;
 
     public RecyclerItemClickListener(ContentsActivity activity, Context context, final RecyclerView recyclerView, OnItemClickListener listener)
@@ -58,11 +58,14 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 x1 = e.getX();
+                y1 = e.getY();
                 break;
             case MotionEvent.ACTION_UP:
                 x2 = e.getX();
+                y2 = e.getY();
                 float deltaX = x2 - x1;
-                if (Math.abs(deltaX) > MIN_DISTANCE) {
+                float deltaY = Math.abs(y2 - y1);
+                if (Math.abs(deltaX) > MIN_DISTANCE && deltaY < 60) {
                     if (mActivity.modeStatus == "MY") {
                         mActivity.loadTotalContent();
                     } else if (mActivity.modeStatus == "TOTAL") {
