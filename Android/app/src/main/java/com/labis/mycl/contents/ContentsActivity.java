@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -38,7 +41,11 @@ import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.util.AlertDialogHelper;
 import com.labis.mycl.util.AuthManager;
+import com.labis.mycl.util.CircleTransform;
 import com.labis.mycl.util.RecyclerItemClickListener;
+import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +67,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public static User userData;
     public static HashMap<String, String> genreMap = new HashMap<String, String>();
     // UI Variable
+    TextView mNickName;
+    ImageView mProfileImage;
+    TextView mLoginEmail;
     RecyclerViewAdapter mAdapter;
     Toolbar toolbar;
     private ProgressDialog progressDoalog = null;
@@ -79,7 +89,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     // -- Kim Jong Min / Global Variable Section -- ////////////////////////////////////////
     private long lastTimeBackPressed;
     private String selectedGenreId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +112,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 genreMap.put(genreData.get(i).id, genreData.get(i).name);
             }
         }
+        mProfileImage = (ImageView) findViewById(R.id.profile_image);
+        mNickName = (TextView) findViewById(R.id.nick_name);
+        mLoginEmail = (TextView) findViewById(R.id.login_email);
+        if(userData.image != null) {
+            Picasso.get().load(userData.image).transform(new CircleTransform()).into(mProfileImage);
+        }
+        mNickName.setText(userData.nickname);
+        mLoginEmail.setText(userData.id);
 
         //-- ProgressDialog Setting --//
         progressDoalog = new ProgressDialog(this);
@@ -300,6 +317,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onSuccess(int code, Object receivedData) {
                 clearRecyclerView(); //initialize
+                resetDrawerCheckedItem(); // Init Filter
                 modeStatus = "TOTAL";
                 getSupportActionBar().setTitle("모든 콘텐츠");
                 getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
@@ -349,6 +367,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 @Override
                 public void onSuccess(int code, Object receivedData) {
                     clearRecyclerView(); // Initialize
+                    resetDrawerCheckedItem(); // Init Filter
                     modeStatus = "MY";
                     getSupportActionBar().setTitle("내 콘텐츠");
                     getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.colorPrimary)));
@@ -484,6 +503,12 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         Log.e(TAG, "resetDrawerCheckedItem()");
 
         selectedGenreId = null;
+        if(modeStatus == "MY") {
+            getSupportActionBar().setTitle("내 콘텐츠");
+        } else {
+            getSupportActionBar().setTitle("모든 콘텐츠");
+        }
+        getSupportActionBar().setSubtitle(null);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         int size = navigationView.getMenu().size();
