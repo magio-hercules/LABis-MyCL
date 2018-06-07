@@ -92,7 +92,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.d(TAG, "onDestroy()");
 
-        authManager.removeAuthStateListener();
+        if (authManager != null) {
+            authManager.removeAuthStateListener();
+        }
         super.onDestroy();
     }
 

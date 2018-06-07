@@ -96,6 +96,7 @@ exports.postInsertMyContents = function(req, res) {
 	var user_id = req.body.user_id;
 	var id;
 	var tQuery;
+	var chapter = 1;
 	
 	console.log("typeof(req.body.id_list) : " + typeof(req.body.id_list)); 
 	if (typeof(req.body.id_list) != 'string') {
@@ -107,11 +108,11 @@ exports.postInsertMyContents = function(req, res) {
 			}
 			id = req.body.id_list[i];
 			
-			tQuery = '("' + user_id + '", "' + id + '")';
+			tQuery = '("' + user_id + '", "' + id + '", "' + chapter + '")';
 			query += tQuery;
 		}
 	} else {
-		tQuery = '("' + user_id + '", "' + req.body.id_list + '")';
+		tQuery = '("' + user_id + '", "' + req.body.id_list + '", "' + chapter + '")';
 		query += tQuery;
 	}
 	// console.log("[INFO][TEST] postInsertMyContents() query : " + query);
@@ -185,7 +186,7 @@ exports.postInsertContentsList = function(req, res) {
 			console.log('result.insertId: ' + result.insertId);
 
 			// insert myContents 
-			var newQuery = mysql_query.postInsertMyContents();
+			var newQuery = mysql_query.postInsertMyNewContents();
 			var newParams = [];
 			newQuery = _setParams(newQuery, newParams, result.insertId, table.Contents_my.id);
 			newQuery = _setParams(newQuery, newParams, req.body.publisher, table.Contents_my.user_id);

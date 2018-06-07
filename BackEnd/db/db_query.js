@@ -63,7 +63,11 @@ module.exports = function () {
         },
         postInsertMyContents: function () {
             // .../MyCL/insert_my_contents (user_id,id_list:[id])
-            return 'INSERT INTO Contents_my (user_id, id) VALUES ';
+            return 'INSERT INTO Contents_my (user_id, id, chapter) VALUES ';
+        },
+        postInsertMyNewContents: function () {
+            // .../MyCL/insert_my_new_contents (user_id,id_list:[id])
+            return 'INSERT INTO Contents_my SET ';
         },
         postUpdateMyContents: function () {
             // .../MyCL/update_my_contents (id,user_id,score,comment,chapter)

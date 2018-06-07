@@ -14,7 +14,13 @@ exports.postLogin = function(req, res) {
 
 	if (req.body.uid != undefined) {
 		console.log("[INFO][TEST] req.body.uid : " + req.body.uid);
-		authAdmin.auth().createCustomToken(req.body.uid)
+		if (authAdmin == null || authAdmin.auth() == null) {
+			console.log("[INFO][TEST] authAdmin or authAdmin.auth is null");
+			authAdmin = auth.init();
+			sleep(1000);
+		}
+		try {
+			authAdmin.auth().createCustomToken(req.body.uid)
 					.then(function(customToken) {
 						// console.log("[INFO][TEST] customToken : " + customToken);
 						idToken = customToken;
@@ -24,6 +30,9 @@ exports.postLogin = function(req, res) {
 					.catch(function(error) {
 						console.log("Error creating custom token:", error);
 					});
+		} catch (error) {
+			console.log("authAdmin.auth().createCustomToken(req.body.uid) : ", error);
+		}
 	} else {
 		console.log("[INFO][TEST] req.body.uid is undefind");
 		common.doQuery(req, res, query, params, _callback_login);
