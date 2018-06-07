@@ -293,7 +293,7 @@ public class DetailActivity extends AppCompatActivity {
                 @Override
                 public void run() {
 
-                    if(chapterIndex < 99) {
+                    if(chapterIndex < 999) {
                         chapterIndex++;
                         chapterView.setText(String.valueOf(chapterIndex) + " 화");
                         mHandler.postDelayed(this, 100);

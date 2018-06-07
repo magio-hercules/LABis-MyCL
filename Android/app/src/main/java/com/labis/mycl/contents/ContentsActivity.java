@@ -59,8 +59,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public RetroClient retroClient;
     // Content Data Variable
     public ArrayList<Content> ContentsList = new ArrayList();
+    public ArrayList<Content> uiShowContentsList = new ArrayList();
     public ArrayList<Content> myContentsBackup = new ArrayList();
     public ArrayList<Content> editContents = new ArrayList();
+
     public static String modeStatus = "MY";
     public boolean myContentsRefresh = true;
     // Login Data Variable
@@ -204,10 +206,19 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public void multiSelectItem(int position) {
         if (mActionMode != null) {
 
-            if (editContents.contains(ContentsList.get(position))) {
-                editContents.remove(ContentsList.get(position));
+            // Normal Mode
+            if(selectedGenreId == null) {
+                if (editContents.contains(ContentsList.get(position))) {
+                    editContents.remove(ContentsList.get(position));
+                } else {
+                    editContents.add(ContentsList.get(position));
+                }
             } else {
-                editContents.add(ContentsList.get(position));
+                if (editContents.contains(uiShowContentsList.get(position))) {
+                    editContents.remove(uiShowContentsList.get(position));
+                } else {
+                    editContents.add(uiShowContentsList.get(position));
+                }
             }
 
             if (editContents.size() > 0) {
@@ -215,7 +226,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             } else {
                 mActionMode.setTitle("");
             }
-
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -237,8 +247,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             @Override
             public void onSuccess(int code, Object receivedData) {
-                for(Content item : editContents) {
+                for (Content item : editContents) {
                     ContentsList.remove(item);
+                    if (selectedGenreId != null) {
+                        uiShowContentsList.remove(item);
+                    }
                 }
 
                 mAdapter.notifyDataSetChanged();
@@ -305,6 +318,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     public void loadTotalContent() {
+        // Backup MyContentList
+        myContentsBackup.clear();
+        myContentsBackup.addAll(ContentsList);
+
         progressDoalog.show();
         retroClient.postTotalContents(userData.id, new RetroCallback() {
             @Override
@@ -377,11 +394,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     List<Content> data = (List<Content>) receivedData;
                     if (!data.isEmpty()) {
                         ContentsList.clear();
-                        myContentsBackup.clear();
-
                         ContentsList.addAll(data);
-                        myContentsBackup.addAll(data);
-
                         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
                         recyclerView.setAdapter(mAdapter);
                     } else {
@@ -471,17 +484,22 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         if (selectedGenreId != genreId) {
             selectedGenreId = genreId;
             item.setChecked(true);
+
+            Log.e(TAG, "title : " + title + ", genreId : " + genreId);
+            if (modeStatus.equals("MY")) {
+                filterJenreMyContents(title, userData.id, genreId);
+            } else if (modeStatus.equals("TOTAL")) {
+                filterJenreTotalContentsList(title, genreId);
+            }
+
         } else {
             title = "";
             selectedGenreId = genreId = null;
             item.setChecked(false);
-        }
-
-        Log.e(TAG, "title : " + title + ", genreId : " + genreId);
-        if (modeStatus.equals("MY")) {
-            filterJenreMyContents(title, userData.id, genreId);
-        } else if (modeStatus.equals("TOTAL")) {
-            filterJenreContentsList(title, genreId);
+            uiShowContentsList.clear();
+            mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
+            recyclerView.setAdapter(mAdapter);
+            getSupportActionBar().setSubtitle(null);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -523,94 +541,46 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         Log.e(TAG, "doFilter() user_id : " + userId);
         Log.e(TAG, "doFilter() gen_id : " + gen_id);
 
-        progressDoalog.show();
-        retroClient.postFilterMyContents(userId, gen_id, new RetroCallback() {
-            @Override
-            public void onError(Throwable t) {
-                Log.e(TAG, t.toString());
-                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
-                progressDoalog.dismiss();
+        ArrayList<Content> filterContents = new ArrayList();
+        for(Content item : ContentsList) {
+            if(item.gen_id.equals(gen_id)) {
+                filterContents.add(item);
             }
+        }
+        uiShowContentsList.clear();
+        uiShowContentsList.addAll(filterContents);
+        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, uiShowContentsList);
+        recyclerView.setAdapter(mAdapter);
 
-            @Override
-            public void onSuccess(int code, Object receivedData) {
-                clearRecyclerView();
-                getSupportActionBar().setTitle("내 콘텐츠");
-                if(title.length() > 0) {
-                    getSupportActionBar().setSubtitle("( " + title + " )");
-                } else {
-                    getSupportActionBar().setSubtitle(null);
-                }
-                myContentsRefresh = false;
-
-                List<Content> data = (List<Content>) receivedData;
-                if (!data.isEmpty()) {
-                    ContentsList.clear();
-                    editContents.clear();
-                    ContentsList.addAll(data);
-                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
-                    recyclerView.setAdapter(mAdapter);
-                } else {
-                    Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
-                }
-                progressDoalog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int code) {
-                Log.e(TAG, "FAIL");
-                Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
-                progressDoalog.dismiss();
-            }
-        });
+        if(title.length() > 0) {
+            getSupportActionBar().setSubtitle("( " + title + " )");
+        } else {
+            getSupportActionBar().setSubtitle(null);
+        }
     }
 
-    private void filterJenreContentsList(final String title, String gen_id) {
+    private void filterJenreTotalContentsList(final String title, String gen_id) {
         Log.e(TAG, "filterJenreContentsList");
         Log.e(TAG, "doFilter() title : " + title);
         Log.e(TAG, "doFilter() gen_id : " + gen_id);
 
-        progressDoalog.show();
-        retroClient.postFilterContentsList(gen_id, new RetroCallback() {
-            @Override
-            public void onError(Throwable t) {
-                Log.e(TAG, t.toString());
-                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
-                progressDoalog.dismiss();
+        ArrayList<Content> filterContents = new ArrayList();
+        for(Content item : ContentsList) {
+            if(item.gen_id.equals(gen_id)) {
+                filterContents.add(item);
             }
+        }
+        uiShowContentsList.clear();
+        uiShowContentsList.addAll(filterContents);
+        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, uiShowContentsList);
+        recyclerView.setAdapter(mAdapter);
 
-            @Override
-            public void onSuccess(int code, Object receivedData) {
-                clearRecyclerView();
-                getSupportActionBar().setTitle("모든 콘텐츠");
-                if(title.length() > 0) {
-                    getSupportActionBar().setSubtitle("( " + title + " )");
-                } else {
-                    getSupportActionBar().setSubtitle(null);
-                }
-
-                List<Content> data = (List<Content>) receivedData;
-                if (!data.isEmpty()) {
-                    ContentsList.clear();
-                    editContents.clear();
-                    ContentsList.addAll(data);
-                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
-                    recyclerView.setAdapter(mAdapter);
-                } else {
-                    Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
-                }
-                progressDoalog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int code) {
-                Log.e(TAG, "FAIL");
-                Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
-                progressDoalog.dismiss();
-            }
-        });
+        if(title.length() > 0) {
+            getSupportActionBar().setSubtitle("( " + title + " )");
+        } else {
+            getSupportActionBar().setSubtitle(null);
+        }
     }
-
 
 
     // -- Search Function Section -- ////////////////////////////////////////
@@ -625,71 +595,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         String query = intent.getStringExtra(SearchManager.QUERY);
         Log.d(TAG, "query : " + query);
-
-        if (modeStatus.equals("MY")) {
-            retroClient.postSearchMyContents(userData.id, query, new RetroCallback() {
-                @Override
-                public void onError(Throwable t) {
-                    Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
-                    progressDoalog.dismiss();
-                }
-
-                @Override
-                public void onSuccess(int code, Object receivedData) {
-                    myContentsRefresh = false;
-
-                    List<Content> data = (List<Content>) receivedData;
-                    if (!data.isEmpty()) {
-                        ContentsList.clear();
-                        ContentsList.addAll(data);
-                        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
-                        recyclerView.setAdapter(mAdapter);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
-                    }
-                    progressDoalog.dismiss();
-                }
-
-                @Override
-                public void onFailure(int code) {
-                    Toast.makeText(getApplicationContext(), "DELETE FAIL : " + code, Toast.LENGTH_SHORT).show();
-                    progressDoalog.dismiss();
-                }
-            });
-        } else {
-            retroClient.postSearchContentsList(query, new RetroCallback() {
-                @Override
-                public void onError(Throwable t) {
-                    Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
-                    progressDoalog.dismiss();
-                }
-
-                @Override
-                public void onSuccess(int code, Object receivedData) {
-                    clearRecyclerView(); //initialize
-                    //modeStatus = "TOTAL";
-
-                    List<Content> data = (List<Content>) receivedData;
-                    if (!data.isEmpty()) {
-                        ArrayList<Content> items = new ArrayList();
-                        items.addAll(data);
-                        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, items);
-                        recyclerView.setAdapter(mAdapter);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
-                    }
-                    progressDoalog.dismiss();
-                }
-
-                @Override
-                public void onFailure(int code) {
-                    Toast.makeText(getApplicationContext(), "DELETE FAIL : " + code, Toast.LENGTH_SHORT).show();
-                    progressDoalog.dismiss();
-                }
-            });
-        }
     }
-
 
 
     // -- Event Override Section -- ////////////////////////////////////////
