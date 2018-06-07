@@ -225,9 +225,9 @@
         <Button
             android:id="@+id/register_registerbtn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="44dp"
             android:layout_gravity="bottom"
-            android:background="@color/pointColor"
+            android:background="#D7D9DD"
             android:text="등록"
             android:textSize="17sp" />
     </LinearLayout>

@@ -1,11 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/custom_ll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F7F7F7"
+    android:gravity="bottom"
     android:orientation="vertical"
-    android:id="@+id/custom_ll"
     tools:context=".contents.CustomActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -23,204 +24,203 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
-        android:id="@+id/custom_scroll_view"
+
+    <LinearLayout
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/custom_appbar">
+        android:layout_below="@+id/custom_appbar"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/mainLayout"
+            android:id="@+id/HeaderDiv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
+            android:layout_height="110dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/HeaderDiv"
+                android:id="@+id/DivImage"
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
-                android:background="@drawable/border"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:padding="10dp">
 
-                <LinearLayout
-                    android:id="@+id/DivImage"
+                <TextView
+                    android:id="@+id/textThum"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:orientation="vertical"
-                    android:padding="10dp">
+                    android:layout_height="24dp"
+                    android:text="타이틀이미지"
+                    android:textSize="11sp" />
 
-                    <TextView
-                        android:id="@+id/textThum"
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:text="타이틀이미지"
-                        android:textSize="11sp" />
-
-                    <ImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:layout_gravity="center"
-                        android:background="@mipmap/ic_default_thum"
-                        android:scaleType="fitXY" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/DivGenre"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/border"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:id="@+id/textGenre"
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:text="장르"
-                        android:textSize="11sp" />
-
-                    <Spinner
-                        android:id="@+id/comboGenre"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:gravity="center" />
-                </LinearLayout>
-
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:background="@mipmap/ic_default_thum"
+                    android:scaleType="fitXY" />
             </LinearLayout>
 
-
             <LinearLayout
-                android:id="@+id/Div1"
+                android:id="@+id/DivGenre"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginTop="-1dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
                 android:background="@drawable/border"
                 android:orientation="vertical"
                 android:padding="10dp">
 
                 <TextView
-                    android:id="@+id/textTitle"
+                    android:id="@+id/textGenre"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
-                    android:text="타이틀"
+                    android:text="장르"
+                    android:textSize="11sp" />
+
+                <Spinner
+                    android:id="@+id/comboGenre"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Div1"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="-1dp"
+            android:background="@drawable/border"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/textTitle"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:text="타이틀"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/editTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/cardview_light_background"
+                android:gravity="bottom|right"
+                android:inputType="textPersonName"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Div2"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="-1dp"
+            android:background="@drawable/border"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/textOriginal"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:text="글로벌타이틀"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/editOriginal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/cardview_light_background"
+                android:gravity="bottom|right"
+                android:inputType="textPersonName"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/OptionDiv"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="-1dp"
+            android:background="@drawable/border"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/Div4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/textSeason"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:text="시즌"
                     android:textSize="12sp" />
 
                 <EditText
-                    android:id="@+id/editTitle"
+                    android:id="@+id/editSeason"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/cardview_light_background"
+                    android:background="@null"
                     android:gravity="bottom|right"
-                    android:inputType="textPersonName"
-                    android:textSize="15sp" />
+                    android:inputType="numberDecimal"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/Div2"
+                android:id="@+id/Div6"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginTop="-1dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="-1dp"
+                android:layout_weight="0.5"
                 android:background="@drawable/border"
                 android:orientation="vertical"
                 android:padding="10dp">
 
                 <TextView
-                    android:id="@+id/textOriginal"
+                    android:id="@+id/textTheater"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
-                    android:text="글로벌타이틀"
+                    android:text="극장판"
                     android:textSize="12sp" />
 
-                <EditText
-                    android:id="@+id/editOriginal"
+                <Switch
+                    android:id="@+id/switchTheater"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/cardview_light_background"
-                    android:gravity="bottom|right"
-                    android:inputType="textPersonName"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/OptionDiv"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginTop="-1dp"
-                android:background="@drawable/border"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/Div4"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:id="@+id/textSeason"
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:text="시즌"
-                        android:textSize="12sp" />
-
-                    <EditText
-                        android:id="@+id/editSeason"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:gravity="bottom|right"
-                        android:inputType="numberDecimal"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/Div6"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="-1dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/border"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:id="@+id/textTheater"
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:text="극장판"
-                        android:textSize="12sp" />
-
-                    <Switch
-                        android:id="@+id/switchTheater"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="right"
-                        android:layout_marginRight="-2dp"
-                        android:switchMinWidth="60dp"
-                        android:track="@drawable/bg_switch_track" />
-
-                </LinearLayout>
+                    android:layout_gravity="right"
+                    android:layout_marginRight="-2dp"
+                    android:switchMinWidth="60dp"
+                    android:track="@drawable/bg_switch_track" />
 
             </LinearLayout>
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/custom_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:id="@+id/Div7"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="120dp"
                 android:layout_marginTop="-1dp"
                 android:background="@drawable/border"
                 android:orientation="vertical"
@@ -241,11 +241,12 @@
                     android:gravity="top"
                     android:inputType="textMultiLine"
                     android:maxLines="@android:integer/config_longAnimTime"
+                    android:minHeight="90dp"
                     android:textSize="15sp" />
             </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
+    </LinearLayout>
 
 
     <LinearLayout
@@ -253,9 +254,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_gravity="bottom"
-        android:foregroundGravity="bottom"
-        android:gravity="bottom">
+        android:layout_gravity="bottom">
 
         <Button
             android:id="@+id/saveBtn"

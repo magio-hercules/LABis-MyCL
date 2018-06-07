@@ -3,23 +3,29 @@ package com.labis.mycl.contents;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -42,6 +48,7 @@ import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.util.CheckPermission;
 import com.labis.mycl.util.ImagePicker;
+import com.labis.mycl.util.SoftKeyboard;
 
 import java.io.File;
 import java.util.Iterator;
@@ -89,9 +96,10 @@ public class CustomActivity extends AppCompatActivity {
     @BindView(R.id.custom_scroll_view)
     ScrollView scrollView;
 
+    @BindView(R.id.custom_ll)
+    RelativeLayout totalLayout;
 
     SpinnerAdapter sAdapter;
-
     private RetroClient retroClient;
 
     // Image 선택
@@ -111,6 +119,7 @@ public class CustomActivity extends AppCompatActivity {
     TransferUtility transferUtility;
 
     private ProgressDialog progressDoalog;
+    private SoftKeyboard softKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,13 +193,30 @@ public class CustomActivity extends AppCompatActivity {
         progressDoalog.setMessage("잠시만 기다리세요....");
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-        // -- EditText Box Focus -- //
-        editSummary.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        InputMethodManager controlManager = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
+        softKeyboard = new SoftKeyboard(totalLayout, controlManager);
+        softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
             @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    scrollView.fullScroll(View.FOCUS_DOWN);
-                }
+            public void onSoftKeyboardHide() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onSoftKeyboardShow() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "FOCUS", Toast.LENGTH_SHORT).show();
+                        if(editSummary.hasFocus()) {
+                            scrollView.fullScroll(View.FOCUS_DOWN);
+                        }
+                    }
+                });
             }
         });
     }
