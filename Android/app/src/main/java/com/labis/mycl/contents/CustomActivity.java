@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Switch;
@@ -84,6 +85,10 @@ public class CustomActivity extends AppCompatActivity {
     LinearLayout seasonDiv;
     @BindView(R.id.Div6)
     LinearLayout theaterDiv;
+
+    @BindView(R.id.custom_scroll_view)
+    ScrollView scrollView;
+
 
     SpinnerAdapter sAdapter;
 
@@ -178,6 +183,16 @@ public class CustomActivity extends AppCompatActivity {
         progressDoalog = new ProgressDialog(this);
         progressDoalog.setMessage("잠시만 기다리세요....");
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        // -- EditText Box Focus -- //
+        editSummary.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+                }
+            }
+        });
     }
 
 
