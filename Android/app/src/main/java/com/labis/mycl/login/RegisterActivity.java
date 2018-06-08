@@ -29,7 +29,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.labis.mycl.R;
+import com.labis.mycl.model.LoginData;
 import com.labis.mycl.model.Register;
+import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.util.AuthManager;
@@ -88,14 +90,22 @@ public class RegisterActivity extends AppCompatActivity {
 
     private AuthManager authManager;
 
+    public static User userData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
 
+        boolean bEditProfile = checkProfile(getIntent());
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("사용자 등록");
+        if (bEditProfile) {
+            toolbar.setTitle("프로필 수정");
+        } else {
+            toolbar.setTitle("사용자 등록");
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -125,6 +135,8 @@ public class RegisterActivity extends AppCompatActivity {
         imgPicker = new ImagePicker(RegisterActivity.this,CAMERA_CODE,GALLERY_CODE);
 
         authManager = AuthManager.getInstance();
+
+        setProfile(bEditProfile);
     }
 
 
@@ -379,6 +391,33 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    private boolean checkProfile(Intent intent) {
+        Log.d(TAG, "editProfile()");
+
+        LoginData loginData = (LoginData) intent.getExtras().getParcelable("LoingData");
+        if (loginData == null) {
+            return false;
+        }
+        userData = loginData.getUser();
+
+        return true;
+    }
+
+    private void setProfile(boolean bEdit) {
+        if (!bEdit) {
+            return;
+        }
+
+        register_email.setText(userData.id);
+        register_age.setText(userData.age);
+        register_gender.setText(userData.gender);
+        register_nickname.setText(userData.nickname);
+        register_phone.setText(userData.phone);
+//        register_age.setText(userData.image);
+        // TODO 이미지 표시
+
+        register_email.setEnabled(false);
+    }
 }
 
 

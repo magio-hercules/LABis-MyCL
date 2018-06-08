@@ -29,9 +29,9 @@
         android:title="삭제"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/action_sign_out"
-        android:title="로그아웃"
-        app:showAsAction="never"/>
+    <!--<item android:id="@+id/action_sign_out"-->
+        <!--android:title="로그아웃"-->
+        <!--app:showAsAction="never"/>-->
 
     <item
         android:id="@+id/action_s3_url"

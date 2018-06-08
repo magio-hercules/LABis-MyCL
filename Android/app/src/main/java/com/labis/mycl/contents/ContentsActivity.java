@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
@@ -32,6 +31,7 @@ import android.widget.Toast;
 
 import com.labis.mycl.MainActivity;
 import com.labis.mycl.R;
+import com.labis.mycl.login.RegisterActivity;
 import com.labis.mycl.login.UrlActivity;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
@@ -45,11 +45,13 @@ import com.labis.mycl.util.CircleTransform;
 import com.labis.mycl.util.RecyclerItemClickListener;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ContentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -89,13 +91,23 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
 
     // -- Kim Jong Min / Global Variable Section -- ////////////////////////////////////////
+    @BindView(R.id.drawer_btn_logout)
+    Button btnLogout;
+    @BindView(R.id.drawer_btn_edit)
+    Button btnEdit;
+    @BindView(R.id.profile_image)
+    ImageView imageProfile;
     private long lastTimeBackPressed;
     private String selectedGenreId;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contents);
+        ButterKnife.bind(this);
 
         // -- Delete Dialog --//
         alertDialogHelper = new AlertDialogHelper(this);
@@ -222,9 +234,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             }
 
             if (editContents.size() > 0) {
-                mActionMode.setTitle("" + editContents.size());
+                mActionMode.setTitle("" + editContents.size() + "개 항목 선택");
             } else {
-                mActionMode.setTitle("");
+                mActionMode.setTitle("삭제할 항목을 선택해주세요");
             }
             mAdapter.notifyDataSetChanged();
         }
@@ -776,7 +788,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             }
 
             return true;
-        } else if (id == R.id.action_sign_out) {
+        } /*else if (id == R.id.action_sign_out) {
             AuthManager authManager = AuthManager.getInstance();
             authManager.signOut();
             authManager.setFirebaseUser(null);
@@ -785,15 +797,41 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             Intent i = new Intent(ContentsActivity.this, MainActivity.class);
             startActivity(i);
             finishAffinity();
-        } else if (id == R.id.action_s3_url) {
+        } */
+        else if (id == R.id.action_s3_url) {
             Intent i = new Intent(ContentsActivity.this, UrlActivity.class);
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @OnClick(R.id.drawer_btn_logout)
+    void onClick_logout() {
+        AuthManager authManager = AuthManager.getInstance();
+        authManager.signOut();
+        authManager.setFirebaseUser(null);
+        myContentsRefresh = true;
+        modeStatus = "MY";
+        Intent i = new Intent(ContentsActivity.this, MainActivity.class);
+        startActivity(i);
+        finishAffinity();
+    }
 
+    @OnClick(R.id.drawer_btn_edit)
+    void onClick_edit() {
+        doRegister();
+    }
 
+    @OnClick(R.id.profile_image)
+    void onClick_profile() {
+        doRegister();
+    }
 
+    private void doRegister() {
+        Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
+        LoginData loginData = new LoginData(userData, null);
+        i.putExtra("LoingData", loginData);
+        startActivity(i);
+    }
 
 }
