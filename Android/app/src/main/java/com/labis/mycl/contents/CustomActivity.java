@@ -42,6 +42,8 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.rest.RetroCallback;
@@ -120,6 +122,7 @@ public class CustomActivity extends AppCompatActivity {
 
     private ProgressDialog progressDoalog;
     private SoftKeyboard softKeyboard;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,10 +203,7 @@ public class CustomActivity extends AppCompatActivity {
             public void onSoftKeyboardHide() {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
-                    public void run() {
-
-                    }
-                });
+                    public void run() { }});
             }
 
             @Override
@@ -211,7 +211,6 @@ public class CustomActivity extends AppCompatActivity {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "FOCUS", Toast.LENGTH_SHORT).show();
                         if(editSummary.hasFocus()) {
                             scrollView.fullScroll(View.FOCUS_DOWN);
                         }
@@ -219,6 +218,11 @@ public class CustomActivity extends AppCompatActivity {
                 });
             }
         });
+
+        // for AD
+        mAdView = findViewById(R.id.custom_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
 
