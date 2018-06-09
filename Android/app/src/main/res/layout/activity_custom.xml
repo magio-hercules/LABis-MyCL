@@ -28,16 +28,14 @@
         android:id="@+id/custom_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:layout_below="@+id/custom_appbar">
 
         <LinearLayout
             android:id="@+id/mainLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
+            android:padding="10dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:orientation="vertical">
@@ -218,7 +216,7 @@
             <LinearLayout
                 android:id="@+id/Div7"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="140dp"
                 android:layout_marginTop="-1dp"
                 android:background="@drawable/border"
                 android:orientation="vertical"
@@ -231,12 +229,14 @@
                     android:textSize="12sp" />
                 <EditText
                     android:id="@+id/editSummary"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/cardview_light_background"
                     android:gravity="top"
                     android:inputType="textMultiLine"
-                    android:maxLines="@android:integer/config_longAnimTime"
+                    android:scrollbars="vertical"
                     android:textSize="15sp" />
             </LinearLayout>
 
@@ -244,7 +244,7 @@
                 android:id="@+id/custom_ad_zone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="66dp"
+                android:layout_marginBottom="44dp"
                 android:layout_marginTop="-1dp"
                 android:background="@drawable/border"
                 android:orientation="vertical"
@@ -266,11 +266,9 @@
                     ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
                 </com.google.android.gms.ads.AdView>
             </LinearLayout>
-
         </LinearLayout>
-
-
     </ScrollView>
+
 
     <LinearLayout
         android:id="@+id/Div8"

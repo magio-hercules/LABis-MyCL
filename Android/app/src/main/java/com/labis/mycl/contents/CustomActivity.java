@@ -14,9 +14,13 @@ import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -95,11 +99,13 @@ public class CustomActivity extends AppCompatActivity {
     @BindView(R.id.Div6)
     LinearLayout theaterDiv;
 
+    @BindView(R.id.custom_ll)
+    RelativeLayout totalLayout;
+
+
     @BindView(R.id.custom_scroll_view)
     ScrollView scrollView;
 
-    @BindView(R.id.custom_ll)
-    RelativeLayout totalLayout;
 
     SpinnerAdapter sAdapter;
     private RetroClient retroClient;
@@ -123,6 +129,8 @@ public class CustomActivity extends AppCompatActivity {
     private ProgressDialog progressDoalog;
     private SoftKeyboard softKeyboard;
     private AdView mAdView;
+
+    boolean editSummaryFocus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,7 +204,7 @@ public class CustomActivity extends AppCompatActivity {
         progressDoalog.setMessage("잠시만 기다리세요....");
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-        InputMethodManager controlManager = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
+       InputMethodManager controlManager = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
         softKeyboard = new SoftKeyboard(totalLayout, controlManager);
         softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
             @Override
@@ -208,14 +216,44 @@ public class CustomActivity extends AppCompatActivity {
 
             @Override
             public void onSoftKeyboardShow() {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if(editSummary.hasFocus()) {
                             scrollView.fullScroll(View.FOCUS_DOWN);
+                            editSummary.requestFocus();
                         }
                     }
-                });
+                },600);
+            }
+        });
+
+
+        editSummary.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
+
+        editSummary.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+
+                return false;
             }
         });
 
@@ -466,4 +504,10 @@ public class CustomActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
     }
 
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        softKeyboard.unRegisterSoftKeyboardCallback();
+    }
 }
