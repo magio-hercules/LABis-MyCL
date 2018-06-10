@@ -1,10 +1,9 @@
 package com.labis.mycl.contents;
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,6 +13,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -22,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,10 +49,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import br.com.mauker.materialsearchview.db.HistoryContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import br.com.mauker.materialsearchview.MaterialSearchView;
 
 public class ContentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -85,11 +87,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     AlertDialogHelper alertDialogHelper;
     public static final int PICK_EDIT_REQUEST = 1;
     public int editPosition = -1;
-    // Swipe Gestures Variable
-    private float x1,x2;
-    static final int MIN_DISTANCE = 250;
-
     private MaterialSearchView searchView;
+    private ArrayList<String> contestsTitleSuggestionsArray = new ArrayList<String>();
+
+
 
     // -- Kim Jong Min / Global Variable Section -- ////////////////////////////////////////
     @BindView(R.id.drawer_btn_logout)
@@ -102,7 +103,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private String selectedGenreId;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +113,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         alertDialogHelper = new AlertDialogHelper(this);
 
         // -- ToolBar -- //
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.content_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("내 콘텐츠");
 
@@ -184,65 +184,46 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             loadTotalContent();
         }
 
-        // -- MainLayout SwipeEvent -- //
-        findViewById(R.id.main_layout).setOnTouchListener(
-                new LinearLayout.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        switch (event.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                x1 = event.getX();
-                                break;
-                            case MotionEvent.ACTION_UP:
-                                x2 = event.getX();
-                                float deltaX = x2 - x1;
-                                if (Math.abs(deltaX) > MIN_DISTANCE) {
-                                    if (modeStatus == "MY") {
-                                        loadTotalContent();
-                                    } else if (modeStatus == "TOTAL") {
-                                        loadMyContents();
-                                    }
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    }
-                }
-        );
-
         // -- Search UI -- //
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
-        searchView.setBackground(getResources().getDrawable(R.drawable.search_view));
+        searchView.setHint("검색");
+        searchView.setVoiceHintPrompt("찾고 싶은 콘텐츠의 제목을 말하세요.");
+        searchView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        searchView.setListTextColor(getResources().getColor(R.color.recyclerView));
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(TAG,"SEARCH :" + query);
+
                 return false;
             };
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //Do some magic
                 return false;
             }
         });
-
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+        searchView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onSearchViewShown() {
-                //Do some magic
-
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-                //Do some magic
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String suggestion = searchView.getSuggestionAtPosition(i);
+                getContentResolver().delete(
+                        HistoryContract.HistoryEntry.CONTENT_URI,
+                        HistoryContract.HistoryEntry.TABLE_NAME +
+                                "." +
+                                HistoryContract.HistoryEntry.COLUMN_QUERY +
+                                " = ? AND " +
+                                HistoryContract.HistoryEntry.TABLE_NAME +
+                                "." +
+                                HistoryContract.HistoryEntry.COLUMN_IS_HISTORY +
+                                " = ?"
+                        ,
+                        new String[]{suggestion, String.valueOf(1)}
+                );
+                searchView.closeSearch();
+                return true;
             }
         });
-
-
 
     }
 
@@ -385,20 +366,40 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
 
                 editContents.clear();
+                ContentsList.clear();
+                contestsTitleSuggestionsArray.clear();
                 List<Content> data = (List<Content>) receivedData;
+
                 if (!data.isEmpty()) {
-                    ContentsList.clear();
                     ContentsList.addAll(data);
+                    //Search Suggestion
                     mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
                     recyclerView.setAdapter(mAdapter);
+
+                    //Search Suggestion
+                    for(Content i : ContentsList) {
+                        contestsTitleSuggestionsArray.add(i.name);
+                        contestsTitleSuggestionsArray.add(i.name_org);
+                    }
+
                 } else {
                     Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
                 }
+
                 if(contentsMainMenu != null) {
                     contentsMainMenu.findItem(R.id.action_total_contents).setVisible(false);
                     contentsMainMenu.findItem(R.id.action_my_contents).setVisible(true);
                     contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("추가");
                 }
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        searchView.clearSuggestions();
+                        searchView.addSuggestions(contestsTitleSuggestionsArray);
+                    }
+                }).start();
+
                 progressDoalog.dismiss();
             }
 
@@ -409,7 +410,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 progressDoalog.dismiss();
             }
         });
-
         setDrawerItem(false, R.id.favorite);
         resetDrawerCheckedItem();
     }
@@ -436,20 +436,37 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
                     myContentsRefresh = false;
                     editContents.clear();
+                    ContentsList.clear();
+                    contestsTitleSuggestionsArray.clear();
                     List<Content> data = (List<Content>) receivedData;
                     if (!data.isEmpty()) {
-                        ContentsList.clear();
                         ContentsList.addAll(data);
                         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
                         recyclerView.setAdapter(mAdapter);
+
+                        //Search Suggestion
+                        for(Content i : ContentsList) {
+                            contestsTitleSuggestionsArray.add(i.name);
+                            contestsTitleSuggestionsArray.add(i.name_org);
+                        }
                     } else {
                         Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
                     }
-                    if(contentsMainMenu != null) {
+
+                    if (contentsMainMenu != null) {
                         contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
                         contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
                         contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("삭제");
                     }
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            searchView.clearSuggestions();
+                            searchView.addSuggestions(contestsTitleSuggestionsArray);
+                        }
+                    }).start();;
+
                     progressDoalog.dismiss();
                 }
 
@@ -469,9 +486,26 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.colorPrimary)));
             mAdapter = new RecyclerViewAdapter(this, ContentsList);
             recyclerView.setAdapter(mAdapter);
+
             contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
             contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
             contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("삭제");
+
+            //Search Suggestion
+            contestsTitleSuggestionsArray.clear();
+            for(Content i : ContentsList) {
+                contestsTitleSuggestionsArray.add(i.name);
+                contestsTitleSuggestionsArray.add(i.name_org);
+            }
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    searchView.clearSuggestions();
+                    searchView.addSuggestions(contestsTitleSuggestionsArray);
+                }
+            }).start();
+
             progressDoalog.dismiss();
         }
 
@@ -702,7 +736,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public void onBackPressed() {
-        if (searchView.isSearchOpen()) {
+        if (searchView.isOpen()) {
             searchView.closeSearch();
             return;
         }
@@ -747,6 +781,18 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 editPosition = -1;
             }
         }
+
+        if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (matches != null && matches.size() > 0) {
+                String searchWrd = matches.get(0);
+                if (!TextUtils.isEmpty(searchWrd)) {
+                    searchView.setQuery(searchWrd, false);
+                }
+            }
+
+            return;
+        }
     }
 
     @Override
@@ -767,10 +813,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             item = contentsMainMenu.findItem(R.id.action_s3_url);
             item.setVisible(true);
         }
-
-        MenuItem searchitem = menu.findItem(R.id.action_search_contents);
-        searchView.setMenuItem(searchitem);
-
         return true;
     }
 
@@ -792,6 +834,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             return true;
         } else if (id == R.id.action_search_contents) {
             // 검색 기능 활성화
+            searchView.openSearch();
             return true;
         } else if (id == R.id.action_edit_contents) {
             // 추가 삭제
