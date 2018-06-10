@@ -282,7 +282,7 @@
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_gravity="bottom"
-            android:background="#D7D9DD"
+            android:background="#E4E5E6"
             android:text="추가"
             android:textSize="15sp" />
     </LinearLayout>

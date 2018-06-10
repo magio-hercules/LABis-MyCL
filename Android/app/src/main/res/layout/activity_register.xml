@@ -8,7 +8,7 @@
     tools:context=".login.RegisterActivity" >
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+        android:id="@+id/register_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -22,21 +22,36 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/register_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:layout_below="@+id/register_appbar">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_below="@+id/appbar"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
+        android:padding="10dp"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border2"
+            android:padding="4dp"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:text="필수정보" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@drawable/border"
-            android:layout_marginTop="-1dp"
             android:orientation="vertical"
             android:padding="10dp">
             <TextView
@@ -60,89 +75,54 @@
             android:layout_height="60dp"
             android:background="@drawable/border"
             android:layout_marginTop="-1dp"
-            android:orientation="vertical"
-            android:padding="10dp">
-            <TextView
-                android:id="@+id/textView_pw"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:text="비밀번호"
-                android:textSize="12sp" />
-            <EditText
-                android:id="@+id/register_password"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/cardview_light_background"
-                android:gravity="bottom|right"
-                android:inputType="textPassword"
-                android:textSize="15sp" />
-        </LinearLayout>
+            android:layout_marginBottom="-1dp"
+            android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/border"
-            android:layout_marginTop="-1dp"
-            android:orientation="vertical"
-            android:padding="10dp">
-            <TextView
-                android:id="@+id/textView_pw1"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:text="비밀번호 재확인"
-                android:textSize="12sp" />
-            <EditText
-                android:id="@+id/register_password_verify"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/cardview_light_background"
-                android:gravity="bottom|right"
-                android:inputType="textPassword"
-                android:textSize="15sp" />
-        </LinearLayout>
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:padding="10dp">
+                <TextView
+                    android:id="@+id/textView_pw"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:text="비밀번호"
+                    android:textSize="12sp" />
+                <EditText
+                    android:id="@+id/register_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/cardview_light_background"
+                    android:gravity="bottom|right"
+                    android:inputType="textPassword"
+                    android:textSize="15sp" />
+            </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/border"
-            android:layout_marginTop="-1dp"
-            android:orientation="vertical"
-            android:padding="10dp">
-            <TextView
-                android:id="@+id/textView_age"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:text="나이"
-                android:textSize="12sp" />
-            <EditText
-                android:id="@+id/register_age"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/cardview_light_background"
-                android:gravity="bottom|right"
-                android:textSize="15sp" />
-        </LinearLayout>
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:background="@drawable/border"
+                android:padding="10dp">
+                <TextView
+                    android:id="@+id/textView_pw1"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:text="비밀번호 재확인"
+                    android:textSize="12sp" />
+                <EditText
+                    android:id="@+id/register_password_verify"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/cardview_light_background"
+                    android:gravity="bottom|right"
+                    android:inputType="textPassword"
+                    android:textSize="15sp" />
+            </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/border"
-            android:layout_marginTop="-1dp"
-            android:orientation="vertical"
-            android:padding="10dp">
-            <TextView
-                android:id="@+id/textView_gender"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:text="성별"
-                android:textSize="12sp" />
-            <EditText
-                android:id="@+id/register_gender"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/cardview_light_background"
-                android:gravity="bottom|right"
-                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -164,7 +144,97 @@
                 android:layout_height="match_parent"
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
+                android:inputType="textPersonName"
                 android:textSize="15sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border2"
+            android:padding="4dp"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginTop="-1dp"
+            android:textColor="@color/colorPrimary"
+            android:text="부가정보" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/border"
+            android:layout_marginBottom="-1dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="0.5"
+                android:padding="10dp">
+                <TextView
+                    android:id="@+id/textView_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:text="나이"
+                    android:textSize="12sp" />
+                <EditText
+                    android:id="@+id/register_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/cardview_light_background"
+                    android:gravity="bottom|right"
+                    android:inputType="numberDecimal"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="0.5"
+                android:background="@drawable/border"
+                android:padding="10dp">
+                <TextView
+                    android:id="@+id/textView_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:text="성별"
+                    android:textSize="12sp" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="right|center_vertical"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/register_gender_male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:textSize="18sp"
+                        android:text="남"
+                        android:textColor="#888888" />
+
+                    <RadioButton
+                        android:id="@+id/register_gender_female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:textSize="18sp"
+                        android:text="여"
+                        android:textColor="#888888" />
+                </RadioGroup>
+
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -173,6 +243,7 @@
             android:background="@drawable/border"
             android:layout_marginTop="-1dp"
             android:orientation="vertical"
+            android:visibility="gone"
             android:padding="10dp">
             <TextView
                 android:id="@+id/textView_phone"
@@ -193,6 +264,7 @@
             android:layout_width="match_parent"
             android:layout_height="110dp"
             android:background="@drawable/border"
+            android:layout_marginBottom="44dp"
             android:layout_marginTop="-1dp"
             android:orientation="vertical"
             android:padding="10dp">
@@ -213,6 +285,7 @@
         </LinearLayout>
     </LinearLayout>
 
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -227,20 +300,20 @@
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_gravity="bottom"
-            android:background="#E8D4D9"
-            android:layout_weight=".5"
+            android:background="#E9E4E5"
+            android:layout_weight="0.5"
             android:text="취소"
-            android:textSize="17sp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/register_registerbtn"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_gravity="bottom"
-            android:background="#D7D9DD"
-            android:layout_weight=".5"
+            android:background="#E4E5E6"
+            android:layout_weight="0.5"
             android:text="확인"
-            android:textSize="17sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
 </RelativeLayout>

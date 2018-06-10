@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="220dp"
@@ -48,8 +48,8 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="220dp"
-            android:layout_height="54dp"
+            android:layout_width="216dp"
+            android:layout_height="44dp"
             android:alpha="0.2"
             android:gravity="center"
             android:orientation="horizontal"
@@ -61,7 +61,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:layout_gravity="center"
-                android:text="LOGIN" />
+                android:text="접속" />
 
             <Button
                 android:id="@+id/login_registerbtn"
@@ -69,7 +69,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:layout_gravity="center"
-                android:text="REGISTER" />
+                android:text="등록" />
         </LinearLayout>
 
         <!--<LinearLayout-->

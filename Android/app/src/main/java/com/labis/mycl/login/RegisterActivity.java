@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -63,14 +64,19 @@ public class RegisterActivity extends AppCompatActivity {
     EditText register_password_verify;
     @BindView(R.id.register_age)
     EditText register_age;
-    @BindView(R.id.register_gender)
-    EditText register_gender;
     @BindView(R.id.register_nickname)
     EditText register_nickname;
     @BindView(R.id.register_phone)
     EditText register_phone;
     @BindView(R.id.register_registerbtn)
     Button btn_register;
+    @BindView(R.id.register_cancel)
+    Button btn_cancle;
+
+    @BindView(R.id.register_gender_male)
+    RadioButton register_gender_male;
+    @BindView(R.id.register_gender_female)
+    RadioButton register_gender_female;
 
     // for S3
     CognitoCachingCredentialsProvider credentialsProvider;
@@ -139,6 +145,10 @@ public class RegisterActivity extends AppCompatActivity {
         setProfile(bEditProfile);
     }
 
+    @OnClick(R.id.register_cancel)
+    void onClick_cancel() {
+        finish();
+    }
 
     @OnClick(R.id.register_registerbtn)
     void onClick_register() {
@@ -147,12 +157,19 @@ public class RegisterActivity extends AppCompatActivity {
         final String str_email = register_email.getText().toString();
         final String str_pw = register_password.getText().toString();
         final String str_pw_verify = register_password_verify.getText().toString();
+        final String str_nickname = register_nickname.getText().toString();
 
         if (str_email.equals("")) {
-            register_email.setError("Required.");
+            register_email.setError("필수");
         }
         if (str_pw.equals("")) {
-            register_password.setError("Required.");
+            register_password.setError("필수");
+        }
+        if (str_pw_verify.equals("")) {
+            register_password_verify.setError("필수");
+        }
+        if (str_nickname.equals("")) {
+            register_nickname.setError("필수");
         }
 
         if (!str_pw.equals(str_pw_verify)) {
@@ -161,7 +178,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (str_email.equals("") || str_pw.equals("")) {
-            Toast.makeText(this, "필수 항목(이메일/비밀번호) 입력 필요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "(이메일/비밀번호/닉네임) 입력해 주세요", Toast.LENGTH_SHORT).show();
             return;
         }
         OnCompleteListener completeListener = new OnCompleteListener<AuthResult>() {
@@ -216,9 +233,17 @@ public class RegisterActivity extends AppCompatActivity {
         String str_email = register_email.getText().toString();
         String str_pw = register_password.getText().toString();
         String str_age = register_age.getText().toString();
-        String str_gender = register_gender.getText().toString();
+        //String str_gender = register_gender.getText().toString();
         String str_nickname = register_nickname.getText().toString();
         String str_phone = register_phone.getText().toString();
+
+        String str_gender = "";
+        if(register_gender_male.isChecked()) {
+            str_gender = "남";
+        }
+        if(register_gender_female.isChecked()) {
+            str_gender = "여";
+        }
 
         AuthManager authManager = AuthManager.getInstance();
         String str_uid = authManager.getmFirebaseUser().getUid();
@@ -393,11 +418,14 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean checkProfile(Intent intent) {
         Log.d(TAG, "editProfile()");
-
+        if (intent.getExtras() == null) {
+            return false;
+        }
         LoginData loginData = (LoginData) intent.getExtras().getParcelable("LoingData");
         if (loginData == null) {
             return false;
         }
+
         userData = loginData.getUser();
 
         return true;
@@ -410,7 +438,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         register_email.setText(userData.id);
         register_age.setText(userData.age);
-        register_gender.setText(userData.gender);
+        //register_gender.setText(userData.gender);
         register_nickname.setText(userData.nickname);
         register_phone.setText(userData.phone);
 //        register_age.setText(userData.image);

@@ -350,7 +350,7 @@
             android:layout_weight="0.5"
             android:layout_height="44dp"
             android:layout_gravity="bottom"
-            android:background="#E8D4D9"
+            android:background="#E9E4E5"
             android:textSize="15sp" />
 
         <Button
@@ -359,7 +359,7 @@
             android:layout_height="44dp"
             android:layout_weight="0.5"
             android:layout_gravity="bottom"
-            android:background="#D7D9DD"
+            android:background="#E4E5E6"
             android:text="확인"
             android:textSize="15sp" />
 
