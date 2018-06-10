@@ -86,7 +86,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
 
             // Chapter Info
-            if(mItems.get(position).chapter > 0) {
+            if(!isNoChapterGenre(mItems.get(position).gen_id)) {
                 holder.mThirdDivMy.setVisibility(View.VISIBLE);
                 holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + "화");
             } else {
@@ -142,6 +142,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 }
             }
         });
+    }
+
+    private Boolean isNoChapterGenre(String gen_id) {
+        // 영화 or 책
+        if(gen_id.equals("B02") || gen_id.equals("A00")) {
+            return true;
+        }
+        return false;
     }
 
     private void enterDetailPage(int position) {

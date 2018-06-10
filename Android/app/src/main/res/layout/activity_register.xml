@@ -213,7 +213,6 @@
                         android:id="@+id/register_gender_male"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:scaleX="0.8"
                         android:scaleY="0.8"
                         android:textSize="18sp"
@@ -224,7 +223,6 @@
                         android:id="@+id/register_gender_female"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:scaleX="0.8"
                         android:scaleY="0.8"
                         android:textSize="18sp"
