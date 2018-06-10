@@ -15,23 +15,14 @@
         android:title="신규 콘텐츠 추가"
         app:showAsAction="never"/>
 
-    <!--<item android:id="@+id/action_search_contents"-->
-        <!--android:title="검색"-->
-        <!--android:icon="@mipmap/ic_search"-->
-        <!--app:showAsAction="always" />-->
     <item android:id="@+id/action_search_contents"
         android:title="검색"
         android:icon="@mipmap/ic_search"
-        app:showAsAction="collapseActionView|ifRoom"
-        app:actionViewClass="android.widget.SearchView" />
+        app:showAsAction="always" />
 
     <item android:id="@+id/action_edit_contents"
         android:title="삭제"
         app:showAsAction="never"/>
-
-    <!--<item android:id="@+id/action_sign_out"-->
-        <!--android:title="로그아웃"-->
-        <!--app:showAsAction="never"/>-->
 
     <item
         android:id="@+id/action_s3_url"

@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -89,6 +89,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private float x1,x2;
     static final int MIN_DISTANCE = 250;
 
+    private MaterialSearchView searchView;
 
     // -- Kim Jong Min / Global Variable Section -- ////////////////////////////////////////
     @BindView(R.id.drawer_btn_logout)
@@ -99,7 +100,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     ImageView imageProfile;
     private long lastTimeBackPressed;
     private String selectedGenreId;
-
 
 
 
@@ -211,6 +211,39 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     }
                 }
         );
+
+        // -- Search UI -- //
+        searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        searchView.setBackground(getResources().getDrawable(R.drawable.search_view));
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(TAG,"SEARCH :" + query);
+                return false;
+            };
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Do some magic
+                return false;
+            }
+        });
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                //Do some magic
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                //Do some magic
+            }
+        });
+
+
+
     }
 
 
@@ -594,22 +627,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-
-    // -- Search Function Section -- ////////////////////////////////////////
-    private void initSearchView(Menu menu) {
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search_contents).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-    }
-
-    private void searchTitle(Intent intent) {
-        Log.d(TAG, "searchTitle()");
-
-        String query = intent.getStringExtra(SearchManager.QUERY);
-        Log.d(TAG, "query : " + query);
-    }
-
-
     // -- Event Override Section -- ////////////////////////////////////////
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
         @Override
@@ -685,6 +702,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public void onBackPressed() {
+        if (searchView.isSearchOpen()) {
+            searchView.closeSearch();
+            return;
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -731,8 +753,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     protected void onNewIntent(Intent intent) {
         Log.d(TAG, "onNewIntent()");
         super.onNewIntent(intent);
-
-        searchTitle(intent);
     }
 
     @Override
@@ -743,13 +763,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         MenuItem item = contentsMainMenu.findItem(R.id.action_my_contents);
         item.setVisible(false);
-
         if (userData.id.equals("labis@labis.com")) {
             item = contentsMainMenu.findItem(R.id.action_s3_url);
             item.setVisible(true);
         }
 
-        initSearchView(menu);
+        MenuItem searchitem = menu.findItem(R.id.action_search_contents);
+        searchView.setMenuItem(searchitem);
 
         return true;
     }
@@ -788,17 +808,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             }
 
             return true;
-        } /*else if (id == R.id.action_sign_out) {
-            AuthManager authManager = AuthManager.getInstance();
-            authManager.signOut();
-            authManager.setFirebaseUser(null);
-            myContentsRefresh = true;
-            modeStatus = "MY";
-            Intent i = new Intent(ContentsActivity.this, MainActivity.class);
-            startActivity(i);
-            finishAffinity();
-        } */
-        else if (id == R.id.action_s3_url) {
+        } else if (id == R.id.action_s3_url) {
             Intent i = new Intent(ContentsActivity.this, UrlActivity.class);
             startActivity(i);
         }
