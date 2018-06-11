@@ -204,7 +204,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         // 챕터
-        if(Item.chapter > 0) {
+        if(!isNoChapterGenre(Item.gen_id)) {
             detailChapterDiv.setVisibility(View.VISIBLE);
             chapterIndex = Item.chapter;
             chapterView.setText(String.valueOf(chapterIndex) + " 화");
@@ -268,55 +268,63 @@ public class DetailActivity extends AppCompatActivity {
 
 
     private View.OnTouchListener mTouchEvent = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                int id = v.getId();
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            int action = event.getAction();
+            int id = v.getId();
 
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (id == R.id.detail_minus_btn) {
-                            mHandler.postDelayed(minusAction, 10);
-                        } else if (id == R.id.detail_plus_btn) {
-                            mHandler.postDelayed(plusAction, 10);
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        mHandler.removeCallbacks(plusAction);
-                        mHandler.removeCallbacks(minusAction);
-                        break;
-                }
-                return true;
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (id == R.id.detail_minus_btn) {
+                        mHandler.postDelayed(minusAction, 10);
+                    } else if (id == R.id.detail_plus_btn) {
+                        mHandler.postDelayed(plusAction, 10);
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    mHandler.removeCallbacks(plusAction);
+                    mHandler.removeCallbacks(minusAction);
+                    break;
             }
+            return true;
+        }
 
-            Runnable plusAction = new Runnable() {
-                @Override
-                public void run() {
+        Runnable plusAction = new Runnable() {
+            @Override
+            public void run() {
 
-                    if(chapterIndex < 999) {
-                        chapterIndex++;
-                        chapterView.setText(String.valueOf(chapterIndex) + " 화");
-                        mHandler.postDelayed(this, 100);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
-                    }
-
+                if (chapterIndex < 999) {
+                    chapterIndex++;
+                    chapterView.setText(String.valueOf(chapterIndex) + " 화");
+                    mHandler.postDelayed(this, 100);
+                } else {
+                    Toast.makeText(getApplicationContext(), "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
                 }
-            };
 
-            Runnable minusAction = new Runnable() {
-                @Override
-                public void run() {
-                    if(chapterIndex > 1) {
-                        chapterIndex--;
-                        chapterView.setText(String.valueOf(chapterIndex) + " 화");
-                        mHandler.postDelayed(this, 100);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            };
+            }
         };
+
+        Runnable minusAction = new Runnable() {
+            @Override
+            public void run() {
+                if (chapterIndex > 1) {
+                    chapterIndex--;
+                    chapterView.setText(String.valueOf(chapterIndex) + " 화");
+                    mHandler.postDelayed(this, 100);
+                } else {
+                    Toast.makeText(getApplicationContext(), "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    };
+
+    private Boolean isNoChapterGenre(String gen_id) {
+        // 영화 or 책
+        if(gen_id.equals("B02") || gen_id.equals("A00")) {
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public void onBackPressed() {
