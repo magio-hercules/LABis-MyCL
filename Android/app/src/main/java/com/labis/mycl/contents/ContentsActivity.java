@@ -89,7 +89,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public int editPosition = -1;
     private MaterialSearchView searchView;
     private ArrayList<String> contestsTitleSuggestionsArray = new ArrayList<String>();
-
+    private boolean isSearchMode = false;
 
 
     // -- Kim Jong Min / Global Variable Section -- ////////////////////////////////////////
@@ -193,8 +193,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d(TAG,"SEARCH :" + query);
-
+                searchContents(query);
                 return false;
             };
 
@@ -614,6 +613,27 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
+
+    // -- Filter , Search Section -- ////////////////////////////////////////
+    private void searchContents(String query) {
+        Log.e(TAG, "searchContents");
+        Log.e(TAG, "query : " + query);
+
+        resetDrawerCheckedItem();
+        ArrayList<Content> searchContents = new ArrayList();
+        for(Content item : ContentsList) {
+            if(item.name.contains(query) || item.name_org.contains(query)) {
+                searchContents.add(item);
+            }
+        }
+
+        isSearchMode = true;
+        uiShowContentsList.clear();
+        uiShowContentsList.addAll(searchContents);
+        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, uiShowContentsList);
+        recyclerView.setAdapter(mAdapter);
+    }
+
     private void filterJenreMyContents(final String title, String userId, String gen_id) {
         Log.e(TAG, "filterJenreMyContents");
         Log.e(TAG, "doFilter() title : " + title);
@@ -630,7 +650,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         uiShowContentsList.addAll(filterContents);
         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, uiShowContentsList);
         recyclerView.setAdapter(mAdapter);
-
+        isSearchMode = false;
         if(title.length() > 0) {
             getSupportActionBar().setSubtitle("( " + title + " )");
         } else {
@@ -653,13 +673,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         uiShowContentsList.addAll(filterContents);
         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, uiShowContentsList);
         recyclerView.setAdapter(mAdapter);
-
+        isSearchMode = false;
         if(title.length() > 0) {
             getSupportActionBar().setSubtitle("( " + title + " )");
         } else {
             getSupportActionBar().setSubtitle(null);
         }
     }
+
 
     // -- Event Override Section -- ////////////////////////////////////////
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -736,6 +757,15 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public void onBackPressed() {
+
+        if (isSearchMode) {
+            isSearchMode = false;
+            resetDrawerCheckedItem();
+            mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
+            recyclerView.setAdapter(mAdapter);
+            return;
+        }
+
         if (searchView.isOpen()) {
             searchView.closeSearch();
             return;
