@@ -32,7 +32,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.labis.mycl.MainActivity;
 import com.labis.mycl.R;
 import com.labis.mycl.contents.ContentsActivity;
 import com.labis.mycl.model.Genre;
@@ -112,6 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String selectImgPick;
 
     private AuthManager authManager;
+    private FirebaseUser currentUser;
 
     private User userData;
     private ArrayList<Genre> genreData;
@@ -127,6 +130,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (!bEditProfile) {
             toolbar.setTitle("사용자 등록");
             currentMode = "CREATE";
+            btn_change_pw.setVisibility(View.GONE);
         } else {
             toolbar.setTitle("프로필 수정");
             currentMode = "UPDATE";
@@ -164,6 +168,18 @@ public class RegisterActivity extends AppCompatActivity {
         bChangePw = false;
 
         setProfile(bEditProfile);
+
+        initAuth();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy()");
+
+        if (authManager != null) {
+            authManager.removeAuthStateListener();
+        }
+        super.onDestroy();
     }
 
     @OnClick(R.id.register_cancel)
@@ -265,8 +281,16 @@ public class RegisterActivity extends AppCompatActivity {
             str_gender = "여";
         }
 
-        AuthManager authManager = AuthManager.getInstance();
-        String str_uid = authManager.getmFirebaseUser().getUid();
+        String str_uid = null;
+        // TODO, 확인용
+        if (authManager.getmFirebaseUser() != null) {
+            Log.e(TAG, "authManager.getmFirebaseUser().getUid() : " + authManager.getmFirebaseUser().getUid());
+            str_uid = authManager.getmFirebaseUser().getUid();
+        }
+        if (currentUser != null) {
+            str_uid = currentUser.getUid();
+            Log.e(TAG, "currentUser.getUid() : " + currentUser.getUid());
+        }
 
        Log.e(TAG, "email: " + str_email + ", pw: " + anonymizePassword(str_pw) + ", age: " + str_age
                 + ", gender: " + str_gender + ", nick: " + str_nickname + ", phone: " + str_phone + ", image: " + url + ", str_uid: " + str_uid);
@@ -283,9 +307,10 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.e(TAG, "postRegister SUCCESS");
                 Toast.makeText(RegisterActivity.this, data.getReason(), Toast.LENGTH_SHORT).show();
 
-                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                Intent i = new Intent(RegisterActivity.this, MainActivity.class);
                 i.putExtra("id", data.getId());
                 startActivity(i);
+                finish();
             }
 
             @Override
@@ -315,7 +340,6 @@ public class RegisterActivity extends AppCompatActivity {
         final String str_gender = t_gender;
         final String str_url = url;
 
-        AuthManager authManager = AuthManager.getInstance();
         final String str_uid = authManager.getmFirebaseUser().getUid();
 
         Log.e(TAG, "email: " + str_email + ", pw: " + anonymizePassword(str_pw) + ", age: " + str_age
@@ -642,6 +666,39 @@ public class RegisterActivity extends AppCompatActivity {
             };
             authManager.updatePassword(completeListener, newPassword);
         }
+    }
+
+    private void initAuth() {
+        Log.d(TAG, "initAuth()");
+
+        currentUser = authManager.getmFirebaseUser();
+        if (currentUser != null)
+            Log.d(TAG, "onAuthStateChanged currentUser : (" + currentUser.getUid() + ")");
+
+        FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = authManager.getmFirebaseUser();
+                FirebaseUser user2 = firebaseAuth.getCurrentUser();
+
+                if (user != null)
+                    Log.d(TAG, "onAuthStateChanged authManager.getmFirebaseUser : (" + user.getUid() + ")");
+                if (user2 != null)
+                    Log.d(TAG, "onAuthStateChanged firebaseAuth.getCurrentUser : (" +  user2.getUid() + ")");
+
+                currentUser = firebaseAuth.getCurrentUser();
+
+                if (currentUser != null) {
+                    Log.d(TAG, "onAuthStateChanged()");
+                    Log.d(TAG, "onAuthStateChanged:signed_in : UID (" + currentUser.getUid() + ")");
+//                    Log.d(TAG, "onAuthStateChanged:signed_in : IdToken (" + mFirebaseUser.getIdToken(true).getResult().getToken() + ")");
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
+        authManager.addAuthStateListener(authListener);
     }
 }
 

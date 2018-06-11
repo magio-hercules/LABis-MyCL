@@ -48,6 +48,8 @@ public class AuthManager {
     }
 
     public void addAuthStateListener(FirebaseAuth.AuthStateListener listener) {
+        Log.d(TAG, "addAuthStateListener()");
+
         if (listener == null) {
             return;
         }
@@ -57,6 +59,8 @@ public class AuthManager {
     }
 
     public void removeAuthStateListener() {
+        Log.d(TAG, "removeAuthStateListener()");
+
         mFirebaseAuth.removeAuthStateListener(mAuthListener);
     }
 

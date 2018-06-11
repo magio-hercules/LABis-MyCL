@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     // Auth
     private AuthManager authManager;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseUser currentUser;
 
     private boolean bAutoLogin;
 
@@ -83,9 +84,19 @@ public class MainActivity extends AppCompatActivity {
 
         animFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
 
+        // TODO
         // for test
         edit_email.setText("labis@labis.com");
         edit_password.setText("123456");
+
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("id");
+        if (id != null) {
+            edit_email.setText(id);
+            edit_password.requestFocus();
+
+            bAutoLogin = true;
+        }
     }
 
     @Override
@@ -121,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         hideProgressDialog();
 
-                        if (!bAutoLogin) {
+                        if (!bAutoLogin && mainLayout.getVisibility() == View.GONE) {
 //                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
 //                            startActivity(i);
 //                            overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
@@ -144,14 +155,29 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initAuth() {
+        Log.d(TAG, "initAuth()");
+
         authManager = AuthManager.getInstance();
+
+        currentUser = authManager.getmFirebaseUser();
+        if (currentUser != null)
+            Log.d(TAG, "initAuth currentUID : (" + currentUser.getUid() + ")");
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = authManager.getmFirebaseUser();
+                FirebaseUser user2 = firebaseAuth.getCurrentUser();
+
+                if (currentUser != null)
+                    Log.d(TAG, "onAuthStateChanged currentUser : (" + currentUser.getUid() + ")");
+                if (user != null)
+                    Log.d(TAG, "onAuthStateChanged uid 1 : (" + user.getUid() + ")");
+                if (user2 != null)
+                    Log.d(TAG, "onAuthStateChanged uid 2 : (" +  user2.getUid() + ")");
+
 //                firebaseAuth.getCurrentUser();
-                if (user != null) {
+                if (user != null && !bAutoLogin) {
                     bAutoLogin = true;
 
                     // User is signed in
@@ -184,6 +210,10 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.login_registerbtn)
     void onClick_register(){
+        if (authManager != null) {
+            authManager.removeAuthStateListener();
+        }
+
         Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
         startActivity(i);
     }
