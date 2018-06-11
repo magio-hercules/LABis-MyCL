@@ -132,6 +132,7 @@ exports.postUpdateMyContents = function(req, res) {
 	query = _setParams(query, params, req.body.score, table.Contents_my.score);
 	query = _setParams(query, params, req.body.comment, table.Contents_my.comment);
 	query = _setParams(query, params, req.body.chapter, table.Contents_my.chapter);
+	query = _setParams(query, params, req.body.favorite, table.Contents_my.favorite);
 	bFirst = true;
 	query = _checkParams(query, params, req.body.id, table.Contents_my.id);
 	query = _checkParams(query, params, req.body.user_id, table.Contents_my.user_id);

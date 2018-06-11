@@ -1,10 +1,16 @@
 var mysql_query = require('../db/db_query')();
+var table = require('../db/db_table');
 var common = require('./common')();
 var auth = require('./auth')();
 var authAdmin = auth.init();
 
 var idToken = null;
 var currentUid = null;
+
+var bFirst = true;
+
+
+
 
 exports.postLogin = function(req, res) {
 	console.log("[INFO] call postLogin");
@@ -20,8 +26,10 @@ exports.postLogin = function(req, res) {
 			sleep(1000);
 		}
 		try {
+			console.log("[INFO][TEST] customToken 1");
 			authAdmin.auth().createCustomToken(req.body.uid)
 					.then(function(customToken) {
+						console.log("[INFO][TEST] customToken 4");
 						// console.log("[INFO][TEST] customToken : " + customToken);
 						idToken = customToken;
 
@@ -30,9 +38,11 @@ exports.postLogin = function(req, res) {
 					.catch(function(error) {
 						console.log("Error creating custom token:", error);
 					});
+			console.log("[INFO][TEST] customToken 2");
 		} catch (error) {
 			console.log("authAdmin.auth().createCustomToken(req.body.uid) : ", error);
 		}
+		console.log("[INFO][TEST] customToken 3");
 	} else {
 		console.log("[INFO][TEST] req.body.uid is undefind");
 		common.doQuery(req, res, query, params, _callback_login);
@@ -48,7 +58,6 @@ exports.postRegister = function(req, res) {
 	var query = mysql_query.postRegister();
 	var user = {
 		id: req.body.id,
-		pw: req.body.pw,
 		age: req.body.age,
 		gender: req.body.gender,
 		nickname: req.body.nickname,
@@ -58,6 +67,26 @@ exports.postRegister = function(req, res) {
 	};
 	
 	common.doRequest(req, res, query, user);
+};
+
+
+exports.postUpdate = function(req, res) {
+	console.log("[INFO] call postUpdate");
+
+	var query = mysql_query.postUpdate();
+	var params = [];
+
+	query = _setParams(query, params, req.body.nickname, table.User.nickname);
+	query = _setParams(query, params, req.body.age, table.User.age);
+	query = _setParams(query, params, req.body.gender, table.User.gender);
+	query = _setParams(query, params, req.body.phone, table.User.phone);
+	query = _setParams(query, params, req.body.image, table.User.image);
+	bFirst = true;
+	query = _checkParams(query, params, req.body.id, table.User.id);
+	query = _checkParams(query, params, req.body.uid, table.User.uid);
+	
+	bFirst = true;
+	common.doRequest(req, res, query, params);
 };
 
 
@@ -137,4 +166,44 @@ function _callback_login(req, res, params, error, result) {
 			});
 		}
 	}
+}
+
+
+function _setParams(query, params, val, str) {
+	if (val != null && val != undefined) {
+		if (bFirst) {
+			bFirst = false;
+		} else {
+			query += ", ";
+		}		
+		
+		query = query + str + "=? ";
+		params.push(val);
+	}
+	return query;
+}
+
+
+function _checkParams(query, params, val, str, bOr) {
+	if (val != null && val != undefined) {
+		if (bFirst) {
+			query += " WHERE "; 
+			bFirst = false;
+		} else {
+			if (bOr) {
+				query += " OR ";
+			} else {
+				query += " AND ";
+			}
+		}		
+		
+		if (typeof(val) != 'string') {
+			query = query + str + "in (" + val + ")";
+		} else {
+			query = query + str + "=? ";
+		}
+		
+		params.push(val);
+	}
+	return query;
 }

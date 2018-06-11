@@ -30,8 +30,12 @@ module.exports = function () {
             return 'SELECT * FROM User WHERE `id`=?';
         },
         postRegister: function () {
-            // .../MyCL/register (id,pw,age,gender,nickname,phone,image,uid)
+            // .../MyCL/register (id,age,gender,nickname,phone,image,uid)
             return 'INSERT INTO User SET ?';
+        },
+        postUpdate: function () {
+            // .../MyCL/update (id,age,gender,nickname,phone,image,uid)
+            return 'UPDATE User SET ';
         },
         postUser: function () {
             // .../MyCL/user (id)
@@ -70,7 +74,7 @@ module.exports = function () {
             return 'INSERT INTO Contents_my SET ';
         },
         postUpdateMyContents: function () {
-            // .../MyCL/update_my_contents (id,user_id,score,comment,chapter)
+            // .../MyCL/update_my_contents (id,user_id,score,comment,chapter,favorite)
             return 'UPDATE Contents_my SET ';
         },
         postFilterMyContents: function () {

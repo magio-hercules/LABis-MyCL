@@ -7,14 +7,9 @@ import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -433,7 +428,7 @@ public class CustomActivity extends AppCompatActivity {
 
     @OnClick(R.id.imageView)
     void onClick_imageView(){
-        final CharSequence[] items = {"촬영하기", "가져오기", "취소"};
+        final CharSequence[] items = {"촬영하기", "가져오기"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("사진 선택");
@@ -453,8 +448,6 @@ public class CustomActivity extends AppCompatActivity {
                     if (result) {
                         imgPicker.selectGallery();
                     }
-                } else if (items[item].equals("취소")) {
-                    dialog.dismiss();
                 }
             }
         });

@@ -42,6 +42,11 @@ public interface RetroBaseApiService {
                                 @Field("nickname") String nickname, @Field("phone") String phone, @Field("image") String image, @Field("uid") String uid);
 
     @FormUrlEncoded
+    @POST("update")
+    Call<Register> postUpdate(@Field("id") String id, @Field("age") String age, @Field("gender") String gender,
+                              @Field("nickname") String nickname, @Field("phone") String phone, @Field("image") String image, @Field("uid") String uid);
+
+    @FormUrlEncoded
     @POST("user")
     Call<List<User>> getUser(@Query("id") String id);
 

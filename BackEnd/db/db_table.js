@@ -9,12 +9,12 @@ module.exports = (function () {
       },
       User: {
         id: "`id`",
-        pw: "`pw`",
         age: "`age`",
         gender: "`gender`",
         nickname: "`nickname`",
         phone: "`phone`",
-        image: "`image`"
+        image: "`image`",
+        uid: "`uid`"
       },
       Contents_my: { 
         id: "`id`",

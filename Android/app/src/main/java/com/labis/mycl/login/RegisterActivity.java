@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -28,8 +29,13 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseUser;
 import com.labis.mycl.R;
+import com.labis.mycl.contents.ContentsActivity;
+import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.LoginData;
 import com.labis.mycl.model.Register;
 import com.labis.mycl.model.User;
@@ -37,9 +43,12 @@ import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.util.AuthManager;
 import com.labis.mycl.util.CheckPermission;
+import com.labis.mycl.util.CircleTransform;
 import com.labis.mycl.util.ImagePicker;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,6 +81,8 @@ public class RegisterActivity extends AppCompatActivity {
     Button btn_register;
     @BindView(R.id.register_cancel)
     Button btn_cancle;
+    @BindView(R.id.register_changePw)
+    Button btn_change_pw;
 
     @BindView(R.id.register_gender_male)
     RadioButton register_gender_male;
@@ -88,7 +99,13 @@ public class RegisterActivity extends AppCompatActivity {
     private final int GALLERY_CODE  = 1112;
     private ImagePicker imgPicker;
 
-    // 퍼미션 획득
+    // Mode (사용자 등록, 프로필 수정) (CREATE, UPDATE)
+    private String currentMode = "CREATE";
+
+    // 비밀번호 변경 기능
+    private boolean bChangePw;
+
+   // 퍼미션 획득
     private final int  MULTIPLE_PERMISSIONS = 101;
     private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
@@ -96,7 +113,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private AuthManager authManager;
 
-    public static User userData;
+    private User userData;
+    private ArrayList<Genre> genreData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,13 +122,14 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
 
-        boolean bEditProfile = checkProfile(getIntent());
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (bEditProfile) {
-            toolbar.setTitle("프로필 수정");
-        } else {
+        boolean bEditProfile = checkProfile(getIntent());
+        if (!bEditProfile) {
             toolbar.setTitle("사용자 등록");
+            currentMode = "CREATE";
+        } else {
+            toolbar.setTitle("프로필 수정");
+            currentMode = "UPDATE";
         }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -142,6 +161,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         authManager = AuthManager.getInstance();
 
+        bChangePw = false;
+
         setProfile(bEditProfile);
     }
 
@@ -150,57 +171,56 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
+    @OnClick(R.id.register_changePw)
+    void onClick_change_pw() {
+        String str_email = register_email.getText().toString();
+        String str_pw = register_password.getText().toString();
+
+        if (str_pw.equals("")) {
+            register_password.setError("필수");
+            bChangePw = false;
+            return;
+        }
+
+        AuthCredential credential = EmailAuthProvider.getCredential(str_email, str_pw);
+
+        FirebaseUser user = authManager.getmFirebaseUser();
+        user.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d(TAG, "User re-authenticated.");
+
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "reauthenticate:success");
+                            Toast.makeText(RegisterActivity.this, "기존 비밀번호 확인 완료", Toast.LENGTH_SHORT).show();
+
+                            bChangePw = true;
+                            register_password.setText("");
+                            btn_change_pw.setVisibility(View.GONE);
+
+                            TextView textView = findViewById(R.id.textView_pw);
+                            textView.setText("신규 비밀번호");
+                        } else {
+                            Log.d(TAG, "reauthenticate:failure", task.getException());
+                            Toast.makeText(RegisterActivity.this, "기존 비밀번호 확인 필요", Toast.LENGTH_SHORT).show();
+
+                            Log.d(TAG, task.getException().getMessage());
+                            Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
     @OnClick(R.id.register_registerbtn)
     void onClick_register() {
         Log.e(TAG, "onClick_register");
 
-        final String str_email = register_email.getText().toString();
-        final String str_pw = register_password.getText().toString();
-        final String str_pw_verify = register_password_verify.getText().toString();
-        final String str_nickname = register_nickname.getText().toString();
-
-        if (str_email.equals("")) {
-            register_email.setError("필수");
+        if (currentMode.equals("CREATE")) {
+            createAccount();
+        } else if (currentMode.equals("UPDATE")) {
+            updateProfile();
         }
-        if (str_pw.equals("")) {
-            register_password.setError("필수");
-        }
-        if (str_pw_verify.equals("")) {
-            register_password_verify.setError("필수");
-        }
-        if (str_nickname.equals("")) {
-            register_nickname.setError("필수");
-        }
-
-        if (!str_pw.equals(str_pw_verify)) {
-            Toast.makeText(this, "비밀번호 재확인 필요", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (str_email.equals("") || str_pw.equals("")) {
-            Toast.makeText(this, "(이메일/비밀번호/닉네임) 입력해 주세요", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        OnCompleteListener completeListener = new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.e(TAG, "OnCompleteListener onComplete");
-
-                if (task.isSuccessful()) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail:success");
-//                    FirebaseUser user = mFirebaseAuth.getCurrentUser();
-
-                    storeImageToBucket();
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.d(TAG, "createUserWithEmail:failure", task.getException());
-                    Log.d(TAG, task.getException().getMessage());
-                    Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-        authManager.createAccount(this, completeListener, str_email, str_pw);
     }
 
 
@@ -248,10 +268,7 @@ public class RegisterActivity extends AppCompatActivity {
         AuthManager authManager = AuthManager.getInstance();
         String str_uid = authManager.getmFirebaseUser().getUid();
 
-        // TODO
-        // UID 추가하기기
-
-       Log.e(TAG, "email: " + str_email + ", pw: " + str_pw + ", age: " + str_age
+       Log.e(TAG, "email: " + str_email + ", pw: " + anonymizePassword(str_pw) + ", age: " + str_age
                 + ", gender: " + str_gender + ", nick: " + str_nickname + ", phone: " + str_phone + ", image: " + url + ", str_uid: " + str_uid);
 
         retroClient.postRegister(str_email, str_pw, str_age, str_gender, str_nickname, str_phone, url, str_uid, new RetroCallback<Register>() {
@@ -280,11 +297,71 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
+    private void updateUser(String url) {
+        final String str_email = register_email.getText().toString();
+        final String str_pw = register_password.getText().toString();
+        final String str_age = register_age.getText().toString();
+//        final String str_gender = register_gender.getText().toString();
+        final String str_nickname = register_nickname.getText().toString();
+        final String str_phone = register_phone.getText().toString();
+
+        String t_gender = "";
+        if(register_gender_male.isChecked()) {
+            t_gender = "남";
+        }
+        if(register_gender_female.isChecked()) {
+            t_gender = "여";
+        }
+        final String str_gender = t_gender;
+        final String str_url = url;
+
+        AuthManager authManager = AuthManager.getInstance();
+        final String str_uid = authManager.getmFirebaseUser().getUid();
+
+        Log.e(TAG, "email: " + str_email + ", pw: " + anonymizePassword(str_pw) + ", age: " + str_age
+                + ", gender: " + str_gender + ", nick: " + str_nickname + ", phone: " + str_phone + ", image: " + url + ", str_uid: " + str_uid);
+
+        retroClient.postUpdate(str_email, str_age, str_gender, str_nickname, str_phone, url, str_uid, new RetroCallback<Register>() {
+            @Override
+            public void onError(Throwable t) {
+                Log.e(TAG, t.toString());
+                Toast.makeText(RegisterActivity.this, "postUpdate Error", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(int code, Register data) {
+                Log.e(TAG, "postUpdate SUCCESS");
+//                Toast.makeText(RegisterActivity.this, data.getReason(), Toast.LENGTH_SHORT).show();
+
+                User newUser = new User(str_email, str_pw, str_age, str_gender, str_nickname, str_phone, str_url, str_uid);
+
+                LoginData loginData = new LoginData(newUser, genreData);
+                Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
+                i.putExtra("LoingData", loginData);
+                startActivity(i);
+                finish();
+                Toast.makeText(RegisterActivity.this, "프로필 수정 완료", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int code) {
+                Log.e(TAG, "postUpdate FAIL");
+                Toast.makeText(RegisterActivity.this, "Update Fail", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
     private void storeImageToBucket() {
         Log.d(TAG, "storeImageToBucket");
 
         if (imgPicker.getCurrentPhotoPath() == null) {
-            registUser(null);
+            if (currentMode.equals("CREATE")) {
+                registUser(null);
+            } else if (currentMode.equals("UPDATE")) {
+                String url = userData.image;
+                updateUser(url);
+            }
             return ;
         }
 
@@ -308,7 +385,11 @@ public class RegisterActivity extends AppCompatActivity {
                         transferUtility.deleteTransferRecord(id);
                         Toast.makeText(getApplicationContext(), "Image Upload 성공", Toast.LENGTH_SHORT).show();
 
-                        registUser(resourceUrl);
+                        if (currentMode.equals("CREATE")) {
+                            registUser(resourceUrl);
+                        } else if (currentMode.equals("UPDATE")) {
+                            updateUser(resourceUrl);
+                        }
                         break;
                     }
                     case CANCELED: {
@@ -348,7 +429,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void selectImage() {
         Log.d(TAG, "select Image");
-        final CharSequence[] items = {"촬영하기", "가져오기", "취소"};
+        final CharSequence[] items = {"촬영하기", "가져오기"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("사진 선택");
@@ -368,8 +449,6 @@ public class RegisterActivity extends AppCompatActivity {
                     if (result) {
                         imgPicker.selectGallery();
                     }
-                } else if (items[item].equals("취소")) {
-                    dialog.dismiss();
                 }
             }
         });
@@ -427,6 +506,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         userData = loginData.getUser();
+        genreData = loginData.getGenreList();
 
         return true;
     }
@@ -438,13 +518,130 @@ public class RegisterActivity extends AppCompatActivity {
 
         register_email.setText(userData.id);
         register_age.setText(userData.age);
-        //register_gender.setText(userData.gender);
+        if (userData.gender.equals("남")) {
+            register_gender_male.setChecked(true);
+        } else if (userData.gender.equals("여")) {
+            register_gender_female.setChecked(true);
+        }
         register_nickname.setText(userData.nickname);
         register_phone.setText(userData.phone);
-//        register_age.setText(userData.image);
-        // TODO 이미지 표시
+
+        // 이미지 표시
+        ImageView profileImage = (ImageView) findViewById(R.id.register_image);
+        if(userData.image != null && userData.image.length() > 10) {
+            Picasso.get().load(userData.image).transform(new CircleTransform()).into(profileImage);
+        }
 
         register_email.setEnabled(false);
+
+        TextView textView = findViewById(R.id.textView_pw);
+        textView.setText("기존 비밀번호");
+    }
+
+    private String anonymizePassword(String password) {
+        if (password == null) {
+            return "null";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < password.length(); i++) {
+            sb.append('*');
+        }
+        return sb.toString();
+    }
+
+    private boolean checkProfile() {
+        String str_email = register_email.getText().toString();
+        String str_pw = register_password.getText().toString();
+        String str_pw_verify = register_password_verify.getText().toString();
+        String str_nickname = register_nickname.getText().toString();
+
+        if (str_email.equals("")) {
+            register_email.setError("필수");
+        }
+
+        if (str_nickname.equals("")) {
+            register_nickname.setError("필수");
+        }
+
+        if (bChangePw) {
+            if (str_pw.equals("")) {
+                register_password.setError("필수");
+            }
+            if (str_pw_verify.equals("")) {
+                register_password_verify.setError("필수");
+            }
+        }
+
+        if (str_email.equals("") || str_nickname.equals("")
+            || (bChangePw && (str_pw.equals("") || str_pw_verify.equals("")))) {
+            Toast.makeText(this, "필수정보를 입력해 주세요", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (bChangePw && !str_pw.equals(str_pw_verify)) {
+            Toast.makeText(this, "비밀번호 재확인 필요", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void createAccount() {
+        if (!checkProfile()) {
+            return;
+        }
+        String str_email = register_email.getText().toString();
+        String str_pw = register_password.getText().toString();
+
+        OnCompleteListener completeListener = new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                Log.e(TAG, "createAccount OnCompleteListener onComplete");
+
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "createUserWithEmail:success");
+
+                    storeImageToBucket();
+                } else {
+                    Log.d(TAG, "createUserWithEmail:failure", task.getException());
+                    Log.d(TAG, task.getException().getMessage());
+                    Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        authManager.createAccount(this, completeListener, str_email, str_pw);
+    }
+
+    private void updateProfile() {
+        if (!checkProfile()) {
+            return;
+        }
+
+        if (!bChangePw) {
+            storeImageToBucket();
+        } else {
+            String newPassword = register_password.getText().toString();
+
+            OnCompleteListener completeListener = new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Log.e(TAG, "updatePassword OnCompleteListener onComplete");
+
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "User password updated.");
+
+                        storeImageToBucket();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.d(TAG, "updatePassword:failure", task.getException());
+                        Log.d(TAG, task.getException().getMessage());
+                        Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            };
+            authManager.updatePassword(completeListener, newPassword);
+        }
     }
 }
 

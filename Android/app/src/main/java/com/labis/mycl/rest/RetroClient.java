@@ -283,6 +283,25 @@ public class RetroClient {
         });
     }
 
+    public void postUpdate(String id, String age, String gender,
+                             String nickname, String phone, String image, String uid, final RetroCallback callback) {
+        apiService.postUpdate(id, age, gender, nickname, phone, image, uid).enqueue(new Callback<Register>() {
+            @Override
+            public void onResponse(Call<Register> call, Response<Register> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Register> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
     public void updateContentsImage(String id, String url, final RetroCallback callback) {
         apiService.updateContentsImage(id, url).enqueue(new Callback<Register>() {
             @Override

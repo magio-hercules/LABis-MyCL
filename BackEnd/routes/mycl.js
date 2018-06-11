@@ -43,7 +43,9 @@ router.get('/total_genre', 		controller_genre.getTotalGenre);
 //////////
 router.post('/login', 					controller_login.postLogin);
 router.post('/register', 				controller_login.postRegister);
+router.post('/update', 					controller_login.postUpdate);
 router.post('/check_id_token', 			controller_login.postCheckIdToken);
+
 router.post('/user',					controller_user.postUser);
 router.post('/genre', 					controller_genre.postGenre);
 router.post('/favorite', 				controller_favorite.postFavorite);

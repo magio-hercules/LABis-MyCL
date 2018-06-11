@@ -64,7 +64,15 @@ public class AuthManager {
         Log.d(TAG, "createAccount() email : " + email + ", password : " + password);
 
         mFirebaseAuth.createUserWithEmailAndPassword(email, password)
-                       .addOnCompleteListener(activity, listener);
+                .addOnCompleteListener(activity, listener);
+    }
+
+    public void updatePassword(OnCompleteListener listener, String password) {
+        Log.d(TAG, "updatePassword() password : " + password);
+
+        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+        user.updatePassword(password)
+                .addOnCompleteListener(listener);
     }
 
     public void signIn(Activity activity, OnCompleteListener listener, String email, String password) {
