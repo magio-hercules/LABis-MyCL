@@ -232,7 +232,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         if (mActionMode != null) {
 
             // Normal Mode
-            if(selectedGenreId == null) {
+            if(selectedGenreId == null && isSearchMode == false) {
                 if (editContents.contains(ContentsList.get(position))) {
                     editContents.remove(ContentsList.get(position));
                 } else {
@@ -274,12 +274,16 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             public void onSuccess(int code, Object receivedData) {
                 for (Content item : editContents) {
                     ContentsList.remove(item);
-                    if (selectedGenreId != null) {
+                    if (selectedGenreId != null || isSearchMode == true) {
                         uiShowContentsList.remove(item);
+                        ContentsList.remove(item);
                     }
                 }
-
                 mAdapter.notifyDataSetChanged();
+                if(isSearchMode) {
+                    getSupportActionBar().setTitle(uiShowContentsList.size() + "개 항목 검색");
+                }
+
                 if (mActionMode != null) {
                     editContents.clear();
                     mActionMode.finish();
@@ -632,6 +636,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         uiShowContentsList.addAll(searchContents);
         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, uiShowContentsList);
         recyclerView.setAdapter(mAdapter);
+        getSupportActionBar().setTitle(uiShowContentsList.size() + "개 항목 검색");
     }
 
     private void filterJenreMyContents(final String title, String userId, String gen_id) {
@@ -652,7 +657,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         recyclerView.setAdapter(mAdapter);
         isSearchMode = false;
         if(title.length() > 0) {
-            getSupportActionBar().setSubtitle("( " + title + " )");
+            getSupportActionBar().setSubtitle("( " + title + " " + uiShowContentsList.size() + "개 항목 )");
         } else {
             getSupportActionBar().setSubtitle(null);
         }
@@ -675,7 +680,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         recyclerView.setAdapter(mAdapter);
         isSearchMode = false;
         if(title.length() > 0) {
-            getSupportActionBar().setSubtitle("( " + title + " )");
+            getSupportActionBar().setSubtitle("( " + title + " " + uiShowContentsList.size() + "개 항목 )");
         } else {
             getSupportActionBar().setSubtitle(null);
         }
@@ -752,6 +757,17 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             isMultiSelect = false;
             editContents.clear();
             mAdapter.notifyDataSetChanged();
+
+            if (isSearchMode && modeStatus.equals("MY") && uiShowContentsList.size() == 0) {
+                mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
+                recyclerView.setAdapter(mAdapter);
+                isSearchMode = false;
+                if(modeStatus == "MY") {
+                    getSupportActionBar().setTitle("내 콘텐츠");
+                } else {
+                    getSupportActionBar().setTitle("모든 콘텐츠");
+                }
+            }
         }
     };
 
