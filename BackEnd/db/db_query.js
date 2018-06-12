@@ -19,12 +19,41 @@ module.exports = function () {
             // .../MyCL/total_genre
             return 'SELECT * FROM Genre';
         },
+        getTotalRequestType: function () {
+            // .../MyCL/total_request_type
+            return 'SELECT * FROM Request_type';
+        },
 
 
         //////////
         // POST //
         //////////
-        // search
+
+        // user
+        postUser: function () {
+            // .../MyCL/user (id)
+           return 'SELECT * FROM User';
+        },
+
+        // genre
+        postGenre: function () {
+            // .../MyCL/genre (id)
+            return 'SELECT * FROM Genre';
+        },
+
+        // favorite
+        postFavorite: function () {
+            // .../MyCL/favorite (user_id)
+            return 'SELECT * FROM Favorite';
+        },
+
+        // prefer
+        postPrefer: function () {
+            // .../MyCL/prefer (user_id)
+            return 'SELECT * FROM Prefer';
+        },
+
+        // login
         postLogin: function () {
             // .../MyCL/login (id)
             return 'SELECT * FROM User WHERE `id`=?';
@@ -37,22 +66,18 @@ module.exports = function () {
             // .../MyCL/update (id,age,gender,nickname,phone,image,uid)
             return 'UPDATE User SET ';
         },
-        postUser: function () {
-            // .../MyCL/user (id)
-           return 'SELECT * FROM User';
+
+        // request
+        postRequestList: function () {
+            // .../MyCL/request_list (req_type_id)
+            return 'SELECT * FROM Request_list';
         },
-        postGenre: function () {
-            // .../MyCL/genre (id)
-            return 'SELECT * FROM Genre';
+        postInsertRequest: function () {
+            // .../MyCL/insert_request (req_type_id,comment)
+            return 'INSERT INTO Request_list SET ';
         },
-        postFavorite: function () {
-            // .../MyCL/favorite (user_id)
-            return 'SELECT * FROM Favorite';
-        },
-        postPrefer: function () {
-            // .../MyCL/prefer (user_id)
-            return 'SELECT * FROM Prefer';
-        },
+
+        // contents
         postTotalContents: function () {
             // .../MyCL/total_contents (user_id)
             return 'SELECT * FROM Contents_list';

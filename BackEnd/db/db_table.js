@@ -58,6 +58,16 @@ module.exports = (function () {
       Series: { 
         id: "`id`",
         name: "`name`"
+      },
+      Request_type: { 
+        id: "`id`",
+        title: "`title`",
+        description: "`description`"
+      },
+      Request_list: { 
+        id: "`id`",
+        req_type_id: "`req_type_id`",
+        comment: "`comment`"
       }
     }
   })();

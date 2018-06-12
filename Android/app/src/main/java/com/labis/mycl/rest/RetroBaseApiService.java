@@ -3,6 +3,7 @@ package com.labis.mycl.rest;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
+import com.labis.mycl.model.RequestType;
 import com.labis.mycl.model.User;
 
 import java.util.ArrayList;
@@ -26,14 +27,36 @@ public interface RetroBaseApiService {
 
     // http://ec2-18-188-106-154.us-east-2.compute.amazonaws.com:9000/MyCL/contents?id=0001&gen_id=A01
 
+
+    ////////////////////////////////////////////////////////////////////////////
+    /// GET API ////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+    @GET("total_genre")
+    Call<List<Genre>> getTotalGenre();
+
+    @GET("total_request_type")
+    Call<List<RequestType>> getTotalRequestType();
+
+
+    ////////////////////////////////////////////////////////////////////////////
     /// POST API ////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    // user
+    @FormUrlEncoded
+    @POST("user")
+    Call<List<User>> getUser(@Query("id") String id);
+
+    // genre
+
+    // favorite
+
+    // prefer
+
+    // login
     @FormUrlEncoded
     @POST("login")
     Call<List<User>> postLogin(@Field("id") String id, @Field("pw") String pw, @Field("uid") String uid);
-
-    @FormUrlEncoded
-    @POST("check_id_token")
-    Call<List<User>> postCheckIdToken(@Field("id") String id, @Field("uid") String uid, @Field("idToken") String idToken);
 
     @FormUrlEncoded
     @POST("register")
@@ -46,10 +69,16 @@ public interface RetroBaseApiService {
     Call<Register> postUpdate(@Field("id") String id, @Field("age") String age, @Field("gender") String gender,
                               @Field("nickname") String nickname, @Field("phone") String phone, @Field("image") String image, @Field("uid") String uid);
 
+    // request
     @FormUrlEncoded
-    @POST("user")
-    Call<List<User>> getUser(@Query("id") String id);
+    @POST("request_list")
+    Call<List<RequestType>> postRequestList(@Field("req_type_id") String req_type_id);
 
+    @FormUrlEncoded
+    @POST("insert_request")
+    Call<Register> postInsertRequest(@Field("req_type_id") String req_type_id, @Field("comment") String comment);
+
+    // contents
     @FormUrlEncoded
     @POST("my_contents")
     Call<List<Content>> postMyContents(@Field("user_id") String user_id);
@@ -82,8 +111,7 @@ public interface RetroBaseApiService {
     @POST("insert_contents_list")
     Call<Register> postInserCustomContents(@Field("gen_id") String gen_id, @Field("season") int season,
                                            @Field("name") String name, @Field("name_org") String name_org,
-                                           @Field("theatrical") int theatrical,
-                                           @Field("summary") String summary,
+                                           @Field("theatrical") int theatrical, @Field("summary") String summary,
                                            @Field("publisher") String publisher, @Field("auth") int auth,
                                            @Field("image") String image);
 
@@ -102,11 +130,4 @@ public interface RetroBaseApiService {
     @FormUrlEncoded
     @POST("search_my_contents")
     Call<List<Content>> postSearchMyContents(@Field("user_id") String user_id, @Field("name") String name);
-
-
-    /// GET API ////////////////////////////////////////////////////////////////
-
-
-    @GET("total_genre")
-    Call<List<Genre>> getTotalGenre();
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
+import com.labis.mycl.model.RequestType;
 import com.labis.mycl.model.User;
 
 import java.util.ArrayList;
@@ -98,6 +99,25 @@ public class RetroClient {
             }
         });
     }
+
+    public void getTotalRequestType(final RetroCallback callback) {
+        apiService.getTotalRequestType().enqueue(new Callback<List<RequestType>>() {
+            @Override
+            public void onResponse(Call<List<RequestType>> call, Response<List<RequestType>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RequestType>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
 
     /// POST API ////////////////////////////////////////////////////////////////
     public void postTotalContents(String userid, final RetroCallback callback) {
@@ -211,7 +231,43 @@ public class RetroClient {
     public void postInserCustomContents(String gen_id, int season, String name, String name_org,
                                         int theatrical, String summary, String publisher, int auth, String image, final RetroCallback callback) {
         apiService.postInserCustomContents( gen_id,  season,  name,  name_org,
-                 theatrical, summary, publisher,  auth,  image).enqueue(new Callback<Register>() {
+                theatrical, summary, publisher,  auth,  image).enqueue(new Callback<Register>() {
+            @Override
+            public void onResponse(Call<Register> call, Response<Register> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Register> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void postRequestList(String req_type_id, final RetroCallback callback) {
+        apiService.postRequestList(req_type_id).enqueue(new Callback<List<RequestType>>() {
+            @Override
+            public void onResponse(Call<List<RequestType>> call, Response<List<RequestType>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RequestType>> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    public void postInsertRequest(String req_type_id, String comment, final RetroCallback callback) {
+        apiService.postInsertRequest(req_type_id, comment).enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
                 if (response.isSuccessful()) {
@@ -246,26 +302,8 @@ public class RetroClient {
         });
     }
 
-    public void postCheckIdToken(String id, String uid, String idToken, final RetroCallback callback) {
-        apiService.postCheckIdToken(id, uid, idToken).enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (response.isSuccessful()) {
-                    callback.onSuccess(response.code(), response.body());
-                } else {
-                    callback.onFailure(response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                callback.onError(t);
-            }
-        });
-    }
-
     public void postRegister(String id, String pw, String age, String gender,
-                               String nickname, String phone, String image, String uid, final RetroCallback callback) {
+                             String nickname, String phone, String image, String uid, final RetroCallback callback) {
         apiService.postRegister(id, pw, age, gender, nickname, phone, image, uid).enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
@@ -284,7 +322,7 @@ public class RetroClient {
     }
 
     public void postUpdate(String id, String age, String gender,
-                             String nickname, String phone, String image, String uid, final RetroCallback callback) {
+                           String nickname, String phone, String image, String uid, final RetroCallback callback) {
         apiService.postUpdate(id, age, gender, nickname, phone, image, uid).enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
