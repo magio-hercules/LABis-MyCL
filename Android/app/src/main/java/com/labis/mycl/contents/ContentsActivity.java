@@ -285,7 +285,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 mAdapter.notifyDataSetChanged();
 
                 if(isSearchMode) {
-                    getSupportActionBar().setTitle(uiShowContentsList.size() + "개 항목 검색");
+                    getSupportActionBar().setTitle("검색 결과 " + uiShowContentsList.size() + "개");
                 }
                 if(selectedGenreId != null) {
                     getSupportActionBar().setSubtitle("( " + selectedSubTitle + " " + uiShowContentsList.size() + "개 )");
@@ -647,7 +647,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         uiShowContentsList.addAll(searchContents);
         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, uiShowContentsList);
         recyclerView.setAdapter(mAdapter);
-        getSupportActionBar().setTitle(uiShowContentsList.size() + "개 항목 검색");
+        getSupportActionBar().setTitle("검색 결과 " + uiShowContentsList.size() + "개");
     }
 
     private void filterJenreMyContents(final String title, String userId, String gen_id) {
