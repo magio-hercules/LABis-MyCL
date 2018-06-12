@@ -857,10 +857,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                             editContents.add(ContentsList.get(editPosition));
                         }
                         delToMyContents();
+                        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
+                        recyclerView.setAdapter(mAdapter);
                     }
                 } else if(modeStatus.equals("TOTAL")) {
                     if(editPosition > -1) {
-
                         if(selectedGenreId != null) {
                             editContents.add(uiShowContentsList.get(editPosition));
                         } else {
@@ -869,6 +870,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                         addToMyContents();
                     }
                 }
+                resetDrawerCheckedItem(); // Init Filter
                 editPosition = -1;
             } else if(resultCode == RESULT_OK) {   // Refesh Action
                 if (modeStatus.equals("MY")) {
