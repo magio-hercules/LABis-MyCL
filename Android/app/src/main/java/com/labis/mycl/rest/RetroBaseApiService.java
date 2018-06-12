@@ -93,7 +93,8 @@ public interface RetroBaseApiService {
 
     @FormUrlEncoded
     @POST("update_my_contents")
-    Call<Register> postUpdateMyContents(@Field("id") String id, @Field("user_id") String user_id, @Field("chapter") int chapter, @Field("favorite") int favorite);
+    Call<Register> postUpdateMyContents(@Field("id") String id, @Field("user_id") String user_id, @Field("chapter") int chapter,
+                                        @Field("favorite") int favorite,  @Field("comment") String comment);
 
     @FormUrlEncoded
     @POST("total_contents")

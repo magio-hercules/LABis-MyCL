@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ActionMode;
@@ -130,7 +132,7 @@ public class DetailActivity extends AppCompatActivity {
     private Content currentItem = null;
     private String userID = null;
     private boolean isRefreshMyContentsList = false;
-    private boolean isEditChapterInfo = false;
+    private boolean isEditChapterOrCommentInfo = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +198,17 @@ public class DetailActivity extends AppCompatActivity {
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        detailFeeling.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                isEditChapterOrCommentInfo = true;
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+        });
     }
 
     private void inflateContent(Content Item) {
@@ -296,7 +309,7 @@ public class DetailActivity extends AppCompatActivity {
         Runnable plusAction = new Runnable() {
             @Override
             public void run() {
-                isEditChapterInfo = true;
+                isEditChapterOrCommentInfo = true;
                 if (chapterIndex < 999) {
                     chapterIndex++;
                     chapterView.setText(String.valueOf(chapterIndex) + " 화");
@@ -311,7 +324,7 @@ public class DetailActivity extends AppCompatActivity {
         Runnable minusAction = new Runnable() {
             @Override
             public void run() {
-                isEditChapterInfo = true;
+                isEditChapterOrCommentInfo = true;
                 if (chapterIndex > 1) {
                     chapterIndex--;
                     chapterView.setText(String.valueOf(chapterIndex) + " 화");
@@ -331,14 +344,18 @@ public class DetailActivity extends AppCompatActivity {
         return false;
     }
 
-    private void updateChapter(int value) {
+    private void updateChapterAndComment(int value) {
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(this);
         progressDoalog.setMessage("잠시만 기다리세요....");
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
 
-        retroClient.postUpdateMyContents(currentItem.id, userID, value, currentItem.favorite, new RetroCallback() {
+        String commentStr = currentItem.comment;
+        if(detailFeeling.getText().length() > 0) {
+            commentStr = detailFeeling.getText().toString();
+        }
+        retroClient.postUpdateMyContents(currentItem.id, userID, value, currentItem.favorite, commentStr, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
@@ -365,7 +382,7 @@ public class DetailActivity extends AppCompatActivity {
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
         final int val = value;
-        retroClient.postUpdateMyContents(currentItem.id, userID, currentItem.chapter, val, new RetroCallback() {
+        retroClient.postUpdateMyContents(currentItem.id, userID, currentItem.chapter, val, currentItem.comment, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
@@ -392,11 +409,12 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+
     @Override
     public void onBackPressed() {
-        if(isRefreshMyContentsList || isEditChapterInfo) {
-            if(isEditChapterInfo) {
-                updateChapter(chapterIndex);
+        if(isRefreshMyContentsList || isEditChapterOrCommentInfo) {
+            if(isEditChapterOrCommentInfo) {
+                updateChapterAndComment(chapterIndex);
             }
             Intent returnIntent = new Intent();
             setResult(Activity.RESULT_OK, returnIntent);
@@ -407,9 +425,9 @@ public class DetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.detail_ok_btn)
     void okClick() {
-        if(isRefreshMyContentsList || isEditChapterInfo) {
-            if(isEditChapterInfo) {
-                updateChapter(chapterIndex);
+        if(isRefreshMyContentsList || isEditChapterOrCommentInfo) {
+            if(isEditChapterOrCommentInfo) {
+                updateChapterAndComment(chapterIndex);
             }
             Intent returnIntent = new Intent();
             setResult(Activity.RESULT_OK, returnIntent);

@@ -172,7 +172,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
                         android:text="시즌"
-                        android:textColor="@color/colorPrimary"
                         android:textSize="12sp" />
 
                     <TextView
