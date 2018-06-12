@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,6 +112,8 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_image_favorite)
     ImageView favoriteImageView;
 
+    @BindView(R.id.detail_scroll_view)
+    ScrollView scrollView;
 
     private static int chapterIndex = 0;
     private String modeStatus = "";
@@ -165,6 +168,13 @@ public class DetailActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         appBar.setVisibility(View.GONE);
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollView.fullScroll(View.FOCUS_DOWN);
+                                detailFeeling.requestFocus();
+                            }
+                        }, 600);
                     }
                 });
             }

@@ -281,7 +281,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                         ContentsList.remove(item);
                     }
                 }
+                editContents.clear();
                 mAdapter.notifyDataSetChanged();
+
                 if(isSearchMode) {
                     getSupportActionBar().setTitle(uiShowContentsList.size() + "개 항목 검색");
                 }
@@ -290,7 +292,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 }
 
                 if (mActionMode != null) {
-                    editContents.clear();
                     mActionMode.finish();
                 }
                 progressDoalog.dismiss();
@@ -853,8 +854,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                             editContents.add(ContentsList.get(editPosition));
                         }
                         delToMyContents();
-                        myContentsRefresh = true;
-                        loadMyContents();
+                        //myContentsRefresh = true;
+                        //loadMyContents();
                     }
                 } else if(modeStatus.equals("TOTAL")) {
                     if(editPosition > -1) {
