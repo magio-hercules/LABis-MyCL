@@ -101,7 +101,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     ImageView imageProfile;
     private long lastTimeBackPressed;
     private String selectedGenreId;
-
+    private String selectedSubTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,15 +230,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     // -- User Function Section -- ////////////////////////////////////////
     public void multiSelectItem(int position) {
         if (mActionMode != null) {
-
-            // Normal Mode
-            if(selectedGenreId == null && isSearchMode == false) {
+            if(selectedGenreId == null && isSearchMode == false) {  // Normal Mode
                 if (editContents.contains(ContentsList.get(position))) {
                     editContents.remove(ContentsList.get(position));
                 } else {
                     editContents.add(ContentsList.get(position));
                 }
-            } else {
+            } else {                                                // Search or Filter Mode
                 if (editContents.contains(uiShowContentsList.get(position))) {
                     editContents.remove(uiShowContentsList.get(position));
                 } else {
@@ -249,7 +247,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             if (editContents.size() > 0) {
                 mActionMode.setTitle("" + editContents.size() + "개 항목 선택");
             } else {
-                mActionMode.setTitle("삭제할 항목을 선택해주세요");
+                if(modeStatus.equals("MY")) {
+                    mActionMode.setTitle("삭제할 항목을 선택해주세요");
+                } else {
+                    mActionMode.setTitle("추가할 항목을 선택해주세요");
+                }
             }
             mAdapter.notifyDataSetChanged();
         }
@@ -282,6 +284,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 mAdapter.notifyDataSetChanged();
                 if(isSearchMode) {
                     getSupportActionBar().setTitle(uiShowContentsList.size() + "개 항목 검색");
+                }
+                if(selectedGenreId != null) {
+                    getSupportActionBar().setSubtitle("( " + selectedSubTitle + " " + uiShowContentsList.size() + "개 )");
                 }
 
                 if (mActionMode != null) {
@@ -318,9 +323,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onSuccess(int code, Object receivedData) {
                 myContentsRefresh = true;
+                editContents.clear();
 
                 if (mActionMode != null) {
-                    editContents.clear();
                     mActionMode.finish();
                 }
                 progressDoalog.dismiss();
@@ -440,6 +445,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     myContentsRefresh = false;
                     editContents.clear();
                     ContentsList.clear();
+                    uiShowContentsList.clear();
                     contestsTitleSuggestionsArray.clear();
                     List<Content> data = (List<Content>) receivedData;
                     if (!data.isEmpty()) {
@@ -525,7 +531,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        String title = item.getTitle().toString();
+        selectedSubTitle = item.getTitle().toString();
         String genreId = null;
 
         switch (id) {
@@ -567,15 +573,15 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             selectedGenreId = genreId;
             item.setChecked(true);
 
-            Log.e(TAG, "title : " + title + ", genreId : " + genreId);
+            Log.e(TAG, "title : " + selectedSubTitle + ", genreId : " + genreId);
             if (modeStatus.equals("MY")) {
-                filterJenreMyContents(title, userData.id, genreId);
+                filterJenreMyContents(selectedSubTitle, userData.id, genreId);
             } else if (modeStatus.equals("TOTAL")) {
-                filterJenreTotalContentsList(title, genreId);
+                filterJenreTotalContentsList(selectedSubTitle, genreId);
             }
 
         } else {
-            title = "";
+            selectedSubTitle = "";
             selectedGenreId = genreId = null;
             item.setChecked(false);
             uiShowContentsList.clear();
@@ -603,6 +609,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         Log.e(TAG, "resetDrawerCheckedItem()");
 
         selectedGenreId = null;
+        selectedSubTitle = null;
         if(modeStatus == "MY") {
             getSupportActionBar().setTitle("내 콘텐츠");
         } else {
@@ -646,18 +653,32 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         Log.e(TAG, "doFilter() gen_id : " + gen_id);
 
         ArrayList<Content> filterContents = new ArrayList();
-        for(Content item : ContentsList) {
-            if(item.gen_id.equals(gen_id)) {
-                filterContents.add(item);
+        if(gen_id.equals("FAV")) {
+            for(Content item : ContentsList) {
+                if(item.favorite == 1) {
+                    filterContents.add(item);
+                }
+            }
+        } else {
+            for(Content item : ContentsList) {
+                if(item.gen_id.equals(gen_id)) {
+                    filterContents.add(item);
+                }
             }
         }
+
         uiShowContentsList.clear();
         uiShowContentsList.addAll(filterContents);
         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, uiShowContentsList);
         recyclerView.setAdapter(mAdapter);
         isSearchMode = false;
+        if(modeStatus == "MY") {
+            getSupportActionBar().setTitle("내 콘텐츠");
+        } else {
+            getSupportActionBar().setTitle("모든 콘텐츠");
+        }
         if(title.length() > 0) {
-            getSupportActionBar().setSubtitle("( " + title + " " + uiShowContentsList.size() + "개 항목 )");
+            getSupportActionBar().setSubtitle("( " + title + " " + uiShowContentsList.size() + "개 )");
         } else {
             getSupportActionBar().setSubtitle(null);
         }
@@ -679,8 +700,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, uiShowContentsList);
         recyclerView.setAdapter(mAdapter);
         isSearchMode = false;
+        if(modeStatus == "MY") {
+            getSupportActionBar().setTitle("내 콘텐츠");
+        } else {
+            getSupportActionBar().setTitle("모든 콘텐츠");
+        }
         if(title.length() > 0) {
-            getSupportActionBar().setSubtitle("( " + title + " " + uiShowContentsList.size() + "개 항목 )");
+            getSupportActionBar().setSubtitle("( " + title + " " + uiShowContentsList.size() + "개 )");
         } else {
             getSupportActionBar().setSubtitle(null);
         }
@@ -782,6 +808,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             return;
         }
 
+        if (selectedGenreId != null) {
+            resetDrawerCheckedItem();
+            mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
+            recyclerView.setAdapter(mAdapter);
+            return;
+        }
+
         if (searchView.isOpen()) {
             searchView.closeSearch();
             return;
@@ -811,20 +844,35 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_EDIT_REQUEST) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_FIRST_USER) {  // Add or Delete Action
                 if (modeStatus.equals("MY")) {
                     if(editPosition > -1) {
-                        editContents.add(ContentsList.get(editPosition));
+                        if(selectedGenreId != null) {
+                            editContents.add(uiShowContentsList.get(editPosition));
+                        } else {
+                            editContents.add(ContentsList.get(editPosition));
+                        }
                         delToMyContents();
+                        myContentsRefresh = true;
+                        loadMyContents();
                     }
                 } else if(modeStatus.equals("TOTAL")) {
                     if(editPosition > -1) {
-                        editContents.add(ContentsList.get(editPosition));
+
+                        if(selectedGenreId != null) {
+                            editContents.add(uiShowContentsList.get(editPosition));
+                        } else {
+                            editContents.add(ContentsList.get(editPosition));
+                        }
                         addToMyContents();
                     }
                 }
-
                 editPosition = -1;
+            } else if(resultCode == RESULT_OK) {   // Refesh Action
+                if (modeStatus.equals("MY")) {
+                    myContentsRefresh = true;
+                    loadMyContents();
+                }
             }
         }
 
@@ -870,7 +918,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             loadTotalContent();
             return true;
         } else if (id == R.id.action_my_contents) {
-            Log.d(TAG, "EVOL REQUEST #1-1");
             loadMyContents();
             return true;
         } else if (id == R.id.action_custom_contents) {

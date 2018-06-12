@@ -171,7 +171,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
 
-        mActivity.retroClient.postUpdateMyContents(mItems.get(position).id, mActivity.userData.id, value, new RetroCallback() {
+        mActivity.retroClient.postUpdateMyContents(mItems.get(position).id, mActivity.userData.id, value, mItems.get(position).favorite, new RetroCallback() {
 
             @Override
             public void onError(Throwable t) {

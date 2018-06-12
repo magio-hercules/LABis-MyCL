@@ -1,6 +1,7 @@
 package com.labis.mycl.contents;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Display;
 import android.view.MenuItem;
@@ -28,6 +30,9 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
+import com.labis.mycl.model.User;
+import com.labis.mycl.rest.RetroCallback;
+import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.util.AlertDialogHelper;
 import com.labis.mycl.util.SoftKeyboard;
 import com.squareup.picasso.Picasso;
@@ -39,6 +44,8 @@ import butterknife.OnClick;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailActivity";
+
+    public RetroClient retroClient;
 
     @BindView(R.id.detail_ll)
     RelativeLayout totalLayout;
@@ -119,11 +126,20 @@ public class DetailActivity extends AppCompatActivity {
 
     AlertDialogHelper alertDialogHelper;
 
+    // Info Data
+    private Content currentItem = null;
+    private String userID = null;
+    private boolean isRefreshMyContentsList = false;
+    private boolean isEditChapterInfo = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
+
+        // -- RetroClient -- //
+        retroClient = RetroClient.getInstance(this).createBaseApi();
 
         // -- Delete Dialog --//
         alertDialogHelper = new AlertDialogHelper(this);
@@ -156,6 +172,7 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Content item = (Content) intent.getSerializableExtra("CONTENT");
         modeStatus = intent.getStringExtra("MODE");
+        userID =  intent.getStringExtra("USER");
 
         // -- Screen Resolution -- //
         AppBarLayout appbar = (AppBarLayout) findViewById(R.id.detail_appbar);
@@ -167,26 +184,13 @@ public class DetailActivity extends AppCompatActivity {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)appBar.getLayoutParams();
         lp.height = screenH / 3;
 
-        // -- ToolBar -- //
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
-        //toolbar.setVisibility(View.GONE);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });*/
-
         // -- Chapter Button Event Add -- //
         minusBtn.setOnTouchListener(mTouchEvent);
         plusBtn.setOnTouchListener(mTouchEvent);
 
         // -- Inflate Content -- //
         inflateContent(item);
+        currentItem = item;
 
         // for AD
         mAdView = findViewById(R.id.adView);
@@ -204,7 +208,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         // 챕터
-        if(!isNoChapterGenre(Item.gen_id)) {
+        if(!isNoChapterGenre(Item.gen_id) && modeStatus.equals("MY")) {
             detailChapterDiv.setVisibility(View.VISIBLE);
             chapterIndex = Item.chapter;
             chapterView.setText(String.valueOf(chapterIndex) + " 화");
@@ -292,7 +296,7 @@ public class DetailActivity extends AppCompatActivity {
         Runnable plusAction = new Runnable() {
             @Override
             public void run() {
-
+                isEditChapterInfo = true;
                 if (chapterIndex < 999) {
                     chapterIndex++;
                     chapterView.setText(String.valueOf(chapterIndex) + " 화");
@@ -307,6 +311,7 @@ public class DetailActivity extends AppCompatActivity {
         Runnable minusAction = new Runnable() {
             @Override
             public void run() {
+                isEditChapterInfo = true;
                 if (chapterIndex > 1) {
                     chapterIndex--;
                     chapterView.setText(String.valueOf(chapterIndex) + " 화");
@@ -326,14 +331,89 @@ public class DetailActivity extends AppCompatActivity {
         return false;
     }
 
+    private void updateChapter(int value) {
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(this);
+        progressDoalog.setMessage("잠시만 기다리세요....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDoalog.show();
+
+        retroClient.postUpdateMyContents(currentItem.id, userID, value, currentItem.favorite, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                isRefreshMyContentsList = true;
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int code) {
+                progressDoalog.dismiss();
+            }
+        });
+    }
+
+    private void updateFavorite(int value) {
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(this);
+        progressDoalog.setMessage("잠시만 기다리세요....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDoalog.show();
+        final int val = value;
+        retroClient.postUpdateMyContents(currentItem.id, userID, currentItem.chapter, val, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                progressDoalog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                isRefreshMyContentsList = true;
+                progressDoalog.dismiss();
+                if(val == 0) {
+                    //해제
+                    Toast.makeText(getApplicationContext(), "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
+                } else {
+                    //추가
+                    Toast.makeText(getApplicationContext(), "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(int code) {
+                progressDoalog.dismiss();
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
+        if(isRefreshMyContentsList || isEditChapterInfo) {
+            if(isEditChapterInfo) {
+                updateChapter(chapterIndex);
+            }
+            Intent returnIntent = new Intent();
+            setResult(Activity.RESULT_OK, returnIntent);
+        }
         super.onBackPressed();
         overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
     }
 
     @OnClick(R.id.detail_ok_btn)
     void okClick() {
+        if(isRefreshMyContentsList || isEditChapterInfo) {
+            if(isEditChapterInfo) {
+                updateChapter(chapterIndex);
+            }
+            Intent returnIntent = new Intent();
+            setResult(Activity.RESULT_OK, returnIntent);
+        }
         finish();
         overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
         softKeyboard.unRegisterSoftKeyboardCallback();
@@ -346,7 +426,7 @@ public class DetailActivity extends AppCompatActivity {
                 @Override
                 public void onPositiveClick(int from) {
                     Intent returnIntent = new Intent();
-                    setResult(Activity.RESULT_OK, returnIntent);
+                    setResult(Activity.RESULT_FIRST_USER, returnIntent);
                     finish();
                 }
                 @Override
@@ -357,7 +437,7 @@ public class DetailActivity extends AppCompatActivity {
             alertDialogHelper.showAlertDialog("", "삭제할까요?", "예", "아니요", 1, false);
         } else if(modeStatus.equals("TOTAL")) { //추가
             Intent returnIntent = new Intent();
-            setResult(Activity.RESULT_OK, returnIntent);
+            setResult(Activity.RESULT_FIRST_USER, returnIntent);
             finish();
         }
     }
@@ -375,11 +455,11 @@ public class DetailActivity extends AppCompatActivity {
         if(favoiteFlag) {
             favoiteFlag = false;
             favoriteImageView.setImageResource(R.mipmap.bookmark_favorite);
-            Toast.makeText(getApplicationContext(), "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
+            updateFavorite(0);
         } else {
             favoiteFlag = true;
             favoriteImageView.setImageResource(R.mipmap.bookmark_favorite_on);
-            Toast.makeText(getApplicationContext(), "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
+            updateFavorite(1);
         }
 
     }
