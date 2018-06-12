@@ -533,6 +533,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         selectedSubTitle = item.getTitle().toString();
+        if(selectedSubTitle.equals("★")) {
+            selectedSubTitle = "즐겨찾기";
+        }
         String genreId = null;
 
         switch (id) {
@@ -854,8 +857,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                             editContents.add(ContentsList.get(editPosition));
                         }
                         delToMyContents();
-                        //myContentsRefresh = true;
-                        //loadMyContents();
                     }
                 } else if(modeStatus.equals("TOTAL")) {
                     if(editPosition > -1) {

@@ -115,27 +115,26 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_scroll_view)
     ScrollView scrollView;
 
-    private static int chapterIndex = 0;
-    private String modeStatus = "";
 
     private Handler mHandler = new Handler ();
     private SoftKeyboard softKeyboard;
 
-    private boolean favoiteFlag = false;
     private boolean posterImageFlag = true;
-
     private int screenW = 0;
     private int screenH = 0;
 
     private AdView mAdView;
-
     AlertDialogHelper alertDialogHelper;
 
-    // Info Data
-    private Content currentItem = null;
+    // Original Item & Flag
+    Content orgContentInfo = null;
     private String userID = null;
-    private boolean isRefreshMyContentsList = false;
-    private boolean isEditChapterOrCommentInfo = false;
+    private String modeStatus = "";
+
+    // Info Data
+    private int chapterIndex;
+    private int favoiteFlag;
+    private String feelingStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,9 +181,14 @@ public class DetailActivity extends AppCompatActivity {
 
         // -- Get Intent Data -- //
         Intent intent = getIntent();
-        Content item = (Content) intent.getSerializableExtra("CONTENT");
+        orgContentInfo = (Content) intent.getSerializableExtra("CONTENT");
         modeStatus = intent.getStringExtra("MODE");
         userID =  intent.getStringExtra("USER");
+
+        chapterIndex = orgContentInfo.chapter;
+        favoiteFlag = orgContentInfo.favorite;
+        if(orgContentInfo.comment ==  null) orgContentInfo.comment ="";
+        feelingStr = orgContentInfo.comment;
 
         // -- Screen Resolution -- //
         AppBarLayout appbar = (AppBarLayout) findViewById(R.id.detail_appbar);
@@ -201,8 +205,7 @@ public class DetailActivity extends AppCompatActivity {
         plusBtn.setOnTouchListener(mTouchEvent);
 
         // -- Inflate Content -- //
-        inflateContent(item);
-        currentItem = item;
+        inflateContent(orgContentInfo);
 
         // for AD
         mAdView = findViewById(R.id.adView);
@@ -212,7 +215,7 @@ public class DetailActivity extends AppCompatActivity {
         detailFeeling.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                isEditChapterOrCommentInfo = true;
+                feelingStr = s.toString();
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -233,7 +236,6 @@ public class DetailActivity extends AppCompatActivity {
         // 챕터
         if(!isNoChapterGenre(Item.gen_id) && modeStatus.equals("MY")) {
             detailChapterDiv.setVisibility(View.VISIBLE);
-            chapterIndex = Item.chapter;
             chapterView.setText(String.valueOf(chapterIndex) + " 화");
         }
 
@@ -247,12 +249,9 @@ public class DetailActivity extends AppCompatActivity {
         // 즐겨찾기
         if(modeStatus.equals("MY")) {
             detailFavoriteTotalDiv.setVisibility(View.VISIBLE);
-
-            if (Item.favorite == 1) {
-                favoiteFlag = true;
+            if (favoiteFlag == 1) {
                 favoriteImageView.setImageResource(R.mipmap.bookmark_favorite_on);
             } else {
-                favoiteFlag = false;
                 favoriteImageView.setImageResource(R.mipmap.bookmark_favorite);
             }
         }
@@ -280,7 +279,7 @@ public class DetailActivity extends AppCompatActivity {
         // 감상평
         if(modeStatus.equals("MY")) {
             detailFeelingDiv.setVisibility(View.VISIBLE);
-            if(Item.comment != null && Item.comment.length() > 0) {
+            if( Item.comment.length() > 0) {
                 detailFeeling.setText(Item.comment);
             }
         }
@@ -319,7 +318,6 @@ public class DetailActivity extends AppCompatActivity {
         Runnable plusAction = new Runnable() {
             @Override
             public void run() {
-                isEditChapterOrCommentInfo = true;
                 if (chapterIndex < 999) {
                     chapterIndex++;
                     chapterView.setText(String.valueOf(chapterIndex) + " 화");
@@ -327,14 +325,12 @@ public class DetailActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
                 }
-
             }
         };
 
         Runnable minusAction = new Runnable() {
             @Override
             public void run() {
-                isEditChapterOrCommentInfo = true;
                 if (chapterIndex > 1) {
                     chapterIndex--;
                     chapterView.setText(String.valueOf(chapterIndex) + " 화");
@@ -354,45 +350,28 @@ public class DetailActivity extends AppCompatActivity {
         return false;
     }
 
-    private void updateChapterAndComment(int value) {
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(this);
-        progressDoalog.setMessage("잠시만 기다리세요....");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDoalog.show();
-
-        String commentStr = currentItem.comment;
-        if(detailFeeling.getText().length() > 0) {
-            commentStr = detailFeeling.getText().toString();
+    private Boolean isChangeInfo() {
+        boolean result = false;
+        if(orgContentInfo.chapter != chapterIndex ) {
+            result = true;         // 챕터 정보
         }
-        retroClient.postUpdateMyContents(currentItem.id, userID, value, currentItem.favorite, commentStr, new RetroCallback() {
-            @Override
-            public void onError(Throwable t) {
-                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
-                progressDoalog.dismiss();
-            }
-
-            @Override
-            public void onSuccess(int code, Object receivedData) {
-                isRefreshMyContentsList = true;
-                progressDoalog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int code) {
-                progressDoalog.dismiss();
-            }
-        });
+        if(orgContentInfo.favorite != favoiteFlag ) {
+            result = true;        // 즐겨찾기 정보
+        }
+        if(orgContentInfo.comment != feelingStr ) {
+            result = true;        // 감상평
+        }
+        return result;
     }
 
-    private void updateFavorite(int value) {
+    private void updateContent() {
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(this);
         progressDoalog.setMessage("잠시만 기다리세요....");
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
-        final int val = value;
-        retroClient.postUpdateMyContents(currentItem.id, userID, currentItem.chapter, val, currentItem.comment, new RetroCallback() {
+
+        retroClient.postUpdateMyContents(orgContentInfo.id, userID, chapterIndex, favoiteFlag, feelingStr, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
@@ -401,15 +380,7 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int code, Object receivedData) {
-                isRefreshMyContentsList = true;
                 progressDoalog.dismiss();
-                if(val == 0) {
-                    //해제
-                    Toast.makeText(getApplicationContext(), "즐겨찾기 해제", Toast.LENGTH_SHORT).show();
-                } else {
-                    //추가
-                    Toast.makeText(getApplicationContext(), "즐겨찾기 추가", Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override
@@ -418,27 +389,17 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
-
 
     @Override
     public void onBackPressed() {
-        if(isRefreshMyContentsList || isEditChapterOrCommentInfo) {
-            if(isEditChapterOrCommentInfo) {
-                updateChapterAndComment(chapterIndex);
-            }
-            Intent returnIntent = new Intent();
-            setResult(Activity.RESULT_OK, returnIntent);
-        }
         super.onBackPressed();
         overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
     }
 
     @OnClick(R.id.detail_ok_btn)
     void okClick() {
-        if(isRefreshMyContentsList || isEditChapterOrCommentInfo) {
-            if(isEditChapterOrCommentInfo) {
-                updateChapterAndComment(chapterIndex);
-            }
+        if(isChangeInfo()) { // 확인
+            updateContent(); // 업데이트 실행
             Intent returnIntent = new Intent();
             setResult(Activity.RESULT_OK, returnIntent);
         }
@@ -480,16 +441,13 @@ public class DetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.detail_fav_image_layout)
     void detailFavoriteDivClick() {
-        if(favoiteFlag) {
-            favoiteFlag = false;
+        if(favoiteFlag == 1) {
+            favoiteFlag = 0;
             favoriteImageView.setImageResource(R.mipmap.bookmark_favorite);
-            updateFavorite(0);
         } else {
-            favoiteFlag = true;
+            favoiteFlag = 1;
             favoriteImageView.setImageResource(R.mipmap.bookmark_favorite_on);
-            updateFavorite(1);
         }
-
     }
 
     @OnClick(R.id.temp_image)

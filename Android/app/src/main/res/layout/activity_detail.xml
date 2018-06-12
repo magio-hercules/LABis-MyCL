@@ -72,8 +72,8 @@
                     android:orientation="horizontal">
                     <TextView
                         android:id="@+id/detail_minus_btn"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
                         android:layout_marginLeft="50dp"
                         android:background="@mipmap/ic_minus_btn" />
                     <TextView
@@ -82,12 +82,13 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="21sp" />
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="20sp" />
                     <TextView
                         android:id="@+id/detail_plus_btn"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
                         android:layout_marginRight="50dp"
                         android:background="@mipmap/ic_plus_btn" />
                 </LinearLayout>
