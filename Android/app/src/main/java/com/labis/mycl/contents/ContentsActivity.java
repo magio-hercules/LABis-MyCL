@@ -612,6 +612,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private void resetDrawerCheckedItem() {
         Log.e(TAG, "resetDrawerCheckedItem()");
 
+        isSearchMode = false;
         selectedGenreId = null;
         selectedSubTitle = null;
         if(modeStatus == "MY") {
@@ -752,16 +753,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                             public void onPositiveClick(int from) {
                                 delToMyContents();
                             }
-
                             @Override
-                            public void onNegativeClick(int from) {
-
-                            }
-
+                            public void onNegativeClick(int from) { }
                             @Override
-                            public void onNeutralClick(int from) {
-
-                            }
+                            public void onNeutralClick(int from) { }
                         });
                         alertDialogHelper.showAlertDialog("", "삭제하시겠습니까?", "예", "아니요", 1, false);
                     } else {
@@ -851,7 +846,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             if (resultCode == RESULT_FIRST_USER) {  // Add or Delete Action
                 if (modeStatus.equals("MY")) {
                     if(editPosition > -1) {
-                        if(selectedGenreId != null) {
+                        if(selectedGenreId != null || isSearchMode) {
                             editContents.add(uiShowContentsList.get(editPosition));
                         } else {
                             editContents.add(ContentsList.get(editPosition));
@@ -859,10 +854,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                         delToMyContents();
                         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
                         recyclerView.setAdapter(mAdapter);
+                        resetDrawerCheckedItem(); // Init Filter
                     }
                 } else if(modeStatus.equals("TOTAL")) {
                     if(editPosition > -1) {
-                        if(selectedGenreId != null) {
+                        if(selectedGenreId != null || isSearchMode) {
                             editContents.add(uiShowContentsList.get(editPosition));
                         } else {
                             editContents.add(ContentsList.get(editPosition));
@@ -870,7 +866,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                         addToMyContents();
                     }
                 }
-                resetDrawerCheckedItem(); // Init Filter
                 editPosition = -1;
             } else if(resultCode == RESULT_OK) {   // Refesh Action
                 if (modeStatus.equals("MY")) {
@@ -878,6 +873,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     loadMyContents();
                 }
             }
+            return;
         }
 
         if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
@@ -888,7 +884,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     searchView.setQuery(searchWrd, false);
                 }
             }
-
             return;
         }
     }

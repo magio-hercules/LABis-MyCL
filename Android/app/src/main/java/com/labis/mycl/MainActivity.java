@@ -28,6 +28,7 @@ import com.labis.mycl.model.LoginData;
 import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
+import com.labis.mycl.util.AlertDialogHelper;
 import com.labis.mycl.util.AuthManager;
 
 import java.util.ArrayList;
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
     private long lastTimeBackPressed;
 
+    AlertDialogHelper alertDialogHelper = null;
+    private boolean isShowAlertDialog = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
 
             bAutoLogin = true;
         }
+
+        // -- Delete Dialog --//
+        alertDialogHelper = new AlertDialogHelper(this);
     }
 
     @Override
@@ -114,14 +120,16 @@ public class MainActivity extends AppCompatActivity {
         retroClient.getTotalGenre(new RetroCallback() {
             @Override
             public void onError(Throwable t) {
-                Log.e(TAG, t.toString());
-                Toast.makeText(getApplicationContext(), "서버 접속 실패", Toast.LENGTH_SHORT).show();
                 hideProgressDialog();
+                if (isShowAlertDialog == false) {
+                    isShowAlertDialog = true;
+                    showAlertsDialog("서버에 접속 실패하였습니다. 잠시 후 다시 시도해주세요");
+                }
             }
 
             @Override
             public void onSuccess(int code, Object receivedData) {
-                Log.e(TAG, "GENRE LOAD SUCCESS");
+                Log.d(TAG, "GENRE LOAD SUCCESS");
 
                 genreData = (ArrayList<Genre>) receivedData;
 
@@ -131,12 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         hideProgressDialog();
-
                         if (!bAutoLogin && mainLayout.getVisibility() == View.GONE) {
-//                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-//                            startActivity(i);
-//                            overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
-//                            finish();
                             mainLayout.setVisibility(View.VISIBLE);
                             mainLayout.setAnimation(animFadein);
                         }
@@ -146,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int code) {
-                Log.e(TAG, "GENRE LOAD FAIL");
+                Log.d(TAG, "GENRE LOAD FAIL");
                 Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
                 hideProgressDialog();
             }
@@ -176,19 +179,16 @@ public class MainActivity extends AppCompatActivity {
                 if (user2 != null)
                     Log.d(TAG, "onAuthStateChanged uid 2 : (" +  user2.getUid() + ")");
 
-//                firebaseAuth.getCurrentUser();
+                // firebaseAuth.getCurrentUser();
                 if (user != null && !bAutoLogin) {
                     bAutoLogin = true;
 
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged()");
                     Log.d(TAG, "onAuthStateChanged:signed_in : UID (" + user.getUid() + ")");
-//                    Log.d(TAG, "onAuthStateChanged:signed_in : IdToken (" + mFirebaseUser.getIdToken(true).getResult().getToken() + ")");
-
                     Log.d(TAG, "authManager.getmFirebaseUser() : " + authManager.getmFirebaseUser());
 
                     showProgressDialog();
-//                    autoLogin(user.getEmail(), user.getUid());
                     doLogin(user.getEmail(), null, user.getUid());
                 } else {
                     // User is signed out
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
     void onClick_login(){
         String str_email = edit_email.getText().toString();
         String str_pw = edit_password.getText().toString();
-        Log.e(TAG, "mail: " + str_email + ", pw: " + anonymizePassword(str_pw));
+        Log.d(TAG, "mail: " + str_email + ", pw: " + anonymizePassword(str_pw));
 
         signIn(str_email, str_pw);
     }
@@ -217,13 +217,6 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
         startActivity(i);
     }
-
-//    @OnClick(R.id.login_testbtn)
-//    void onClick_loginTest(){
-//        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-//        startActivity(i);
-//        finish();
-//    }
 
     public void showProgressDialog() {
         Log.d(TAG, "showProgressDialog");
@@ -247,6 +240,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void showAlertsDialog(String message) {
+        alertDialogHelper.setAlertDialogListener(new AlertDialogHelper.AlertDialogListener() {
+            @Override
+            public void onPositiveClick(int from) {
+                //forceExitActivity();
+                finish();
+            }
+            @Override
+            public void onNegativeClick(int from){}
+            @Override
+            public void onNeutralClick(int from){}
+        });
+        alertDialogHelper.showAlertDialog("", message, "확인", 1, false);
+    }
+
+    private void forceExitActivity() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                finish();
+            }
+        }, 1000);
+    }
+
     private boolean validateForm() {
         boolean valid = true;
 
@@ -255,8 +272,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Email Required.", Toast.LENGTH_SHORT).show();
             valid = false;
             edit_email.setError("Required.");
-        } else {
-//            mEmailField.setError(null);
         }
 
         String password = edit_password.getText().toString();
@@ -264,8 +279,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Email Required.", Toast.LENGTH_SHORT).show();
             valid = false;
             edit_password.setError("Required.");
-        } else {
-//            mPasswordField.setError(null);
         }
 
         return valid;
@@ -301,7 +314,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (!task.isSuccessful()) {
-//                            mStatusTextView.setText(R.string.auth_failed);
                     Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                 }
                 hideProgressDialog();
@@ -319,19 +331,19 @@ public class MainActivity extends AppCompatActivity {
         retroClient.postLogin(email, pw, uid, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
-                Log.e(TAG, t.toString());
+                Log.d(TAG, t.toString());
                 Toast.makeText(MainActivity.this, "Login Error", Toast.LENGTH_SHORT).show();
                 hideProgressDialog();
             }
             @Override
             public void onFailure(int code) {
-                Log.e(TAG, "FAIL");
+                Log.d(TAG, "FAIL");
                 Toast.makeText(MainActivity.this, "Login Fail", Toast.LENGTH_SHORT).show();
                 hideProgressDialog();
             }
             @Override
             public void onSuccess(int code, Object receivedData) {
-                Log.e(TAG, "SUCCESS");
+                Log.d(TAG, "SUCCESS");
                 Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
 
                 userData = ((List<User>)receivedData).get(0);

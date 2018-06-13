@@ -72,6 +72,7 @@
                 android:id="@+id/content_sub_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:textColor="@color/colorPrimary"
                 android:textSize="11sp" />
         </LinearLayout>
