@@ -72,7 +72,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         //Picasso.get().load(mItems.get(position).image).transform(PicassoTransformations.resizeTransformation).into(holder.mImgView);
         Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
         holder.mName.setText(mItems.get(position).name + "  ");
-        holder.mNameOrg.setText(mItems.get(position).name_org);
+        if(mItems.get(position).name_org.length() > 0) {
+            holder.mNameOrg.setText(mItems.get(position).name_org);
+        } else {
+            holder.mNameOrg.setVisibility(View.GONE);
+        }
 
         if(mActivity.modeStatus == "MY") {
             holder.mGen.setBackground(mActivity.getResources().getDrawable(R.color.colorPrimary));

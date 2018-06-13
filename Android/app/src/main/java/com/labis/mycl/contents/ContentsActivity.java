@@ -248,9 +248,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 mActionMode.setTitle("" + editContents.size() + "개 항목 선택");
             } else {
                 if(modeStatus.equals("MY")) {
-                    mActionMode.setTitle("삭제할 항목을 선택해주세요");
+                    mActionMode.setTitle("삭제 항목 선택");
                 } else {
-                    mActionMode.setTitle("추가할 항목을 선택해주세요");
+                    mActionMode.setTitle("추가 항목 선택");
                 }
             }
             mAdapter.notifyDataSetChanged();
@@ -763,9 +763,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
                             }
                         });
-                        alertDialogHelper.showAlertDialog("", "삭제할까요?", "예", "아니요", 1, false);
+                        alertDialogHelper.showAlertDialog("", "삭제하시겠습니까?", "예", "아니요", 1, false);
                     } else {
-                        Toast.makeText(getApplicationContext(), "삭제할 항목을 선택해 주세요", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "삭제 항목 선택", Toast.LENGTH_SHORT).show();
                     }
                     return true;
 
@@ -773,7 +773,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     if (editContents.size() > 0) {
                         addToMyContents();
                     } else {
-                        Toast.makeText(getApplicationContext(), "추가할 항목을 선택해 주세요", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "추가 항목 선택", Toast.LENGTH_SHORT).show();
                     }
                     return true;
                 default:
