@@ -19,13 +19,15 @@ exports.postLogin = function(req, res) {
 	var params = [ req.body.id ];
 
 	if (req.body.uid != undefined) {
-		console.log("[INFO][TEST] req.body.uid : " + req.body.uid);
-		if (authAdmin == null || authAdmin.auth() == null) {
-			console.log("[INFO][TEST] authAdmin or authAdmin.auth is null");
-			authAdmin = auth.init();
-			sleep(1000);
-		}
+		console.log("[INFO][TEST] before try");
 		try {
+			console.log("[INFO][TEST] req.body.uid : " + req.body.uid);
+			if (authAdmin == null || authAdmin.auth() == null) {
+				console.log("[INFO][TEST] authAdmin or authAdmin.auth is null");
+				authAdmin = auth.init();
+				sleep(1000);
+			}
+		
 			console.log("[INFO][TEST] customToken 1");
 			authAdmin.auth().createCustomToken(req.body.uid)
 					.then(function(customToken) {

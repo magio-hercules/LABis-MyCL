@@ -3,17 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon --debug ./bin/www",
-    "forever": "sudo forever start -c nodemon --debug ./bin/www"
+    "start": "nodemon --debug ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "~4.15.2",
+    "firebase-admin": "^5.12.1",
     "mime": "^2.3.1",
     "morgan": "~1.8.1",
     "mysql": "^2.15.0",
-    "serve-favicon": "~2.2.0"
+    "serve-favicon": "~2.2.0",
+    "nodemon": "~1.17.5"
   }
 }

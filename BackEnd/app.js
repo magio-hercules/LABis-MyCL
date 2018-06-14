@@ -10,9 +10,9 @@ var bodyParser = require('body-parser');
 var app = express();
 // Configuration
 app.use(express.static(__dirname + '/public'));
-app.use(connect.logger('dev'));
-app.use(connect.json());
-app.use(connect.urlencoded());
+// app.use(connect.logger('dev')); // app.use(logger('dev'));
+// app.use(connect.json());
+// app.use(connect.urlencoded());
 
 // for login
 app.use(bodyParser.urlencoded({ extended: true }));
