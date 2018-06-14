@@ -115,6 +115,8 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_scroll_view)
     ScrollView scrollView;
 
+    @BindView(R.id.adview_layout)
+    LinearLayout adviewLayout;
 
     private Handler mHandler = new Handler ();
     private SoftKeyboard softKeyboard;
@@ -478,19 +480,20 @@ public class DetailActivity extends AppCompatActivity {
             posterImageFlag = false;
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)appBar.getLayoutParams();
             lp.height = screenH;
+            tempImgView.setAlpha(1.0f);
             tempImgView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             detailZoom.setImageResource(R.mipmap.zoom_out);
-            detailZoom.setAlpha(0.5f);
+            //detailZoom.setAlpha(0.5f);
 
             // 동적으로 margin 변경하기
-            int marginRightPixel = convertDptoPixel(8);
-            int marginBottomPixel = convertDptoPixel(58);
+            int marginRightPixel = convertDptoPixel(4);
+            int marginBottomPixel = convertDptoPixel(14);
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) detailZoom.getLayoutParams();
             layoutParams.setMargins(0, 0, marginRightPixel, marginBottomPixel);
             detailZoom.setLayoutParams(layoutParams);
 
             orgImgView.setVisibility(View.VISIBLE);
-            mAdViewPoster.setVisibility(View.VISIBLE);
+            adviewLayout.setVisibility(View.VISIBLE);
 
             if(posterLoadFlag && curImageUrl != null && curImageUrl.length() > 10) {
                 String imageUrl = curImageUrl.replace("/resize/", "/images/");
@@ -501,17 +504,19 @@ public class DetailActivity extends AppCompatActivity {
             posterImageFlag = true;
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)appBar.getLayoutParams();
             lp.height = screenH / 3;
+            tempImgView.setAlpha(0.8f);
             tempImgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             detailZoom.setImageResource(R.mipmap.zoom_in);
 
             // 동적으로 margin 변경하기
-            int marginPixel = convertDptoPixel(8);
+            int marginRightPixel = convertDptoPixel(2);
+            int marginBottomPixel = convertDptoPixel(2);
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) detailZoom.getLayoutParams();
-            layoutParams.setMargins(0, 0, marginPixel, marginPixel);
+            layoutParams.setMargins(0, 0, marginRightPixel, marginBottomPixel);
             detailZoom.setLayoutParams(layoutParams);
 
             orgImgView.setVisibility(View.GONE);
-            mAdViewPoster.setVisibility(View.GONE);
+            adviewLayout.setVisibility(View.GONE);
         }
     }
 
