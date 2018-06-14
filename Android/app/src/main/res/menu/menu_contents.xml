@@ -24,6 +24,10 @@
         android:title="삭제"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/action_help"
+        android:title="도움말"
+        app:showAsAction="never"/>
+
     <item
         android:id="@+id/action_s3_url"
         android:title="S3 URL 변경"

@@ -69,10 +69,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         }
         holder.mGen.setText(genreText);
-        //Picasso.get().load(mItems.get(position).image).transform(PicassoTransformations.resizeTransformation).into(holder.mImgView);
         Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
         holder.mName.setText(mItems.get(position).name);
-        if(mItems.get(position).name_org != "") {
+        if(mItems.get(position).name_org.length() > 1) {
             holder.mNameOrg.setVisibility(View.VISIBLE);
             holder.mNameOrg.setText(mItems.get(position).name_org);
         }
