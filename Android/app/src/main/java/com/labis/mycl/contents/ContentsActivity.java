@@ -922,7 +922,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             return true;
         } else if (id == R.id.action_custom_contents) {
             Intent i = new Intent(getApplicationContext(), CustomActivity.class);
-            startActivity(i);
+            startActivityForResult(i,PICK_EDIT_REQUEST);
             overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
             return true;
         } else if (id == R.id.action_search_contents) {

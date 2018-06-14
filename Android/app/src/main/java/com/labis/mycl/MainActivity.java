@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO
         // for test
-        edit_email.setText("labis@labis.com");
-        edit_password.setText("123456");
+        //edit_email.setText("labis@labis.com");
+        //edit_password.setText("123456");
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");

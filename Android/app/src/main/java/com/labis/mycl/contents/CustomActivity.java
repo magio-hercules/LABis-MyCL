@@ -1,6 +1,7 @@
 package com.labis.mycl.contents;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.Service;
@@ -353,6 +354,8 @@ public class CustomActivity extends AppCompatActivity {
             public void onSuccess(int code, Object receivedData) {
                 Toast.makeText(getApplicationContext(), "[" + Item.name + "] 추가 성공", Toast.LENGTH_SHORT).show();
                 progressDoalog.dismiss();
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_OK, returnIntent);
                 finish();
                 overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
             }
