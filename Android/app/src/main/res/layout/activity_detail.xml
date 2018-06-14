@@ -52,7 +52,7 @@
             android:id="@+id/adview_layout"
             android:layout_width="match_parent"
             android:visibility="gone"
-            android:background="#1B1F25"
+            android:background="#995B1E52"
             android:layout_height="60dp">
 
             <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
