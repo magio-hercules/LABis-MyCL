@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.labis.mycl.MainActivity;
 import com.labis.mycl.R;
+import com.labis.mycl.help.HelpActivity;
 import com.labis.mycl.login.RegisterActivity;
 import com.labis.mycl.login.UrlActivity;
 import com.labis.mycl.model.Content;
@@ -941,10 +942,12 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     mActionMode = startActionMode(mActionModeCallback);
                 }
             }
-
             return true;
         } else if (id == R.id.action_s3_url) {
             Intent i = new Intent(ContentsActivity.this, UrlActivity.class);
+            startActivity(i);
+        } else if (id == R.id.action_help) {
+            Intent i = new Intent(ContentsActivity.this, HelpActivity.class);
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);

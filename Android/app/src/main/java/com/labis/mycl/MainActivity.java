@@ -121,10 +121,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable t) {
                 hideProgressDialog();
-                if (isShowAlertDialog == false) {
+               /* if (isShowAlertDialog == false) {
                     isShowAlertDialog = true;
                     showAlertsDialog("서버에 접속 실패하였습니다. 잠시 후 다시 시도해주세요");
-                }
+                }*/
             }
 
             @Override
