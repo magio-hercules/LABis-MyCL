@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="helplist">
-        <item>▽ 유형 선택</item>
+        <item>( 선  택 )</item>
         <item>버그신고</item>
         <item>개선</item>
         <item>회원탈퇴</item>

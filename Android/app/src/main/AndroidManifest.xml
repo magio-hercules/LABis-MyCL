@@ -67,7 +67,8 @@
         <activity
             android:name=".contents.CustomActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".help.HelpActivity"></activity>
+        <activity android:name=".help.HelpActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
