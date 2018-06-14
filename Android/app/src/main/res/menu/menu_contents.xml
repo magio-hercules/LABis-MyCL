@@ -25,7 +25,7 @@
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_help"
-        android:title="도움말"
+        android:title="문의 및 도움말"
         app:showAsAction="never"/>
 
     <item

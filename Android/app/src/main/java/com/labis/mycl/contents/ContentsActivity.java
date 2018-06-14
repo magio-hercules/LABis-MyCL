@@ -399,7 +399,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 if(contentsMainMenu != null) {
                     contentsMainMenu.findItem(R.id.action_total_contents).setVisible(false);
                     contentsMainMenu.findItem(R.id.action_my_contents).setVisible(true);
-                    contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("추가");
+                    contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("콘텐츠 추가");
                 }
 
                 new Thread(new Runnable() {
@@ -467,7 +467,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     if (contentsMainMenu != null) {
                         contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
                         contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
-                        contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("삭제");
+                        contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("콘텐츠 삭제");
                     }
 
                     new Thread(new Runnable() {
@@ -500,7 +500,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
             contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
             contentsMainMenu.findItem(R.id.action_my_contents).setVisible(false);
-            contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("삭제");
+            contentsMainMenu.findItem(R.id.action_edit_contents).setTitle("콘텐츠 삭제");
 
             //Search Suggestion
             contestsTitleSuggestionsArray.clear();

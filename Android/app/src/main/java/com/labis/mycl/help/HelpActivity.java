@@ -33,7 +33,9 @@ public class HelpActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.help_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("도움말");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("문의 및 도움말");
 
         SpinnerAdapter sAdapter = ArrayAdapter.createFromResource(this, R.array.helplist, R.layout.spinner_item);
         comboHelp.setAdapter(sAdapter);
