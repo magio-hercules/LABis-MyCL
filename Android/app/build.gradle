@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-ads:12.0.1'
     compile 'com.google.android.gms:play-services-auth:12.0.1'
     implementation 'br.com.mauker.materialsearchview:materialsearchview:1.2.3'
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

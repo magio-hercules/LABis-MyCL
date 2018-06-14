@@ -12,15 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.ActionMode;
+import android.util.TypedValue;
 import android.view.Display;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,7 +32,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
-import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.util.AlertDialogHelper;
@@ -59,6 +57,8 @@ public class DetailActivity extends AppCompatActivity {
     ImageView detailZoom;
     @BindView(R.id.temp_image)
     ImageView tempImgView;
+    @BindView(R.id.original_image)
+    ImageView orgImgView;
 
     @BindView(R.id.detail_minus_btn)
     TextView minusBtn;
@@ -120,10 +120,12 @@ public class DetailActivity extends AppCompatActivity {
     private SoftKeyboard softKeyboard;
 
     private boolean posterImageFlag = true;
+    private boolean posterLoadFlag = true;
     private int screenW = 0;
     private int screenH = 0;
 
     private AdView mAdView;
+    private AdView mAdViewPoster;
     AlertDialogHelper alertDialogHelper;
 
     // Original Item & Flag
@@ -135,6 +137,8 @@ public class DetailActivity extends AppCompatActivity {
     private int chapterIndex;
     private int favoiteFlag;
     private String feelingStr;
+
+    private String curImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,9 +212,13 @@ public class DetailActivity extends AppCompatActivity {
         inflateContent(orgContentInfo);
 
         // for AD
-        mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
+
+        mAdView = findViewById(R.id.adView);
         mAdView.loadAd(adRequest);
+
+        mAdViewPoster = findViewById(R.id.adView_poster);
+        mAdViewPoster.loadAd(adRequest);
 
         detailFeeling.addTextChangedListener(new TextWatcher() {
             @Override
@@ -285,10 +293,10 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         // 이미지 로딩
-        String imageUrl = Item.image;
-        if(imageUrl != null && imageUrl.length() > 10) {
-            imageUrl = imageUrl.replace("/resize/", "/images/");
-            Picasso.get().load(imageUrl).into(tempImgView);
+        curImageUrl = Item.image;
+        if(curImageUrl != null && curImageUrl.length() > 10) {
+//            imageUrl = imageUrl.replace("/resize/", "/images/");
+            Picasso.get().load(curImageUrl).into(tempImgView);
         }
     }
 
@@ -392,8 +400,12 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
+        if (!posterImageFlag) {
+            showPoster(posterImageFlag);
+        } else {
+            overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
+            super.onBackPressed();
+        }
     }
 
     @OnClick(R.id.detail_ok_btn)
@@ -453,23 +465,62 @@ public class DetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.temp_image)
     void AppBarClick() {
-        if(posterImageFlag) {
+        showPoster(posterImageFlag);
+    }
+
+    @OnClick(R.id.detail_zoom_btn)
+    void ZoomIconClick() {
+        showPoster(posterImageFlag);
+    }
+
+    private void showPoster(boolean bShow) {
+        if(bShow) {
             posterImageFlag = false;
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)appBar.getLayoutParams();
             lp.height = screenH;
-            tempImgView.setAlpha(1.0f);
             tempImgView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             detailZoom.setImageResource(R.mipmap.zoom_out);
             detailZoom.setAlpha(0.5f);
+
+            // 동적으로 margin 변경하기
+            int marginRightPixel = convertDptoPixel(8);
+            int marginBottomPixel = convertDptoPixel(58);
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) detailZoom.getLayoutParams();
+            layoutParams.setMargins(0, 0, marginRightPixel, marginBottomPixel);
+            detailZoom.setLayoutParams(layoutParams);
+
+            orgImgView.setVisibility(View.VISIBLE);
+            mAdViewPoster.setVisibility(View.VISIBLE);
+
+            if(posterLoadFlag && curImageUrl != null && curImageUrl.length() > 10) {
+                String imageUrl = curImageUrl.replace("/resize/", "/images/");
+                Picasso.get().load(imageUrl).into(orgImgView);
+                posterLoadFlag = false;
+            }
         } else {
             posterImageFlag = true;
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)appBar.getLayoutParams();
             lp.height = screenH / 3;
-            tempImgView.setAlpha(0.8f);
             tempImgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             detailZoom.setImageResource(R.mipmap.zoom_in);
-            detailZoom.setAlpha(0.8f);
+
+            // 동적으로 margin 변경하기
+            int marginPixel = convertDptoPixel(8);
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) detailZoom.getLayoutParams();
+            layoutParams.setMargins(0, 0, marginPixel, marginPixel);
+            detailZoom.setLayoutParams(layoutParams);
+
+            orgImgView.setVisibility(View.GONE);
+            mAdViewPoster.setVisibility(View.GONE);
         }
     }
 
+    private int convertDptoPixel(int dp) {
+        if (dp == 0) {
+            return 0;
+        }
+
+        return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                getResources().getDisplayMetrics());
+    }
 }

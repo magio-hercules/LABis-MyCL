@@ -21,18 +21,35 @@
                 android:id="@+id/temp_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:alpha="0.8"
+                android:scaleType="centerCrop" />
+            <com.github.chrisbanes.photoview.PhotoView
+                android:id="@+id/original_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
                 android:scaleType="centerCrop" />
             <ImageView
                 android:id="@+id/detail_zoom_btn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginBottom="4dp"
-                android:alpha="0.8"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_gravity="bottom|right"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/zoom_in" />
+
+            <com.google.android.gms.ads.AdView
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/adView_poster"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                ads:adSize="BANNER"
+                android:layout_gravity="bottom|center"
+                android:visibility="gone"
+                ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+            </com.google.android.gms.ads.AdView>
         </FrameLayout>
 
 
