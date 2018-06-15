@@ -135,7 +135,7 @@ public class RegisterActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         bEditProfile = checkProfile(getIntent());
         if (!bEditProfile) {
-            toolbar.setTitle("사용자 등록");
+            toolbar.setTitle("회원가입");
             currentMode = "CREATE";
             btn_change_pw.setVisibility(View.GONE);
         } else {
@@ -423,8 +423,6 @@ public class RegisterActivity extends AppCompatActivity {
                 switch (state) {
                     case COMPLETED: {
                         transferUtility.deleteTransferRecord(id);
-                        Toast.makeText(getApplicationContext(), "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
-
                         if (currentMode.equals("CREATE")) {
                             registUser(resourceUrl);
                         } else if (currentMode.equals("UPDATE")) {
@@ -652,8 +650,13 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     Log.d(TAG, "createUserWithEmail:failure", task.getException());
                     Log.d(TAG, task.getException().getMessage());
+
                     // TODO
-                    Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    String msg = task.getException().getMessage();
+                    if(msg.contains("least 6")){
+                        msg = "비밀번호 최소 6자리 이상";
+                    }
+                    Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
                     hideProgressDialog();
                 }
             }

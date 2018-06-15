@@ -336,8 +336,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int code, Object receivedData) {
                 Log.d(TAG, "SUCCESS");
-                Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-
                 userData = ((List<User>)receivedData).get(0);
 
                 hideProgressDialog();
