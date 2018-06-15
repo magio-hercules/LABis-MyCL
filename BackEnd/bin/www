@@ -55,6 +55,7 @@ function normalizePort(val) {
 
 function onError(error) {
   if (error.syscall !== 'listen') {
+    console.error("onError error.syscall !== 'listen'");
     throw error;
   }
 
@@ -70,6 +71,10 @@ function onError(error) {
       break;
     case 'EADDRINUSE':
       console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    case 'ECONNRESET':
+      console.error(bind + ' is Error (ECONNRESET)');
       process.exit(1);
       break;
     default:
