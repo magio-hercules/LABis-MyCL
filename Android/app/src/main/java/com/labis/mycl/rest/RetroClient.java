@@ -6,6 +6,7 @@ import android.content.Context;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
+import com.labis.mycl.model.RequestList;
 import com.labis.mycl.model.RequestType;
 import com.labis.mycl.model.User;
 
@@ -249,9 +250,9 @@ public class RetroClient {
     }
 
     public void postRequestList(String req_type_id, final RetroCallback callback) {
-        apiService.postRequestList(req_type_id).enqueue(new Callback<List<RequestType>>() {
+        apiService.postRequestList(req_type_id).enqueue(new Callback<List<RequestList>>() {
             @Override
-            public void onResponse(Call<List<RequestType>> call, Response<List<RequestType>> response) {
+            public void onResponse(Call<List<RequestList>> call, Response<List<RequestList>> response) {
                 if (response.isSuccessful()) {
                     callback.onSuccess(response.code(), response.body());
                 } else {
@@ -260,14 +261,14 @@ public class RetroClient {
             }
 
             @Override
-            public void onFailure(Call<List<RequestType>> call, Throwable t) {
+            public void onFailure(Call<List<RequestList>> call, Throwable t) {
                 callback.onError(t);
             }
         });
     }
 
-    public void postInsertRequest(String req_type_id, String comment, final RetroCallback callback) {
-        apiService.postInsertRequest(req_type_id, comment).enqueue(new Callback<Register>() {
+    public void postInsertRequest(String user_id, String req_type_id, String comment, final RetroCallback callback) {
+        apiService.postInsertRequest(user_id, req_type_id, comment).enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
                 if (response.isSuccessful()) {

@@ -3,6 +3,7 @@ package com.labis.mycl.rest;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.Register;
+import com.labis.mycl.model.RequestList;
 import com.labis.mycl.model.RequestType;
 import com.labis.mycl.model.User;
 
@@ -72,11 +73,11 @@ public interface RetroBaseApiService {
     // request
     @FormUrlEncoded
     @POST("request_list")
-    Call<List<RequestType>> postRequestList(@Field("req_type_id") String req_type_id);
+    Call<List<RequestList>> postRequestList(@Field("req_type_id") String req_type_id);
 
     @FormUrlEncoded
     @POST("insert_request")
-    Call<Register> postInsertRequest(@Field("req_type_id") String req_type_id, @Field("comment") String comment);
+    Call<Register> postInsertRequest(@Field("user_id") String user_id, @Field("req_type_id") String req_type_id, @Field("comment") String comment);
 
     // contents
     @FormUrlEncoded

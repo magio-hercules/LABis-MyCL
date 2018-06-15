@@ -67,6 +67,7 @@ module.exports = (function () {
       },
       Request_list: { 
         id: "`id`",
+        user_id: "`user_id`",
         req_type_id: "`req_type_id`",
         comment: "`comment`"
       }

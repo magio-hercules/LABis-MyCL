@@ -31,6 +31,7 @@ exports.postInsertRequest = function(req, res) {
 
     var newQuery = mysql_query.postInsertRequest();
 	var newParams = [];
+	newQuery = _setParams(newQuery, newParams, req.body.user_id, table.Request_list.user_id);
 	newQuery = _setParams(newQuery, newParams, req.body.req_type_id, table.Request_list.req_type_id);
 	newQuery = _setParams(newQuery, newParams, req.body.comment, table.Request_list.comment);
 

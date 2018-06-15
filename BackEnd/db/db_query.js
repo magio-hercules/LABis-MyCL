@@ -73,7 +73,7 @@ module.exports = function () {
             return 'SELECT * FROM Request_list';
         },
         postInsertRequest: function () {
-            // .../MyCL/insert_request (req_type_id,comment)
+            // .../MyCL/insert_request (user_id,req_type_id,comment)
             return 'INSERT INTO Request_list SET ';
         },
 
