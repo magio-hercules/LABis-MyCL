@@ -185,6 +185,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
             @Override
             public void onSuccess(int code, Object receivedData) {
+                mActivity.myContentsRefresh = true;
                 mActivity.updateItemDataView(position);
                 progressDoalog.dismiss();
             }
