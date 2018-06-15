@@ -5,7 +5,8 @@ module.exports = (function () {
         auth: "1",
         non_auth: "0",
         favorite: "1",
-        non_favorite: "0"
+        non_favorite: "0",
+        default_chapter: "1"
       },
       User: {
         id: "`id`",

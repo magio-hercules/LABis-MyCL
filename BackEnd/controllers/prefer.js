@@ -8,7 +8,7 @@ var bFirst = true;
 
 
 exports.postPrefer = function(req, res) {
-	console.log("[INFO] call postPrefer");
+	console.log("[====] call postPrefer");
 
 	var query = mysql_query.postPrefer();
 	var params = [ ];

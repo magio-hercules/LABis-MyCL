@@ -1,5 +1,5 @@
 var admin = require('firebase-admin');
-var serviceAccount = require('/home/ubuntu/MyCL/mycl-205006-firebase-adminsdk-iv1t4-0cb8ee4c44.json');
+var serviceAccount = require('/home/ubuntu/mycl/mycl-205006-firebase-adminsdk-iv1t4-0cb8ee4c44.json');
 
 var appInfo = null;
 

@@ -8,7 +8,7 @@ var bFirst = true;
 
 
 exports.postFavorite = function(req, res) {
-	console.log("[INFO] call postFavorite");
+	console.log("[====] call postFavorite");
 
 	var query = mysql_query.postFavorite();
 	var params = [ ];

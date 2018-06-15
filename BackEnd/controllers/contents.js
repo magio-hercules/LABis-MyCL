@@ -11,7 +11,7 @@ var bFirst = true;
 // GET //
 /////////
 // exports.getContents = function(req, res) {
-// 	console.log("[INFO] call getContents");
+// 	console.log("[====] call getContents");
 // 	// console.log("req.query : " + JSON.stringify(req.query));
 
 // 	var query = mysql_query.getContents();
@@ -26,7 +26,7 @@ var bFirst = true;
 
 
 exports.getTotalContents = function(req, res) {
-	console.log("[INFO] call getTotalContents");
+	console.log("[====] call getTotalContents");
 	// console.log("req.query : " + JSON.stringify(req.query));
 
 	var query = mysql_query.getTotalContents();
@@ -40,7 +40,7 @@ exports.getTotalContents = function(req, res) {
 // POST //
 //////////
 exports.postTotalContents = function(req, res) {
-	console.log("[INFO] call postTotalContents");
+	console.log("[====] call postTotalContents");
 	// console.log("req.body : " + JSON.stringify(req.body));
 	
 	var query = mysql_query.postTotalContents();
@@ -58,7 +58,7 @@ exports.postTotalContents = function(req, res) {
 
 
 exports.postTotalNewContents = function(req, res) {
-	console.log("[INFO] call postTotalNewContents");
+	console.log("[====] call postTotalNewContents");
 	// console.log("req.body : " + JSON.stringify(req.body));
 	
 	var query = mysql_query.postTotalNewContents();
@@ -72,7 +72,7 @@ exports.postTotalNewContents = function(req, res) {
 
 
 exports.postMyContents = function(req, res) {
-	console.log("[INFO] call postMyContents");
+	console.log("[====] call postMyContents");
 
 	var query = mysql_query.postMyContents();
 	var params = [ ];
@@ -87,7 +87,7 @@ exports.postMyContents = function(req, res) {
 
 
 exports.postInsertMyContents = function(req, res) {
-	console.log("[INFO] call postInsertMyContents");
+	console.log("[====] call postInsertMyContents");
 	console.log("req.body : " + JSON.stringify(req.body));
 
 	var query = mysql_query.postInsertMyContents();
@@ -115,7 +115,7 @@ exports.postInsertMyContents = function(req, res) {
 		tQuery = '("' + user_id + '", "' + req.body.id_list + '", "' + chapter + '")';
 		query += tQuery;
 	}
-	// console.log("[INFO][TEST] postInsertMyContents() query : " + query);
+	// console.log("[====][TEST] postInsertMyContents() query : " + query);
 	
 	bFirst = true;
 	common.doRequest(req, res, query, params);
@@ -123,7 +123,7 @@ exports.postInsertMyContents = function(req, res) {
 
 
 exports.postUpdateMyContents = function(req, res) {
-	console.log("[INFO] call postUpdateMyContents");
+	console.log("[====] call postUpdateMyContents");
 	// console.log("req.body : " + JSON.stringify(req.body));
 
 	var query = mysql_query.postUpdateMyContents();
@@ -143,7 +143,7 @@ exports.postUpdateMyContents = function(req, res) {
 
 
 exports.postFilterMyContents = function(req, res) {
-	console.log("[INFO] call postFilterMyContents");
+	console.log("[====] call postFilterMyContents");
 	// console.log("req.body : " + JSON.stringify(req.body));
 
 	var query = mysql_query.postFilterMyContents();
@@ -163,7 +163,7 @@ exports.postFilterMyContents = function(req, res) {
 
 
 exports.postInsertContentsList = function(req, res) {
-	console.log("[INFO] call postInsertContentsList");
+	console.log("[====] call postInsertContentsList");
 	// console.log("req.body : " + JSON.stringify(req.body));
 
 	var query = mysql_query.postInsertContentsList();
@@ -193,7 +193,7 @@ exports.postInsertContentsList = function(req, res) {
 			newQuery = _setParams(newQuery, newParams, req.body.publisher, table.Contents_my.user_id);
 			newQuery = _setParams(newQuery, newParams, req.body.score, table.Contents_my.score);
 			newQuery = _setParams(newQuery, newParams, req.body.comment, table.Contents_my.comment);
-			newQuery = _setParams(newQuery, newParams, req.body.chapter, table.Contents_my.chapter);
+			newQuery = _setParams(newQuery, newParams, /*req.body.chapter*/table.Config.default_chapter, table.Contents_my.chapter);
 
 			bFirst = true;
 			common.doRequest(req, res, newQuery, newParams);
@@ -202,7 +202,7 @@ exports.postInsertContentsList = function(req, res) {
 
 
 exports.postFilterContentsList = function(req, res) {
-	console.log("[INFO] call postFilterContentsList");
+	console.log("[====] call postFilterContentsList");
 
 	var query = mysql_query.postFilterContentsList();
 	var params = [];
@@ -214,7 +214,7 @@ exports.postFilterContentsList = function(req, res) {
 
 
 exports.postNonAuthContentsList = function(req, res) {
-	console.log("[INFO] call postNonAuthContentsList");
+	console.log("[====] call postNonAuthContentsList");
 
 	var query = mysql_query.postNonAuthContentsList();
 	var params = [];
@@ -227,7 +227,7 @@ exports.postNonAuthContentsList = function(req, res) {
 
 
 exports.postSetAuthContentsList = function(req, res) {
-	console.log("[INFO] call postSetAuthContentsList");
+	console.log("[====] call postSetAuthContentsList");
 
 	var query = mysql_query.postSetAuthContentsList();
 	var params = [];
@@ -242,7 +242,7 @@ exports.postSetAuthContentsList = function(req, res) {
 };
 
 exports.postDeleteMyContents = function(req, res) {
-	console.log("[INFO] call postDeleteMyContents");
+	console.log("[====] call postDeleteMyContents");
 
 	var query = mysql_query.postDeleteMyContents();
 	var params = [];
@@ -255,7 +255,7 @@ exports.postDeleteMyContents = function(req, res) {
 };
 
 exports.postUpdateContentsImage = function(req, res) {
-	console.log("[INFO] call postUpdateContentsImage");
+	console.log("[====] call postUpdateContentsImage");
 
 	var query = mysql_query.postUpdateContentsImage();
 	var params = [];
@@ -271,7 +271,7 @@ exports.postUpdateContentsImage = function(req, res) {
 
 
 exports.postSearchContentsList = function(req, res) {
-	console.log("[INFO] call postSearchContentsList");
+	console.log("[====] call postSearchContentsList");
 
 	var query = mysql_query.postSearchContentsList();
 	var params = [];
@@ -287,7 +287,7 @@ exports.postSearchContentsList = function(req, res) {
 
 
 exports.postSearchMyContents = function(req, res) {
-	console.log("[INFO] call postSearchMyContents");
+	console.log("[====] call postSearchMyContents");
 
 	var query = mysql_query.postSearchMyContents();
 	var params = [];

@@ -13,7 +13,7 @@ var bFirst = true;
 
 
 exports.postLogin = function(req, res) {
-	console.log("[INFO] call postLogin");
+	console.log("[====] call postLogin");
 
 	var query = mysql_query.postLogin();
 	var params = [ req.body.id ];
@@ -55,7 +55,7 @@ exports.postLogin = function(req, res) {
 
 
 exports.postRegister = function(req, res) {
-	console.log("[INFO] call postRegister");
+	console.log("[====] call postRegister");
 
 	var query = mysql_query.postRegister();
 	var user = {
@@ -73,7 +73,7 @@ exports.postRegister = function(req, res) {
 
 
 exports.postUpdate = function(req, res) {
-	console.log("[INFO] call postUpdate");
+	console.log("[====] call postUpdate");
 
 	var query = mysql_query.postUpdate();
 	var params = [];
@@ -93,7 +93,7 @@ exports.postUpdate = function(req, res) {
 
 
 exports.postCheckIdToken = function(req, res) {
-	console.log("[INFO] call postCheckIdToken");
+	console.log("[====] call postCheckIdToken");
 
 	console.log("[INFO][TEST] req.body.id : " + req.body.id);
 	console.log("[INFO][TEST] req.body.uid : " + req.body.uid);

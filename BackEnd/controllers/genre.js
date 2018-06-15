@@ -7,7 +7,7 @@ var bFirst = true;
 
 
 exports.getTotalGenre = function(req, res) {
-	console.log("[INFO] call getTotalGenre");
+	console.log("[====] call getTotalGenre");
 	// console.log("req.query : " + JSON.stringify(req.query));
 	var query = mysql_query.getTotalGenre();
 	common.doQuery(req, res, query);
@@ -20,7 +20,7 @@ exports.getTotalGenre = function(req, res) {
 // };
 
 exports.postGenre = function(req, res) {
-	console.log("[INFO] call postGenre");
+	console.log("[====] call postGenre");
 
     var query = mysql_query.postGenre();
 	var params = [];

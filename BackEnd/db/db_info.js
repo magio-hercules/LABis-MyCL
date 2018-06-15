@@ -8,7 +8,7 @@ module.exports = (function () {
         database: ''
       },
       real: { // real server db info
-        host: 'ec2-18-188-106-154.us-east-2.compute.amazonaws.com',
+        host: 'ec2-13-125-205-18.ap-northeast-2.compute.amazonaws.com',
         port: '3306',
         user: 'labis',
         password: 'labis0423',

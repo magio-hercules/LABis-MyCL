@@ -7,7 +7,7 @@ var bFirst = true;
 
 
 exports.getTotalRequestType = function(req, res) {
-	console.log("[INFO] call getTotalRequestType");
+	console.log("[====] call getTotalRequestType");
 	
 	var query = mysql_query.getTotalRequestType();
 	common.doQuery(req, res, query);
@@ -15,7 +15,7 @@ exports.getTotalRequestType = function(req, res) {
 
 
 exports.postRequestList = function(req, res) {
-	console.log("[INFO] call postRequestList");
+	console.log("[====] call postRequestList");
 
     var query = mysql_query.postRequestList();
 	var params = [];
@@ -27,7 +27,7 @@ exports.postRequestList = function(req, res) {
 
 
 exports.postInsertRequest = function(req, res) {
-	console.log("[INFO] call postInsertRequest");
+	console.log("[====] call postInsertRequest");
 
     var newQuery = mysql_query.postInsertRequest();
 	var newParams = [];

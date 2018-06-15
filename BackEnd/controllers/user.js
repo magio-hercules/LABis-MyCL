@@ -13,7 +13,7 @@ var bFirst = true;
 // };
 
 exports.postUser = function(req, res) {
-	console.log("[INFO] call postUser");
+	console.log("[====] call postUser");
 
     var query = mysql_query.postUser();
 	var params = [];
