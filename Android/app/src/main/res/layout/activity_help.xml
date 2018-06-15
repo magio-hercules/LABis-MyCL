@@ -185,7 +185,7 @@
                     android:layout_height="match_parent"
                     android:lineSpacingExtra="15dip"
                     android:paddingLeft="4dp"
-                    android:text="- 개발자 : Labis Corp.(쫑미니, 쿨한후니, 에볼)\n- 개발자 이메일 : Labis@Labis.com\n- 버전 : 1.1.1\n- 업데이트 날짜 : ‘18.06.16\n- 다운로드 크기 : 3MB"
+                    android:text="- 개발자 : Labis Corp.(쫑미니, 쿨영후니, 에볼)\n- 개발자 이메일 : Labis@Labis.com\n- 버전 : 1.1.1\n- 업데이트 날짜 : ‘18.06.16\n- 다운로드 크기 : 3MB"
                     android:textColor="#777777"
                     android:textSize="13sp" />
             </LinearLayout>
