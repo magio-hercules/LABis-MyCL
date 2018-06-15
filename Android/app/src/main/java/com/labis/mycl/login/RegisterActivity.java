@@ -622,7 +622,7 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
 
-        if (bChangePw && !str_pw.equals(str_pw_verify)) {
+        if ((!bEditProfile || bChangePw) && !str_pw.equals(str_pw_verify)) {
             Toast.makeText(this, "비밀번호 재확인 필요", Toast.LENGTH_SHORT).show();
             return false;
         }
