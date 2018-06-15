@@ -121,7 +121,7 @@
                     android:id="@+id/textView_pw1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="비밀번호 재확인"
+                    android:text="비밀번호 확인"
                     android:textSize="12sp" />
                 <EditText
                     android:id="@+id/register_password_verify"

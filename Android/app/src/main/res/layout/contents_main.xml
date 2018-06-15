@@ -34,13 +34,58 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize">
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/myContentsView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/recyclerView"
+            android:visibility="gone"
             android:paddingTop="3dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/empty_my_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:alpha="0.8"
+                android:fontFamily="@font/nanumsquare"
+                android:gravity="bottom|center_horizontal"
+                android:text="'내 콘텐츠를 채워주세요'"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanumsquare"
+                android:textSize="14sp"
+                android:layout_marginTop="12dp"
+                android:text=".\n.\n.\n.\n" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_gravity="bottom"
+            android:alpha="0.7"
+            android:scaleType="fitXY"
+            android:src="@mipmap/empty_backgound" />
+
     </LinearLayout>
 
 

@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,7 +90,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private MaterialSearchView searchView;
     private ArrayList<String> contestsTitleSuggestionsArray = new ArrayList<String>();
     private boolean isSearchMode = false;
-
+    @BindView(R.id.empty_my_content_layout)
+    LinearLayout emptyBackground;
 
     // -- Kim Jong Min / Global Variable Section -- ////////////////////////////////////////
     @BindView(R.id.drawer_btn_logout)
@@ -293,6 +295,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 if (mActionMode != null) {
                     mActionMode.finish();
                 }
+                emptyToggle();
                 progressDoalog.dismiss();
                 Toast.makeText(getApplicationContext(), "삭제 완료", Toast.LENGTH_SHORT).show();
             }
@@ -328,6 +331,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 if (mActionMode != null) {
                     mActionMode.finish();
                 }
+                emptyToggle();
                 progressDoalog.dismiss();
                 Toast.makeText(getApplicationContext(), "추가 완료", Toast.LENGTH_SHORT).show();
             }
@@ -407,7 +411,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                         searchView.addSuggestions(contestsTitleSuggestionsArray);
                     }
                 }).start();
-
+                emptyToggle();
                 progressDoalog.dismiss();
             }
 
@@ -420,6 +424,21 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         });
         setDrawerItem(false, R.id.favorite);
         resetDrawerCheckedItem();
+    }
+
+    @OnClick(R.id.empty_my_content_layout)
+    void emptyClick() {
+        loadTotalContent();
+    }
+
+    private void emptyToggle() {
+        if(recyclerView.getAdapter().getItemCount() > 0 || modeStatus.equals("TOTAL")) {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyBackground.setVisibility(View.GONE);
+        } else {
+            emptyBackground.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
     }
 
     public void loadMyContents() {
@@ -442,25 +461,24 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     getSupportActionBar().setTitle("내 콘텐츠");
                     getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.colorPrimary)));
 
+                    // Clear
                     myContentsRefresh = false;
                     editContents.clear();
                     ContentsList.clear();
                     uiShowContentsList.clear();
                     contestsTitleSuggestionsArray.clear();
-                    List<Content> data = (List<Content>) receivedData;
-                    if (!data.isEmpty()) {
-                        ContentsList.addAll(data);
-                        mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
-                        recyclerView.setAdapter(mAdapter);
 
-                        //Search Suggestion
-                        for(Content i : ContentsList) {
-                            contestsTitleSuggestionsArray.add(i.name);
-                            contestsTitleSuggestionsArray.add(i.name_org);
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "DATA EMPTY", Toast.LENGTH_SHORT).show();
+                    List<Content> data = (List<Content>) receivedData;
+                    ContentsList.addAll(data);
+                    mAdapter = new RecyclerViewAdapter(ContentsActivity.this, ContentsList);
+                    recyclerView.setAdapter(mAdapter);
+
+                    //Search Suggestion
+                    for (Content i : ContentsList) {
+                        contestsTitleSuggestionsArray.add(i.name);
+                        contestsTitleSuggestionsArray.add(i.name_org);
                     }
+
 
                     if (contentsMainMenu != null) {
                         contentsMainMenu.findItem(R.id.action_total_contents).setVisible(true);
@@ -475,7 +493,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                             searchView.addSuggestions(contestsTitleSuggestionsArray);
                         }
                     }).start();;
-
+                    emptyToggle();
                     progressDoalog.dismiss();
                 }
 
@@ -514,7 +532,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     searchView.addSuggestions(contestsTitleSuggestionsArray);
                 }
             }).start();
-
+            emptyToggle();
             progressDoalog.dismiss();
         }
 

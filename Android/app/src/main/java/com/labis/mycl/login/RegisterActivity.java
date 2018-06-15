@@ -655,6 +655,8 @@ public class RegisterActivity extends AppCompatActivity {
                     String msg = task.getException().getMessage();
                     if(msg.contains("least 6")){
                         msg = "비밀번호 최소 6자리 이상";
+                    } else if(msg.contains("already")) {
+                        msg = "이미 등록된 이메일";
                     }
                     Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
                     hideProgressDialog();
