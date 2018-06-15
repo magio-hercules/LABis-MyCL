@@ -34,7 +34,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:layout_marginTop="2dp"
-            android:padding="5dp"
+            android:padding="8dp"
             android:orientation="vertical">
 
             <TextView
@@ -81,7 +81,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="12dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -89,36 +89,51 @@
                 android:layout_gravity="center"
                 android:background="@drawable/border"
                 android:gravity="center"
+                android:paddingBottom="1dp"
                 android:orientation="vertical">
-                <Spinner
-                    android:id="@+id/help_combo"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:gravity="center" />
+                    android:layout_height="29dp"
+                    android:background="@drawable/border">
+                    <Spinner
+                        android:id="@+id/help_combo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center" />
+                </LinearLayout>
 
-                <EditText
-                    android:id="@+id/help_escription"
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="152dp"
-                    android:layout_marginTop="-1dp"
-                    android:background="@drawable/border"
-                    android:gravity="top"
-                    android:inputType="textMultiLine"
-                    android:overScrollMode="always"
-                    android:padding="4dp"
-                    android:scrollbarStyle="insideInset"
-                    android:scrollbars="vertical"
-                    android:textSize="15sp" />
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="-1dp"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/help_escription"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border"
+                        android:gravity="top"
+                        android:inputType="textMultiLine"
+                        android:overScrollMode="always"
+                        android:padding="4dp"
+                        android:scrollbarStyle="insideInset"
+                        android:scrollbars="vertical"
+                        android:layout_weight="1"
+                        android:textSize="15sp" />
+                    <Button
+                        android:id="@+id/detail_ok_btn"
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:background="#66CBD0DA"
+                        android:text="전송"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
-                <Button
-                    android:id="@+id/detail_ok_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:background="#E4E5E6"
-                    android:text="보내기"
-                    android:textStyle="bold"
-                    android:textSize="14sp" />
+
             </LinearLayout>
 
 
@@ -131,7 +146,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="12dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -172,7 +187,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="12dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="165dp"

@@ -486,8 +486,8 @@ public class DetailActivity extends AppCompatActivity {
             //detailZoom.setAlpha(0.5f);
 
             // 동적으로 margin 변경하기
-            int marginRightPixel = convertDptoPixel(4);
-            int marginBottomPixel = convertDptoPixel(14);
+            int marginRightPixel = convertDptoPixel(2);
+            int marginBottomPixel = convertDptoPixel(2);
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) detailZoom.getLayoutParams();
             layoutParams.setMargins(0, 0, marginRightPixel, marginBottomPixel);
             detailZoom.setLayoutParams(layoutParams);

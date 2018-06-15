@@ -64,8 +64,9 @@
                 android:alpha="0.8"
                 android:fontFamily="@font/nanumsquare"
                 android:gravity="bottom|center_horizontal"
-                android:text="'내 콘텐츠를 채워주세요'"
+                android:text="'내 콘텐츠를 채워주세요''"
                 android:textColor="@color/colorPrimary"
+                android:textStyle="italic"
                 android:textSize="13sp" />
 
             <TextView

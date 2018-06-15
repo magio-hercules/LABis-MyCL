@@ -69,7 +69,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         }
         holder.mGen.setText(genreText);
-        Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
+        if(mItems.get(position).image != null && mItems.get(position).image.length() > 0) {
+            holder.mImgView.setVisibility(View.VISIBLE);
+            Picasso.get().load(mItems.get(position).image).into(holder.mImgView);
+        } else {
+            holder.mImgView.setVisibility(View.GONE);
+            holder.mNullText.setVisibility(View.VISIBLE);
+        }
         holder.mName.setText(mItems.get(position).name);
         if(mItems.get(position).name_org.length() > 0) {
             holder.mNameOrg.setVisibility(View.VISIBLE);

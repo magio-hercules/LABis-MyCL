@@ -138,7 +138,7 @@ public class CustomActivity extends AppCompatActivity {
         
         // -- ToolBar -- //
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("커스텀 콘텐츠 추가");
+        toolbar.setTitle("개인 콘텐츠 추가");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

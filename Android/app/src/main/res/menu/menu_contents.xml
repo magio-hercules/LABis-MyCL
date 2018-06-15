@@ -12,7 +12,7 @@
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_custom_contents"
-        android:title="신규 콘텐츠 추가"
+        android:title="개인 콘텐츠 추가"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_search_contents"

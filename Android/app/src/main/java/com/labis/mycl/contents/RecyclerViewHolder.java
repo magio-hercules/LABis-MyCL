@@ -16,6 +16,7 @@ import com.labis.mycl.R;
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     public TextView mGen;
     public ImageView mImgView;
+    public TextView mNullText;
     public TextView mName;
     public TextView mNameOrg;
     public TextView mConAddBtn;
@@ -36,6 +37,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         mGen = (TextView) itemView.findViewById(R.id.content_genre_text);
         mImgView = (ImageView) itemView.findViewById(R.id.content_image);
+        mNullText = (TextView) itemView.findViewById(R.id.content_null_text);
 
         mTitleDiv = (LinearLayout)itemView.findViewById(R.id.secondDiv);
         mName = (TextView) itemView.findViewById(R.id.content_title);
