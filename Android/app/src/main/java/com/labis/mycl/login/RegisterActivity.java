@@ -2,6 +2,7 @@ package com.labis.mycl.login;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -103,6 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     // Mode (사용자 등록, 프로필 수정) (CREATE, UPDATE)
     private String currentMode = "CREATE";
+    boolean bEditProfile;
 
     // 비밀번호 변경 기능
     private boolean bChangePw;
@@ -119,6 +121,11 @@ public class RegisterActivity extends AppCompatActivity {
     private User userData;
     private ArrayList<Genre> genreData;
 
+    private ProgressDialog mProgressDialog = null;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        boolean bEditProfile = checkProfile(getIntent());
+        bEditProfile = checkProfile(getIntent());
         if (!bEditProfile) {
             toolbar.setTitle("사용자 등록");
             currentMode = "CREATE";
@@ -193,11 +200,12 @@ public class RegisterActivity extends AppCompatActivity {
         String str_pw = register_password.getText().toString();
 
         if (str_pw.equals("")) {
-            register_password.setError("필수");
+            register_password.setError("필수항목");
             bChangePw = false;
             return;
         }
 
+        showProgressDialog();
         AuthCredential credential = EmailAuthProvider.getCredential(str_email, str_pw);
 
         FirebaseUser user = authManager.getmFirebaseUser();
@@ -222,15 +230,17 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "기존 비밀번호 확인 필요", Toast.LENGTH_SHORT).show();
 
                             Log.d(TAG, task.getException().getMessage());
+                            // TODO 문구 변경
                             Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                        hideProgressDialog();
                     }
                 });
     }
 
     @OnClick(R.id.register_registerbtn)
     void onClick_register() {
-        Log.e(TAG, "onClick_register");
+        Log.d(TAG, "onClick_register");
 
         if (currentMode.equals("CREATE")) {
             createAccount();
@@ -284,39 +294,43 @@ public class RegisterActivity extends AppCompatActivity {
         String str_uid = null;
         // TODO, 확인용
         if (authManager.getmFirebaseUser() != null) {
-            Log.e(TAG, "authManager.getmFirebaseUser().getUid() : " + authManager.getmFirebaseUser().getUid());
+            Log.d(TAG, "authManager.getmFirebaseUser().getUid() : " + authManager.getmFirebaseUser().getUid());
             str_uid = authManager.getmFirebaseUser().getUid();
         }
         if (currentUser != null) {
             str_uid = currentUser.getUid();
-            Log.e(TAG, "currentUser.getUid() : " + currentUser.getUid());
+            Log.d(TAG, "currentUser.getUid() : " + currentUser.getUid());
         }
 
-       Log.e(TAG, "email: " + str_email + ", pw: " + anonymizePassword(str_pw) + ", age: " + str_age
+        Log.d(TAG, "email: " + str_email + ", pw: " + anonymizePassword(str_pw) + ", age: " + str_age
                 + ", gender: " + str_gender + ", nick: " + str_nickname + ", phone: " + str_phone + ", image: " + url + ", str_uid: " + str_uid);
 
         retroClient.postRegister(str_email, str_pw, str_age, str_gender, str_nickname, str_phone, url, str_uid, new RetroCallback<Register>() {
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, t.toString());
-                Toast.makeText(RegisterActivity.this, "postRegister Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "사용자 등록 오류", Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
             }
 
             @Override
             public void onSuccess(int code, Register data) {
-                Log.e(TAG, "postRegister SUCCESS");
-                Toast.makeText(RegisterActivity.this, data.getReason(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "postRegister SUCCESS");
+                // TODO
+                Toast.makeText(RegisterActivity.this, "사용자 등록 성공", Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
 
                 Intent i = new Intent(RegisterActivity.this, MainActivity.class);
                 i.putExtra("id", data.getId());
                 startActivity(i);
-                finish();
+                finishAffinity();
             }
 
             @Override
             public void onFailure(int code) {
                 Log.e(TAG, "postRegister FAIL");
-                Toast.makeText(RegisterActivity.this, "Register Fail", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "사용자 등록 오류", Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
             }
         });
     }
@@ -342,35 +356,37 @@ public class RegisterActivity extends AppCompatActivity {
 
         final String str_uid = authManager.getmFirebaseUser().getUid();
 
-        Log.e(TAG, "email: " + str_email + ", pw: " + anonymizePassword(str_pw) + ", age: " + str_age
+        Log.d(TAG, "email: " + str_email + ", pw: " + anonymizePassword(str_pw) + ", age: " + str_age
                 + ", gender: " + str_gender + ", nick: " + str_nickname + ", phone: " + str_phone + ", image: " + url + ", str_uid: " + str_uid);
 
         retroClient.postUpdate(str_email, str_age, str_gender, str_nickname, str_phone, url, str_uid, new RetroCallback<Register>() {
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, t.toString());
-                Toast.makeText(RegisterActivity.this, "postUpdate Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "프로필 수정 오류", Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
             }
 
             @Override
             public void onSuccess(int code, Register data) {
-                Log.e(TAG, "postUpdate SUCCESS");
-//                Toast.makeText(RegisterActivity.this, data.getReason(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "postUpdate SUCCESS");
+
+                Toast.makeText(RegisterActivity.this, "프로필 수정 완료", Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
 
                 User newUser = new User(str_email, str_pw, str_age, str_gender, str_nickname, str_phone, str_url, str_uid);
-
                 LoginData loginData = new LoginData(newUser, genreData);
                 Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
                 i.putExtra("LoingData", loginData);
                 startActivity(i);
                 finish();
-                Toast.makeText(RegisterActivity.this, "프로필 수정 완료", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int code) {
                 Log.e(TAG, "postUpdate FAIL");
-                Toast.makeText(RegisterActivity.this, "Update Fail", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "프로필 수정 오류", Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
             }
         });
     }
@@ -407,7 +423,7 @@ public class RegisterActivity extends AppCompatActivity {
                 switch (state) {
                     case COMPLETED: {
                         transferUtility.deleteTransferRecord(id);
-                        Toast.makeText(getApplicationContext(), "Image Upload 성공", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
 
                         if (currentMode.equals("CREATE")) {
                             registUser(resourceUrl);
@@ -418,21 +434,25 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     case CANCELED: {
                         transferUtility.deleteTransferRecord(id);
-                        Toast.makeText(getApplicationContext(), "Image Upload CANCELED", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "이미지 업로드 취소", Toast.LENGTH_SHORT).show();
+                        hideProgressDialog();
                         break;
                     }
                     case FAILED: {
                         transferUtility.deleteTransferRecord(id);
-                        Toast.makeText(getApplicationContext(), "Image Upload FAILED", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "이미지 업로드 실패", Toast.LENGTH_SHORT).show();
+                        hideProgressDialog();
                         break;
                     }
                     case PAUSED: {
-                        Toast.makeText(getApplicationContext(), "Image Upload PAUSED", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "이미지 업로드 일시중지", Toast.LENGTH_SHORT).show();
+                        hideProgressDialog();
                         break;
                     }
                     case WAITING_FOR_NETWORK: {
                         transferUtility.deleteTransferRecord(id);
-                        Toast.makeText(getApplicationContext(), "WAITING_FOR_NETWORK", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "네트워크 대기중", Toast.LENGTH_SHORT).show();
+                        hideProgressDialog();
                         break;
                     }
                 }
@@ -445,7 +465,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onError(int id, Exception ex) {
-                Toast.makeText(getApplicationContext(), "Image upload 실패", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "이미지 업로드 실패", Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
             }
         });
     }
@@ -581,25 +602,25 @@ public class RegisterActivity extends AppCompatActivity {
         String str_nickname = register_nickname.getText().toString();
 
         if (str_email.equals("")) {
-            register_email.setError("필수");
+            register_email.setError("필수항목");
         }
 
         if (str_nickname.equals("")) {
-            register_nickname.setError("필수");
+            register_nickname.setError("필수항목");
         }
 
-        if (bChangePw) {
+        if (!bEditProfile || bChangePw) {
             if (str_pw.equals("")) {
-                register_password.setError("필수");
+                register_password.setError("필수항목");
             }
             if (str_pw_verify.equals("")) {
-                register_password_verify.setError("필수");
+                register_password_verify.setError("필수항목");
             }
         }
 
         if (str_email.equals("") || str_nickname.equals("")
             || (bChangePw && (str_pw.equals("") || str_pw_verify.equals("")))) {
-            Toast.makeText(this, "필수정보를 입력해 주세요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "필수항목 입력 필요", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -618,10 +639,11 @@ public class RegisterActivity extends AppCompatActivity {
         String str_email = register_email.getText().toString();
         String str_pw = register_password.getText().toString();
 
+        showProgressDialog();
         OnCompleteListener completeListener = new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.e(TAG, "createAccount OnCompleteListener onComplete");
+                Log.d(TAG, "createAccount OnCompleteListener onComplete");
 
                 if (task.isSuccessful()) {
                     Log.d(TAG, "createUserWithEmail:success");
@@ -630,7 +652,9 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     Log.d(TAG, "createUserWithEmail:failure", task.getException());
                     Log.d(TAG, task.getException().getMessage());
+                    // TODO
                     Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    hideProgressDialog();
                 }
             }
         };
@@ -650,7 +674,7 @@ public class RegisterActivity extends AppCompatActivity {
             OnCompleteListener completeListener = new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    Log.e(TAG, "updatePassword OnCompleteListener onComplete");
+                    Log.d(TAG, "updatePassword OnCompleteListener onComplete");
 
                     if (task.isSuccessful()) {
                         Log.d(TAG, "User password updated.");
@@ -660,6 +684,7 @@ public class RegisterActivity extends AppCompatActivity {
                         // If sign in fails, display a message to the user.
                         Log.d(TAG, "updatePassword:failure", task.getException());
                         Log.d(TAG, task.getException().getMessage());
+                        // TODO
                         Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -699,6 +724,28 @@ public class RegisterActivity extends AppCompatActivity {
             }
         };
         authManager.addAuthStateListener(authListener);
+    }
+
+    public void showProgressDialog() {
+        Log.d(TAG, "showProgressDialog");
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        }
+
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+    }
+
+    public void hideProgressDialog() {
+        Log.d(TAG, "hideProgressDialog");
+
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 }
 

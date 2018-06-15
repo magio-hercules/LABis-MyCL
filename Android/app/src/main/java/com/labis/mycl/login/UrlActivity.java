@@ -501,7 +501,7 @@ public class UrlActivity extends Activity {
 
             @Override
             public void onSuccess(int code, Object data) {
-                Log.e(TAG, "postTotalContents SUCCESS");
+                Log.d(TAG, "postTotalContents SUCCESS");
 
                 List<Content> listData = (List<Content>) data;
                 if (!listData.isEmpty()) {
@@ -517,7 +517,7 @@ public class UrlActivity extends Activity {
     }
 
     private void updateImageUrl(String id, String url) {
-        Log.e(TAG, "[updateContentsImage] id: " + id + ", url: " + url);
+        Log.d(TAG, "[updateContentsImage] id: " + id + ", url: " + url);
 
         retroClient.updateContentsImage(id, url, new RetroCallback<Register>() {
             @Override
@@ -528,7 +528,7 @@ public class UrlActivity extends Activity {
 
             @Override
             public void onSuccess(int code, Register data) {
-                Log.e(TAG, "updateContentsImage SUCCESS");
+                Log.d(TAG, "updateContentsImage SUCCESS");
                 Toast.makeText(UrlActivity.this, data.getReason(), Toast.LENGTH_SHORT).show();
 
                 initList();

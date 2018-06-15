@@ -182,18 +182,16 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
         String email = edit_email.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(LoginActivity.this, "Email Required.", Toast.LENGTH_SHORT).show();
             valid = false;
-            edit_email.setError("Required.");
+            edit_email.setError("필수항목");
         } else {
 //            mEmailField.setError(null);
         }
 
         String password = edit_password.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(LoginActivity.this, "Email Required.", Toast.LENGTH_SHORT).show();
             valid = false;
-            edit_password.setError("Required.");
+            edit_password.setError("필수항목");
         } else {
 //            mPasswordField.setError(null);
         }

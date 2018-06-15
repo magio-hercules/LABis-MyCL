@@ -20,12 +20,10 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,11 +48,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import br.com.mauker.materialsearchview.MaterialSearchView;
 import br.com.mauker.materialsearchview.db.HistoryContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import br.com.mauker.materialsearchview.MaterialSearchView;
 
 public class ContentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -529,7 +527,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Log.e(TAG, "onNavigationItemSelected");
+        Log.d(TAG, "onNavigationItemSelected");
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -578,7 +576,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             selectedGenreId = genreId;
             item.setChecked(true);
 
-            Log.e(TAG, "title : " + selectedSubTitle + ", genreId : " + genreId);
+            Log.d(TAG, "title : " + selectedSubTitle + ", genreId : " + genreId);
             if (modeStatus.equals("MY")) {
                 filterJenreMyContents(selectedSubTitle, userData.id, genreId);
             } else if (modeStatus.equals("TOTAL")) {
@@ -611,7 +609,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void resetDrawerCheckedItem() {
-        Log.e(TAG, "resetDrawerCheckedItem()");
+        Log.d(TAG, "resetDrawerCheckedItem()");
 
         isSearchMode = false;
         selectedGenreId = null;
@@ -633,8 +631,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     // -- Filter , Search Section -- ////////////////////////////////////////
     private void searchContents(String query) {
-        Log.e(TAG, "searchContents");
-        Log.e(TAG, "query : " + query);
+        Log.d(TAG, "searchContents");
+        Log.d(TAG, "query : " + query);
 
         resetDrawerCheckedItem();
         ArrayList<Content> searchContents = new ArrayList();
@@ -653,10 +651,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void filterJenreMyContents(final String title, String userId, String gen_id) {
-        Log.e(TAG, "filterJenreMyContents");
-        Log.e(TAG, "doFilter() title : " + title);
-        Log.e(TAG, "doFilter() user_id : " + userId);
-        Log.e(TAG, "doFilter() gen_id : " + gen_id);
+        Log.d(TAG, "filterJenreMyContents");
+        Log.d(TAG, "doFilter() title : " + title);
+        Log.d(TAG, "doFilter() user_id : " + userId);
+        Log.d(TAG, "doFilter() gen_id : " + gen_id);
 
         ArrayList<Content> filterContents = new ArrayList();
         if(gen_id.equals("FAV")) {
@@ -691,9 +689,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void filterJenreTotalContentsList(final String title, String gen_id) {
-        Log.e(TAG, "filterJenreContentsList");
-        Log.e(TAG, "doFilter() title : " + title);
-        Log.e(TAG, "doFilter() gen_id : " + gen_id);
+        Log.d(TAG, "filterJenreContentsList");
+        Log.d(TAG, "doFilter() title : " + title);
+        Log.d(TAG, "doFilter() gen_id : " + gen_id);
 
         ArrayList<Content> filterContents = new ArrayList();
         for(Content item : ContentsList) {

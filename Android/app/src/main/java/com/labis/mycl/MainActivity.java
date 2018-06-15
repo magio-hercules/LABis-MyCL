@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             edit_email.setText(id);
             edit_password.requestFocus();
 
-            bAutoLogin = true;
+//            bAutoLogin = true;
         }
 
         // -- Delete Dialog --//
@@ -134,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         hideProgressDialog();
+                        Log.d(TAG, "condition !bAutoLogin : " + !bAutoLogin);
+                        Log.d(TAG, "condition mainLayout.getVisibility() : " + mainLayout.getVisibility());
+
                         if (!bAutoLogin && mainLayout.getVisibility() == View.GONE) {
                             mainLayout.setVisibility(View.VISIBLE);
                             mainLayout.setAnimation(animFadein);
@@ -145,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(int code) {
                 Log.d(TAG, "GENRE LOAD FAIL");
-                Toast.makeText(getApplicationContext(), "Failure Code : " + code, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Failure Code : " + code);
                 hideProgressDialog();
             }
         });
@@ -217,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "showProgressDialog");
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setMessage("로딩중...");
             mProgressDialog.setIndeterminate(true);
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
@@ -264,16 +267,14 @@ public class MainActivity extends AppCompatActivity {
 
         String email = edit_email.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(MainActivity.this, "Email Required.", Toast.LENGTH_SHORT).show();
             valid = false;
-            edit_email.setError("Required.");
+            edit_email.setError("필수항목");
         }
 
         String password = edit_password.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(MainActivity.this, "Email Required.", Toast.LENGTH_SHORT).show();
             valid = false;
-            edit_password.setError("Required.");
+            edit_password.setError("필수항목");
         }
 
         return valid;
@@ -304,13 +305,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.getException());
-                    Toast.makeText(MainActivity.this, "Authentication failed.",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "접속 실패", Toast.LENGTH_SHORT).show();
                 }
 
-                if (!task.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                }
                 hideProgressDialog();
             }
         };
@@ -327,19 +324,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable t) {
                 Log.d(TAG, t.toString());
-                Toast.makeText(MainActivity.this, "Login Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "로그인 에러", Toast.LENGTH_SHORT).show();
                 hideProgressDialog();
             }
             @Override
             public void onFailure(int code) {
                 Log.d(TAG, "FAIL");
-                Toast.makeText(MainActivity.this, "Login Fail", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
                 hideProgressDialog();
             }
             @Override
             public void onSuccess(int code, Object receivedData) {
                 Log.d(TAG, "SUCCESS");
-                Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
 
                 userData = ((List<User>)receivedData).get(0);
 

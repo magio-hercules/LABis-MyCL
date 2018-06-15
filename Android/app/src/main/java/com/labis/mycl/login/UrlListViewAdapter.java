@@ -99,7 +99,7 @@ public class UrlListViewAdapter extends BaseAdapter {
         item.setTextTitle(title);
         item.setTextUrl(url);
 
-        Log.e("[TEST]", "add item : " + id + ", " + title + ", " + url);
+        Log.d("[TEST]", "add item : " + id + ", " + title + ", " + url);
 
         listViewItemList.add(item);
     }
