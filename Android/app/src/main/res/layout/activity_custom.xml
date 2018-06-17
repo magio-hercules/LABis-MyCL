@@ -62,13 +62,20 @@
                         android:text="타이틀이미지"
                         android:textSize="11sp" />
 
-                    <ImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:layout_gravity="center"
-                        android:background="@mipmap/ic_default_thum"
-                        android:scaleType="fitXY" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+                        <ImageView
+                            android:id="@+id/imageView"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:alpha="0.1"
+                            android:background="@mipmap/ic_default_thum4"
+                            android:scaleType="centerCrop" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout

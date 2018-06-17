@@ -374,6 +374,7 @@ public class CustomActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
+            imageView.setAlpha(1.0f);
             switch (requestCode) {
                 case CAMERA_CODE:
                     imageView.setImageBitmap(imgPicker.getImage());
@@ -465,8 +466,10 @@ public class CustomActivity extends AppCompatActivity {
         String name = editTitle.getText().toString();
         String name_org = editOriginal.getText().toString();
         int season = 0;
-        if(editSeason.getText().length() > 0) {
+        if (editSeason.getText().length() > 0) {
             season = Integer.parseInt(editSeason.getText().toString());
+        } else {
+            if (editSeason.isEnabled()) season = 1;
         }
         int theatrical = switchTheater.isChecked() ? 1 : 0;
         String summary = editSummary.getText().toString();
