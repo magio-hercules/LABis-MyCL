@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#212832</color>
     <color name="colorAccent">#212832</color>
     <color name="pointColor">#D5D5D5</color>
-    <color name="actionBar">#B71D45</color>
+    <color name="actionBar">#CC3E64</color>
     <color name="recyclerView">#EEEEEE</color>
+    <color name="colorOptionBtn">#C9758B</color>
 </resources>

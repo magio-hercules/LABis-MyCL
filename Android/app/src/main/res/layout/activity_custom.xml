@@ -281,18 +281,21 @@
     <LinearLayout
         android:id="@+id/Div8"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="bottom">
-
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:layout_alignParentBottom="true">
         <Button
             android:id="@+id/saveBtn"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="@dimen/button_ok_option_height"
             android:layout_gravity="bottom"
-            android:background="#E4E5E6"
+            android:layout_weight="0.5"
+            android:background="@drawable/border_add_btn"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:fontFamily="@font/nanumsquare"
             android:text="추가"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -367,31 +367,36 @@
     <LinearLayout
         android:id="@+id/detail_button_div"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="bottom"
-        android:foregroundGravity="bottom"
-        android:orientation="horizontal"
-        android:gravity="bottom">
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/detail_option_btn"
-            android:layout_width="match_parent"
-            android:layout_weight="0.5"
-            android:layout_height="44dp"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_ok_option_height"
             android:layout_gravity="bottom"
-            android:background="#E9E4E5"
-            android:textSize="15sp" />
+            android:layout_weight="0.5"
+            android:background="@drawable/border_option_btn"
+            android:textStyle="bold"
+            android:textColor="@color/colorOptionBtn"
+            android:fontFamily="@font/nanumsquare"
+            android:textSize="13sp" />
 
         <Button
             android:id="@+id/detail_ok_btn"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_weight="0.5"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_ok_option_height"
             android:layout_gravity="bottom"
-            android:background="#E4E5E6"
+            android:layout_weight="0.5"
+            android:layout_marginLeft="-1dp"
+            android:background="@drawable/border_ok_btn"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:fontFamily="@font/nanumsquare"
             android:text="확인"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
 
     </LinearLayout>
 

@@ -30,7 +30,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/description_title_height"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:layout_marginTop="2dp"
@@ -43,6 +43,8 @@
                 android:background="@drawable/border2"
                 android:padding="4dp"
                 android:text="앱 사용방법"
+                android:fontFamily="@font/nanumsquare"
+                android:gravity="center_vertical"
                 android:textColor="@color/colorPrimary"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -74,10 +76,12 @@
             <TextView
                 android:id="@+id/help_request_title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/description_title_height"
                 android:background="@drawable/border2"
                 android:padding="4dp"
                 android:text="문의 및 요청"
+                android:fontFamily="@font/nanumsquare"
+                android:gravity="center_vertical"
                 android:textColor="@color/colorPrimary"
                 android:textSize="13sp"
                 android:textStyle="bold"
@@ -128,7 +132,7 @@
                         android:layout_width="60dp"
                         android:layout_height="match_parent"
                         style="?android:attr/borderlessButtonStyle"
-                        android:background="#66CBD0DA"
+                        android:background="@drawable/border_ok_btn"
                         android:text="전송"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -139,10 +143,12 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/description_title_height"
                 android:background="@drawable/border2"
                 android:padding="4dp"
                 android:text="후원하기"
+                android:fontFamily="@font/nanumsquare"
+                android:gravity="center_vertical"
                 android:textColor="@color/colorPrimary"
                 android:textSize="13sp"
                 android:textStyle="bold"
@@ -180,10 +186,12 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/description_title_height"
                 android:background="@drawable/border2"
                 android:padding="4dp"
                 android:text="앱 정보"
+                android:fontFamily="@font/nanumsquare"
+                android:gravity="center_vertical"
                 android:textColor="@color/colorPrimary"
                 android:textSize="13sp"
                 android:textStyle="bold"
