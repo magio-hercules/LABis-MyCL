@@ -2,8 +2,12 @@
 <resources>
     <string-array name="helplist">
         <item>( 선  택 )</item>
-        <item>버그신고</item>
-        <item>개선</item>
-        <item>회원탈퇴</item>
+        <item>콘텐츠 추가</item>
+        <item>장르 추가</item>
+        <item>버그 신고</item>
+        <item>사용자 개선 건의</item>
+        <item>탈퇴 요청</item>
+        <item>개발자에게</item>
+        <item>기타</item>
     </string-array>
 </resources>

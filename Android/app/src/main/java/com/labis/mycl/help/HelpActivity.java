@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -43,6 +45,10 @@ public class HelpActivity extends AppCompatActivity {
     ScrollView scrollView;
     @BindView(R.id.help_request_title)
     TextView helpRequestTitle;
+    @BindView(R.id.help_description)
+    EditText helpDescription;
+    @BindView(R.id.detail_ok_btn)
+    Button sendButton;
 
     private Toolbar toolbar;
     private AdView mAdView;
@@ -85,6 +91,32 @@ public class HelpActivity extends AppCompatActivity {
                 String item = sAdapter.getItem(position).toString();
                 if(position > 0) {
                     scrollToRequest();
+                }
+
+                switch(item) {
+                    case "콘텐츠 추가":
+                        helpDescription.setHint("어떤 장르의 어떤 콘텐츠를 추가할까요?");
+                        break;
+                    case "장르 추가":
+                        helpDescription.setHint("어떤 장르를 추가할까요?");
+                        break;
+                    case "버그 신고":
+                        helpDescription.setHint("발생한 오류에 대해 제보해 주세요.");
+                        break;
+                    case "사용자 개선 건의":
+                        helpDescription.setHint("사용중 불편함이 있으면 건의해 주세요.");
+                        break;
+                    case "탈퇴 요청":
+                        helpDescription.setHint("탈퇴 이유를 간단히 적어주세요.");
+                        break;
+                    case "개발자에게":
+                        helpDescription.setHint("개발자들에게 하고 싶은 말을 해주세요.");
+                        break;
+                    case "기타":
+                        helpDescription.setHint("");
+                        break;
+                    default:
+                        break;
                 }
             }
             public void onNothingSelected(AdapterView parent) { }
