@@ -230,7 +230,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     // -- User Function Section -- ////////////////////////////////////////
     public void multiSelectItem(int position) {
-        if (mActionMode != null) {
+        if (mActionMode != null && position > -1) {
             if(selectedGenreId == null && isSearchMode == false) {  // Normal Mode
                 if (editContents.contains(ContentsList.get(position))) {
                     editContents.remove(ContentsList.get(position));
