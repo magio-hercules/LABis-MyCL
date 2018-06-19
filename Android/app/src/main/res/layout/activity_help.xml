@@ -35,6 +35,7 @@
             android:focusableInTouchMode="true"
             android:layout_marginTop="2dp"
             android:padding="8dp"
+            android:descendantFocusability="blocksDescendants"
             android:orientation="vertical">
 
             <TextView
