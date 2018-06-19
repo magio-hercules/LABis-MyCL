@@ -29,6 +29,7 @@
         android:fillViewport="true">
 
         <LinearLayout
+            android:id="@+id/layout_scroll_ad"
             android:layout_width="match_parent"
             android:layout_height="@dimen/description_title_height"
             android:focusable="true"

@@ -1,36 +1,39 @@
 package com.labis.mycl.help;
 
+import android.app.ProgressDialog;
 import android.app.Service;
-import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.labis.mycl.R;
+import com.labis.mycl.model.LoginData;
+import com.labis.mycl.model.User;
+import com.labis.mycl.rest.RetroCallback;
+import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.util.SoftKeyboard;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +42,8 @@ import me.relex.circleindicator.CircleIndicator;
 
 
 public class HelpActivity extends AppCompatActivity {
+    private static final String TAG = "[HELP]";
+
     @BindView(R.id.help_combo)
     Spinner comboHelp;
     @BindView(R.id.help_scroll_view)
@@ -53,17 +58,31 @@ public class HelpActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private AdView mAdView;
 
+    public static User userData;
+
     private static ViewPager mPager;
     private static int currentPage = 0;
     private static final Integer[] HELP = {R.mipmap.intoro_img_01, R.mipmap.help_1, R.mipmap.help_2, R.mipmap.help_3};
     private ArrayList<Integer> HELPArray = new ArrayList<Integer>();
     private SoftKeyboard softKeyboard;
 
+    public RetroClient retroClient;
+
+    private ProgressDialog mProgressDialog = null;
+
+    private String curComboIndex = "";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
         ButterKnife.bind(this);
+
+        LoginData loginData = (LoginData) getIntent().getExtras().getParcelable("LoingData");
+        if (loginData != null) {
+            userData = loginData.getUser();
+        }
 
         toolbar = (Toolbar) findViewById(R.id.help_toolbar);
         setSupportActionBar(toolbar);
@@ -84,6 +103,13 @@ public class HelpActivity extends AppCompatActivity {
         mAdView = findViewById(R.id.help_ad);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                LinearLayout layout = (LinearLayout)findViewById(R.id.layout_scroll_ad);
+                layout.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+            }
+        });
 
         // Request Combo
         comboHelp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -92,6 +118,8 @@ public class HelpActivity extends AppCompatActivity {
                 if(position > 0) {
                     scrollToRequest();
                 }
+
+                curComboIndex = Integer.toString(position);
 
                 switch(item) {
                     case "콘텐츠 추가":
@@ -140,12 +168,14 @@ public class HelpActivity extends AppCompatActivity {
                     public void run() {
                         scrollToRequest();
                     }
-                }, 600);
+                }, 100);
             }
         });
 
         // Help Pager View
         initHelpImage();
+
+        retroClient = RetroClient.getInstance(this).createBaseApi();
     }
 
     private void scrollToRequest() {
@@ -164,6 +194,7 @@ public class HelpActivity extends AppCompatActivity {
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(mPager);
 
+        /*
         // Auto start of viewpager
         final Handler handler = new Handler();
         final Runnable Update = new Runnable() {
@@ -181,6 +212,68 @@ public class HelpActivity extends AppCompatActivity {
                 handler.post(Update);
             }
         }, 4000, 4000);
+        */
+    }
+
+    public void showProgressDialog() {
+        Log.d(TAG, "showProgressDialog");
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        }
+
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+    }
+
+    public void hideProgressDialog() {
+        Log.d(TAG, "hideProgressDialog");
+
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    @OnClick(R.id.detail_ok_btn)
+    void onClick_send() {
+        String reqType = curComboIndex;
+        String comment = helpDescription.getText().toString();
+
+        if (reqType.equals("0")) {
+            Toast.makeText(getApplicationContext(), "항목을 선택해주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (comment.equals("")) {
+            Toast.makeText(getApplicationContext(), "내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Log.d(TAG, "reqType : " + reqType + ", comment : " + comment);
+
+        showProgressDialog();
+        retroClient.postInsertRequest(userData.id, reqType, comment, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+                hideProgressDialog();
+                Toast.makeText(getApplicationContext(), "전송 오류", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+                hideProgressDialog();
+                Toast.makeText(getApplicationContext(), "전송 완료", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int code) {
+                hideProgressDialog();
+                Toast.makeText(getApplicationContext(), "전송 실패", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

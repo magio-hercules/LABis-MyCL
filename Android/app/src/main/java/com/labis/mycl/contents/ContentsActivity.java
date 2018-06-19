@@ -964,6 +964,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             startActivity(i);
         } else if (id == R.id.action_help) {
             Intent i = new Intent(ContentsActivity.this, HelpActivity.class);
+            LoginData loginData = new LoginData(userData, null);
+            i.putExtra("LoingData", loginData);
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);
