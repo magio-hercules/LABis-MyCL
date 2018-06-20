@@ -940,6 +940,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 if (modeStatus.equals("MY")) {
                     myContentsRefresh = true;
                     loadMyContents();
+                } else {
+                    myContentsRefresh = true;
                 }
             }
             return;
