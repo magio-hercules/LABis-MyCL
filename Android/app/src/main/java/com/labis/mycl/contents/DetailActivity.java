@@ -384,7 +384,7 @@ public class DetailActivity extends AppCompatActivity {
         retroClient.postUpdateMyContents(orgContentInfo.id, userID, chapterIndex, favoiteFlag, feelingStr, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
-                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "서버 접속 실패", Toast.LENGTH_SHORT).show();
                 progressDoalog.dismiss();
             }
 
