@@ -264,6 +264,9 @@ public class HelpActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int code, Object receivedData) {
+
+                comboHelp.setSelection(0);
+                helpDescription.setText(null);
                 hideProgressDialog();
                 Toast.makeText(getApplicationContext(), "전송 완료", Toast.LENGTH_SHORT).show();
             }
