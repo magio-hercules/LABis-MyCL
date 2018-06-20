@@ -331,6 +331,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         progressDoalog.show();
         ArrayList<String> addList = new ArrayList<String>();
         for(Content item : editContents) {
+            myContentsBackup.add(item);
             addList.add(item.id);
             Log.d(TAG,"EVOL Item ID : " + item.id);
         }
@@ -994,11 +995,21 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 if (mActionMode == null) {
                     isMultiSelect = true;
                     mActionMode = startActionMode(mActionModeCallback);
+                    if(modeStatus.equals("MY")) {
+                        mActionMode.setTitle("삭제 항목 선택");
+                    } else {
+                        mActionMode.setTitle("추가 항목 선택");
+                    }
                 }
             } else if(modeStatus == "TOTAL") {
                 if (mActionMode == null) {
                     isMultiSelect = true;
                     mActionMode = startActionMode(mActionModeCallback);
+                    if(modeStatus.equals("MY")) {
+                        mActionMode.setTitle("삭제 항목 선택");
+                    } else {
+                        mActionMode.setTitle("추가 항목 선택");
+                    }
                 }
             }
             return true;
