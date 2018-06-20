@@ -1,10 +1,12 @@
 package com.labis.mycl;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -28,7 +30,6 @@ import com.labis.mycl.model.LoginData;
 import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
-import com.labis.mycl.util.AlertDialogHelper;
 import com.labis.mycl.util.AuthManager;
 
 import java.util.ArrayList;
@@ -68,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
     private long lastTimeBackPressed;
 
-    AlertDialogHelper alertDialogHelper = null;
-    private boolean isShowAlertDialog = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
 //            bAutoLogin = true;
         }
-
-        // -- Delete Dialog --//
-        alertDialogHelper = new AlertDialogHelper(this);
     }
 
     @Override
@@ -107,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         if (authManager != null) {
             authManager.removeAuthStateListener();
         }
+
         super.onDestroy();
     }
 
@@ -116,10 +113,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable t) {
                 hideProgressDialog();
-               /* if (isShowAlertDialog == false) {
-                    isShowAlertDialog = true;
-                    showAlertsDialog("서버에 접속 실패하였습니다. 잠시 후 다시 시도해주세요");
-                }*/
+
+                showAlertsDialog("서버 접속에 실패하였습니다.\n잠시 후 다시 시도해주세요.");
             }
 
             @Override
@@ -150,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "GENRE LOAD FAIL");
                 Log.d(TAG, "Failure Code : " + code);
                 hideProgressDialog();
+
+                showAlertsDialog("서버 접속에 실패하였습니다.\n잠시 후 다시 시도해주세요.");
             }
         });
     }
@@ -239,18 +236,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showAlertsDialog(String message) {
-        alertDialogHelper.setAlertDialogListener(new AlertDialogHelper.AlertDialogListener() {
-            @Override
-            public void onPositiveClick(int from) {
-                //forceExitActivity();
-                finish();
-            }
-            @Override
-            public void onNegativeClick(int from){}
-            @Override
-            public void onNeutralClick(int from){}
-        });
-        alertDialogHelper.showAlertDialog("", message, "확인", 1, false);
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("확인",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                .create();
+        alertDialog.show();
     }
 
     private void forceExitActivity() {

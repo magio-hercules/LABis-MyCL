@@ -1,8 +1,10 @@
 package com.labis.mycl.contents;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,7 +36,6 @@ import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
-import com.labis.mycl.util.AlertDialogHelper;
 import com.labis.mycl.util.SoftKeyboard;
 import com.squareup.picasso.Picasso;
 
@@ -128,7 +129,6 @@ public class DetailActivity extends AppCompatActivity {
 
     private AdView mAdView;
     private AdView mAdViewPoster;
-    AlertDialogHelper alertDialogHelper;
 
     // Original Item & Flag
     Content orgContentInfo = null;
@@ -150,9 +150,6 @@ public class DetailActivity extends AppCompatActivity {
 
         // -- RetroClient -- //
         retroClient = RetroClient.getInstance(this).createBaseApi();
-
-        // -- Delete Dialog --//
-        alertDialogHelper = new AlertDialogHelper(this);
 
         // -- KeyPad Event Control -- //
         InputMethodManager controlManager = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
@@ -425,20 +422,24 @@ public class DetailActivity extends AppCompatActivity {
     @OnClick(R.id.detail_option_btn)
     void optionClick() {
         if(modeStatus.equals("MY")) { //삭제
-            alertDialogHelper.setAlertDialogListener(new AlertDialogHelper.AlertDialogListener() {
-                @Override
-                public void onPositiveClick(int from) {
-                    Intent returnIntent = new Intent();
-                    setResult(Activity.RESULT_FIRST_USER, returnIntent);
-                    finish();
-                }
-                @Override
-                public void onNegativeClick(int from){}
-                @Override
-                public void onNeutralClick(int from){}
-            });
-            alertDialogHelper.showAlertDialog("", "삭제할까요?", "예", "아니요", 1, false);
-
+            AlertDialog alertDialog = new AlertDialog.Builder(DetailActivity.this)
+                    .setTitle("콘텐츠 삭제")
+                    .setMessage("삭제하시겠습니까?")
+                    .setPositiveButton("예",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent returnIntent = new Intent();
+                                    setResult(Activity.RESULT_FIRST_USER, returnIntent);
+                                    finish();
+                                }
+                            })
+                    .setNegativeButton("아니요",
+                            new android.content.DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) { }
+                            }).create();
+            alertDialog.show();
         } else if(modeStatus.equals("TOTAL")) { //추가
             Intent returnIntent = new Intent();
             setResult(Activity.RESULT_FIRST_USER, returnIntent);

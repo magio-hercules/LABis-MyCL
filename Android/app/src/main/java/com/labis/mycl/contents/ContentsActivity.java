@@ -1,6 +1,8 @@
 package com.labis.mycl.contents;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -39,7 +41,6 @@ import com.labis.mycl.model.LoginData;
 import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
-import com.labis.mycl.util.AlertDialogHelper;
 import com.labis.mycl.util.AuthManager;
 import com.labis.mycl.util.CircleTransform;
 import com.labis.mycl.util.RecyclerItemClickListener;
@@ -84,7 +85,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     ActionMode mActionMode;
     public boolean isMultiSelect = false;
     RecyclerView recyclerView;
-    AlertDialogHelper alertDialogHelper;
     public static final int PICK_EDIT_REQUEST = 1;
     public int editPosition = -1;
     private MaterialSearchView searchView;
@@ -109,9 +109,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contents);
         ButterKnife.bind(this);
-
-        // -- Delete Dialog --//
-        alertDialogHelper = new AlertDialogHelper(this);
 
         // -- ToolBar -- //
         toolbar = (Toolbar) findViewById(R.id.content_toolbar);
@@ -787,17 +784,24 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             switch (item.getItemId()) {
                 case R.id.action_delete_contents:
                     if (editContents.size() > 0) {
-                        alertDialogHelper.setAlertDialogListener(new AlertDialogHelper.AlertDialogListener() {
-                            @Override
-                            public void onPositiveClick(int from) {
-                                delToMyContents();
-                            }
-                            @Override
-                            public void onNegativeClick(int from) { }
-                            @Override
-                            public void onNeutralClick(int from) { }
-                        });
-                        alertDialogHelper.showAlertDialog("", "삭제하시겠습니까?", "예", "아니요", 1, false);
+                        AlertDialog alertDialog = new AlertDialog.Builder(ContentsActivity.this)
+                                .setTitle("콘텐츠 삭제")
+                                .setMessage("삭제하시겠습니까?")
+                                .setPositiveButton("예",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                delToMyContents();
+                                            }
+                                        })
+                                .setNegativeButton("아니요",
+                                        new android.content.DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Log.i(TAG, "Click NO");
+                                            }
+                                        }).create();
+                        alertDialog.show();
                     } else {
                         Toast.makeText(getApplicationContext(), "삭제 항목 선택", Toast.LENGTH_SHORT).show();
                     }
