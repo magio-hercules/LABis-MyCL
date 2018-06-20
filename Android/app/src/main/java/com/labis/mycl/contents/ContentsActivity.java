@@ -272,9 +272,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private boolean isExistMyContent(Content item) {
-        for(Content i : myContentsBackup) {
-            Log.d(TAG,"EVOL i1 = " + i.id + " / i2 = " + item.id);
-            if(i.id.equals(item.id)) return true;
+        if(modeStatus.equals("TOTAL")) {
+            for (Content i : myContentsBackup) {
+                if (i.id.equals(item.id)) return true;
+            }
         }
         return false;
     }
