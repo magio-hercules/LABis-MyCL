@@ -96,9 +96,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
 
             // Chapter Info
-            if(!isNoChapterGenre(mItems.get(position).gen_id)) {
+            String genID = mItems.get(position).gen_id;
+            if(!isNoChapterGenre(genID)) {
                 holder.mThirdDivMy.setVisibility(View.VISIBLE);
-                holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + "화");
+                String eof = "화";
+                if(genID.equals("A00")) eof = "권";
+                holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + eof);
             } else {
                 holder.mThirdDivMy.setVisibility(View.GONE);
             }
@@ -155,8 +158,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     }
 
     private Boolean isNoChapterGenre(String gen_id) {
-        // 영화 or 책
-        if(gen_id.equals("B02") || gen_id.equals("A00")) {
+        // 영화
+        if(gen_id.equals("B02")) {
             return true;
         }
         return false;

@@ -134,6 +134,7 @@ public class DetailActivity extends AppCompatActivity {
     Content orgContentInfo = null;
     private String userID = null;
     private String modeStatus = "";
+    private String genID ="";
 
     // Info Data
     private int chapterIndex;
@@ -192,6 +193,7 @@ public class DetailActivity extends AppCompatActivity {
         favoiteFlag = orgContentInfo.favorite;
         if(orgContentInfo.comment ==  null) orgContentInfo.comment ="";
         feelingStr = orgContentInfo.comment;
+        genID = orgContentInfo.gen_id;
 
         // -- Screen Resolution -- //
         AppBarLayout appbar = (AppBarLayout) findViewById(R.id.detail_appbar);
@@ -243,7 +245,9 @@ public class DetailActivity extends AppCompatActivity {
         // 챕터
         if(!isNoChapterGenre(Item.gen_id) && modeStatus.equals("MY")) {
             detailChapterDiv.setVisibility(View.VISIBLE);
-            chapterView.setText(String.valueOf(chapterIndex) + " 화");
+            String eof = " 화";
+            if(genID.equals("A00")) eof = " 권";
+            chapterView.setText(String.valueOf(chapterIndex) + eof);
         }
 
         // 타이틀
@@ -327,7 +331,9 @@ public class DetailActivity extends AppCompatActivity {
             public void run() {
                 if (chapterIndex < 999) {
                     chapterIndex++;
-                    chapterView.setText(String.valueOf(chapterIndex) + " 화");
+                    String eof = " 화";
+                    if(genID.equals("A00")) eof = " 권";
+                    chapterView.setText(String.valueOf(chapterIndex) + eof);
                     mHandler.postDelayed(this, 100);
                 } else {
                     Toast.makeText(getApplicationContext(), "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
@@ -340,7 +346,9 @@ public class DetailActivity extends AppCompatActivity {
             public void run() {
                 if (chapterIndex > 1) {
                     chapterIndex--;
-                    chapterView.setText(String.valueOf(chapterIndex) + " 화");
+                    String eof = " 화";
+                    if(genID.equals("A00")) eof = " 권";
+                    chapterView.setText(String.valueOf(chapterIndex) + eof);
                     mHandler.postDelayed(this, 100);
                 } else {
                     Toast.makeText(getApplicationContext(), "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
@@ -350,8 +358,8 @@ public class DetailActivity extends AppCompatActivity {
     };
 
     private Boolean isNoChapterGenre(String gen_id) {
-        // 영화 or 책
-        if(gen_id.equals("B02") || gen_id.equals("A00")) {
+        // 영화
+        if(gen_id.equals("B02")) {
             return true;
         }
         return false;
