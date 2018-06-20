@@ -54,7 +54,7 @@
                     android:textColor="@color/colorPrimary"
                     android:fontFamily="@font/nanumsquare"
                     android:textStyle="bold"
-                    android:text="B L A N K" />
+                    android:text="이미지\n없음" />
             </LinearLayout>
 
         </LinearLayout>
