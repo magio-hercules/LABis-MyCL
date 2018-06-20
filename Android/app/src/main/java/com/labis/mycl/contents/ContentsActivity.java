@@ -785,7 +785,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 case R.id.action_delete_contents:
                     if (editContents.size() > 0) {
                         AlertDialog alertDialog = new AlertDialog.Builder(ContentsActivity.this)
-                                .setTitle("콘텐츠 삭제")
                                 .setMessage("삭제하시겠습니까?")
                                 .setPositiveButton("예",
                                         new DialogInterface.OnClickListener() {

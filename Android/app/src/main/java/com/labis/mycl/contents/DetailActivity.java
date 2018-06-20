@@ -423,7 +423,6 @@ public class DetailActivity extends AppCompatActivity {
     void optionClick() {
         if(modeStatus.equals("MY")) { //삭제
             AlertDialog alertDialog = new AlertDialog.Builder(DetailActivity.this)
-                    .setTitle("콘텐츠 삭제")
                     .setMessage("삭제하시겠습니까?")
                     .setPositiveButton("예",
                             new DialogInterface.OnClickListener() {
