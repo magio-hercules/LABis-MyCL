@@ -232,16 +232,28 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public void multiSelectItem(int position) {
         if (mActionMode != null && position > -1) {
             if(selectedGenreId == null && isSearchMode == false) {  // Normal Mode
-                if (editContents.contains(ContentsList.get(position))) {
-                    editContents.remove(ContentsList.get(position));
+                Content selectItem = ContentsList.get(position);
+                // Exist Check
+                if(isExistMyContent(selectItem)) {
+                    Toast.makeText(getApplicationContext(), "내 콘텐츠 보유 항목", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (editContents.contains(selectItem)) {
+                    editContents.remove(selectItem);
                 } else {
-                    editContents.add(ContentsList.get(position));
+                    editContents.add(selectItem);
                 }
             } else {                                                // Search or Filter Mode
-                if (editContents.contains(uiShowContentsList.get(position))) {
-                    editContents.remove(uiShowContentsList.get(position));
+                Content selectItem = uiShowContentsList.get(position);
+                // Exist Check
+                if(isExistMyContent(selectItem)) {
+                    Toast.makeText(getApplicationContext(), "내 콘텐츠 보유 항목", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (editContents.contains(selectItem)) {
+                    editContents.remove(selectItem);
                 } else {
-                    editContents.add(uiShowContentsList.get(position));
+                    editContents.add(selectItem);
                 }
             }
 
@@ -255,7 +267,16 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 }
             }
             mAdapter.notifyDataSetChanged();
+
         }
+    }
+
+    private boolean isExistMyContent(Content item) {
+        for(Content i : myContentsBackup) {
+            Log.d(TAG,"EVOL i1 = " + i.id + " / i2 = " + item.id);
+            if(i.id.equals(item.id)) return true;
+        }
+        return false;
     }
 
     public void delToMyContents() {
@@ -269,7 +290,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         retroClient.postDeleteMyContents(userData.id, deleteList, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
-                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "서버 접속 실패", Toast.LENGTH_SHORT).show();
                 progressDoalog.dismiss();
             }
 
@@ -319,7 +340,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         retroClient.postInsertMyContents(userData.id, addList, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
-                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "서버 접속 실패", Toast.LENGTH_SHORT).show();
                 progressDoalog.dismiss();
             }
 
@@ -365,7 +386,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, t.toString());
-                Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "서버 접속 실패", Toast.LENGTH_SHORT).show();
                 progressDoalog.dismiss();
             }
 
@@ -449,7 +470,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 @Override
                 public void onError(Throwable t) {
                     Log.e(TAG, t.toString());
-                    Toast.makeText(getApplicationContext(), "서버 접속에 실패 하였습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "서버 접속 실패", Toast.LENGTH_SHORT).show();
                     progressDoalog.dismiss();
                 }
 
@@ -875,11 +896,29 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     }
                 } else if(modeStatus.equals("TOTAL")) {
                     if(editPosition > -1) {
+
                         if(selectedGenreId != null || isSearchMode) {
-                            editContents.add(uiShowContentsList.get(editPosition));
+
+                            Content selectItem = uiShowContentsList.get(editPosition);
+                            // Exist Check
+                            if(isExistMyContent(selectItem)) {
+                                Toast.makeText(getApplicationContext(), "내 콘텐츠 보유 항목", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            editContents.add(selectItem);
+
                         } else {
-                            editContents.add(ContentsList.get(editPosition));
+
+                            Content selectItem = ContentsList.get(editPosition);
+                            // Exist Check
+                            if(isExistMyContent(selectItem)) {
+                                Toast.makeText(getApplicationContext(), "내 콘텐츠 보유 항목", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            editContents.add(selectItem);
+
                         }
+
                         addToMyContents();
                     }
                 }
