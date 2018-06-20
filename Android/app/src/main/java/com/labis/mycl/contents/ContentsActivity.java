@@ -228,6 +228,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     // -- User Function Section -- ////////////////////////////////////////
     public void multiSelectItem(int position) {
         if (mActionMode != null && position > -1) {
+            if(mActionMode.getTitle() == null) {
+                if (modeStatus.equals("MY")) {
+                    mActionMode.setTitle("삭제 항목 선택");
+                } else {
+                    mActionMode.setTitle("추가 항목 선택");
+                }
+            }
+
             if(selectedGenreId == null && isSearchMode == false) {  // Normal Mode
                 Content selectItem = ContentsList.get(position);
                 // Exist Check
@@ -452,7 +460,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void emptyToggle() {
-        if(recyclerView.getAdapter().getItemCount() > 0 || modeStatus.equals("TOTAL")) {
+        if(recyclerView.getAdapter().getItemCount() > 0 || modeStatus.equals("TOTAL") || isSearchMode || selectedGenreId != null) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyBackground.setVisibility(View.GONE);
         } else {
