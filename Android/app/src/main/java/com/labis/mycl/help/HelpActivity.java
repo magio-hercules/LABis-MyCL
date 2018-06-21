@@ -62,7 +62,7 @@ public class HelpActivity extends AppCompatActivity {
 
     private static ViewPager mPager;
     private static int currentPage = 0;
-    private static final Integer[] HELP = {R.mipmap.intoro_img_01, R.mipmap.help_1, R.mipmap.help_2, R.mipmap.help_3};
+    private static final Integer[] HELP = {R.mipmap.help_1, R.mipmap.help_2, R.mipmap.help_3, R.mipmap.help_4, R.mipmap.help_5};
     private ArrayList<Integer> HELPArray = new ArrayList<Integer>();
     private SoftKeyboard softKeyboard;
 

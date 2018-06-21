@@ -52,15 +52,15 @@
                 android:textStyle="bold" />
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="380dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/border"
                 android:orientation="vertical"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp">
                 <RelativeLayout
-                    android:layout_width="300dp"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content">
+                    android:layout_width="250dp"
+                    android:layout_height="440dp"
+                    android:layout_gravity="center">
                     <android.support.v4.view.ViewPager
                         android:id="@+id/pager"
                         android:layout_width="match_parent"
@@ -70,6 +70,7 @@
                         android:id="@+id/indicator"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
+                        app:ci_drawable="@drawable/circleindicator_round"
                         android:layout_alignParentBottom="true" />
                 </RelativeLayout>
             </LinearLayout>
