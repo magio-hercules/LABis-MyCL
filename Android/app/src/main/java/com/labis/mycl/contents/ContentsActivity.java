@@ -462,13 +462,15 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void emptyToggle() {
-        if(recyclerView.getAdapter().getItemCount() > 0 || modeStatus.equals("TOTAL") || isSearchMode || selectedGenreId != null) {
+
+        if (ContentsList.size() > 0 || modeStatus.equals("TOTAL") || isSearchMode || selectedGenreId != null) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyBackground.setVisibility(View.GONE);
         } else {
             emptyBackground.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         }
+
     }
 
     public void loadMyContents() {
@@ -640,7 +642,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             recyclerView.setAdapter(mAdapter);
             getSupportActionBar().setSubtitle(null);
         }
-
+        emptyToggle();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -674,6 +676,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         for (int i = 0; i < size; i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
+        emptyToggle();
     }
 
 
@@ -681,7 +684,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private void searchContents(String query) {
         Log.d(TAG, "searchContents");
         Log.d(TAG, "query : " + query);
-
         resetDrawerCheckedItem();
         ArrayList<Content> searchContents = new ArrayList();
         for(Content item : ContentsList) {
@@ -696,6 +698,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         mAdapter = new RecyclerViewAdapter(ContentsActivity.this, uiShowContentsList);
         recyclerView.setAdapter(mAdapter);
         getSupportActionBar().setTitle("검색 결과 " + uiShowContentsList.size() + "개");
+        emptyToggle();
     }
 
     private void filterJenreMyContents(final String title, String userId, String gen_id) {
