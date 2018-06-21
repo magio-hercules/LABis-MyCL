@@ -418,8 +418,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
                     //Search Suggestion
                     for(Content i : ContentsList) {
-                        contestsTitleSuggestionsArray.add(i.name);
-                        contestsTitleSuggestionsArray.add(i.name_org);
+                        if (i.name != null && i.name_org != null) {
+                            contestsTitleSuggestionsArray.add(i.name);
+                            contestsTitleSuggestionsArray.add(i.name_org);
+                        }
                     }
 
                 } else {

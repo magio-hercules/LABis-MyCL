@@ -77,7 +77,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             holder.mNullText.setVisibility(View.VISIBLE);
         }
         holder.mName.setText(mItems.get(position).name);
-        if(mItems.get(position).name_org.length() > 0) {
+        if(mItems.get(position).name_org != null && mItems.get(position).name_org.length() > 0) {
             holder.mNameOrg.setVisibility(View.VISIBLE);
             holder.mNameOrg.setText(mItems.get(position).name_org);
         } else {
