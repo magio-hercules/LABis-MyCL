@@ -86,14 +86,18 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:ellipsize="end"
+                android:maxLines="2" />
             <TextView
                 android:id="@+id/content_sub_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:textColor="@color/colorPrimary"
-                android:textSize="11sp" />
+                android:layout_marginTop="2dp"
+                android:textSize="11sp"
+                android:ellipsize="end"
+                android:maxLines="1"/>
         </LinearLayout>
 
 
@@ -117,6 +121,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@mipmap/ic_minus_btn" />
+
                 <TextView
                     android:id="@+id/index"
                     android:layout_width="44dp"
