@@ -417,11 +417,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                     recyclerView.setAdapter(mAdapter);
 
                     //Search Suggestion
-                    for(Content i : ContentsList) {
-                        if (i.name != null && i.name_org != null) {
-                            contestsTitleSuggestionsArray.add(i.name);
-                            contestsTitleSuggestionsArray.add(i.name_org);
-                        }
+                    for (Content i : ContentsList) {
+                        contestsTitleSuggestionsArray.add(i.name);
+                        contestsTitleSuggestionsArray.add(i.name_org);
+
                     }
 
                 } else {
