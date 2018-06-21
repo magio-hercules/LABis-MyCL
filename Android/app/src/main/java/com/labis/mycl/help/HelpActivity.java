@@ -168,7 +168,7 @@ public class HelpActivity extends AppCompatActivity {
                     public void run() {
                         scrollToRequest();
                     }
-                }, 100);
+                }, 600);
             }
         });
 
