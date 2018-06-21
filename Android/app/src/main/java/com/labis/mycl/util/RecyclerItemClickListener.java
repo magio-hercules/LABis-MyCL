@@ -54,8 +54,8 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
     }
 
     @Override
-    public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e)
-    {
+    public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 x1 = e.getX();
@@ -66,14 +66,19 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                 y2 = e.getY();
                 float deltaX = x2 - x1;
                 float deltaY = Math.abs(y2 - y1);
+
+                // Swipe
                 if (Math.abs(deltaX) > MIN_DISTANCE && deltaY < Y_TOUCH_HEIGHT) {
-                    if (mActivity.modeStatus == "MY") {
-                        mActivity.loadTotalContent();
-                    } else if (mActivity.modeStatus == "TOTAL") {
-                        mActivity.loadMyContents();
+                    if (mActivity.isMultiSelect == false) {
+                        if (mActivity.modeStatus == "MY") {
+                            mActivity.loadTotalContent();
+                        } else if (mActivity.modeStatus == "TOTAL") {
+                            mActivity.loadMyContents();
+                        }
                     }
                     return true;
                 }
+
                 break;
             default:
                 break;
@@ -81,10 +86,10 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
         View childView = view.findChildViewUnder(e.getX(), e.getY());
 
-        if(childView != null && mListener != null && mGestureDetector.onTouchEvent(e))
-        {
+        if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
             mListener.onItemClick(childView, view.getChildPosition(childView));
         }
+
 
         return false;
     }
