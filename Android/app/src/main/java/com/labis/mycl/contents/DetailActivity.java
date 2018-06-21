@@ -334,7 +334,7 @@ public class DetailActivity extends AppCompatActivity {
                     String eof = " 화";
                     if(genID.equals("A00")) eof = " 권";
                     chapterView.setText(String.valueOf(chapterIndex) + eof);
-                    mHandler.postDelayed(this, 100);
+                    mHandler.postDelayed(this, 50);
                 } else {
                     Toast.makeText(getApplicationContext(), "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
                 }
@@ -349,7 +349,7 @@ public class DetailActivity extends AppCompatActivity {
                     String eof = " 화";
                     if(genID.equals("A00")) eof = " 권";
                     chapterView.setText(String.valueOf(chapterIndex) + eof);
-                    mHandler.postDelayed(this, 100);
+                    mHandler.postDelayed(this, 50);
                 } else {
                     Toast.makeText(getApplicationContext(), "더 이상 안됩니다 -_-;;", Toast.LENGTH_SHORT).show();
                 }

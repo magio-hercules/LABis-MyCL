@@ -228,7 +228,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     // -- User Function Section -- ////////////////////////////////////////
     public void multiSelectItem(int position) {
         if (mActionMode != null && position > -1) {
-            if (mActionMode.getTitle() == null || mActionMode.getTitle().length() < 1) {
+
+            if(editContents.size() == 0) {
                 if (modeStatus.equals("MY")) {
                     mActionMode.setTitle("삭제 항목 선택");
                 } else {
