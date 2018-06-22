@@ -184,7 +184,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     ads:adSize="MEDIUM_RECTANGLE"
-                    ads:adUnitId="ca-app-pub-3940256099942544/6300978111"></com.google.android.gms.ads.AdView>
+                    ads:adUnitId="ca-app-pub-7240040702770473/7408862173"></com.google.android.gms.ads.AdView>
             </LinearLayout>
 
 
