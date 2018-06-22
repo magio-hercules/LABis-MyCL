@@ -129,6 +129,7 @@
                         android:scrollbarStyle="insideInset"
                         android:scrollbars="vertical"
                         android:layout_weight="1"
+                        android:maxLength="500"
                         android:textSize="15sp" />
                     <Button
                         android:id="@+id/detail_ok_btn"

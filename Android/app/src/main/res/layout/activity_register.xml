@@ -63,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:text="이메일"
                 android:textSize="12sp" />
+
             <EditText
                 android:id="@+id/register_email"
                 android:layout_width="match_parent"
@@ -70,6 +71,7 @@
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:inputType="textEmailAddress"
+                android:maxLength="50"
                 android:textSize="15sp" />
         </LinearLayout>
 
@@ -150,6 +152,7 @@
                 android:layout_height="wrap_content"
                 android:text="닉네임"
                 android:textSize="12sp" />
+
             <EditText
                 android:id="@+id/register_nickname"
                 android:layout_width="match_parent"
@@ -157,6 +160,7 @@
                 android:background="@color/cardview_light_background"
                 android:gravity="bottom|right"
                 android:inputType="textPersonName"
+                android:maxLength="20"
                 android:textSize="15sp" />
         </LinearLayout>
 
