@@ -12,10 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.register_password_verify)
     EditText register_password_verify;
     @BindView(R.id.register_age)
-    EditText register_age;
+    Spinner register_age;
     @BindView(R.id.register_nickname)
     EditText register_nickname;
     @BindView(R.id.register_phone)
@@ -123,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private ProgressDialog mProgressDialog = null;
 
-
+    String str_age = "";
 
 
     @Override
@@ -172,10 +176,40 @@ public class RegisterActivity extends AppCompatActivity {
 
         authManager = AuthManager.getInstance();
 
+        // 연령대 확인
+        final SpinnerAdapter sAdapter = ArrayAdapter.createFromResource(this, R.array.agelist, R.layout.spinner_item);
+        register_age.setAdapter(sAdapter);
+        register_age.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView parent, View view, int position, long id) {
+                String item = sAdapter.getItem(position).toString();
+
+                switch(item) {
+                    case "10대":
+                        str_age = "10대";
+                        break;
+                    case "20대":
+                        str_age = "20대";
+                        break;
+                    case "30대":
+                        str_age = "30대";
+                        break;
+                    case "40대":
+                        str_age = "40대";
+                        break;
+                    case "50대":
+                        str_age = "50대";
+                        break;
+                    default:
+                        str_age = "";
+                        break;
+                }
+            }
+            public void onNothingSelected(AdapterView parent) { }
+        });
+
+
         bChangePw = false;
-
         setProfile(bEditProfile);
-
         initAuth();
     }
 
@@ -278,8 +312,6 @@ public class RegisterActivity extends AppCompatActivity {
     private void registUser(String url) {
         String str_email = register_email.getText().toString();
         String str_pw = register_password.getText().toString();
-        String str_age = register_age.getText().toString();
-        //String str_gender = register_gender.getText().toString();
         String str_nickname = register_nickname.getText().toString();
         String str_phone = register_phone.getText().toString();
 
@@ -339,8 +371,6 @@ public class RegisterActivity extends AppCompatActivity {
     private void updateUser(String url) {
         final String str_email = register_email.getText().toString();
         final String str_pw = register_password.getText().toString();
-        final String str_age = register_age.getText().toString();
-//        final String str_gender = register_gender.getText().toString();
         final String str_nickname = register_nickname.getText().toString();
         final String str_phone = register_phone.getText().toString();
 
@@ -560,7 +590,28 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         register_email.setText(userData.id);
-        register_age.setText(userData.age);
+        str_age = userData.age;
+        switch (userData.age) {
+            case "10대":
+                register_age.setSelection(1);
+                break;
+            case "20대":
+                register_age.setSelection(2);
+                break;
+            case "30대":
+                register_age.setSelection(3);
+                break;
+            case "40대":
+                register_age.setSelection(4);
+                break;
+            case "50대":
+                register_age.setSelection(5);
+                break;
+            default:
+                register_age.setSelection(0);
+                break;
+        }
+
         if (userData.gender.equals("남")) {
             register_gender_male.setChecked(true);
         } else if (userData.gender.equals("여")) {
