@@ -113,7 +113,7 @@ public interface RetroBaseApiService {
     @POST("insert_contents_list")
     Call<Register> postInserCustomContents(@Field("gen_id") String gen_id, @Field("season") int season,
                                            @Field("name") String name, @Field("name_org") String name_org,
-                                           @Field("theatrical") int theatrical, @Field("summary") String summary,
+                                           @Field("theatrical") int theatrical, @Field("comment") String comment,
                                            @Field("publisher") String publisher, @Field("auth") int auth,
                                            @Field("image") String image);
 
