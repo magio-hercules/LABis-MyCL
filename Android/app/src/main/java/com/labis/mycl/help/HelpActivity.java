@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,8 @@ import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.util.SoftKeyboard;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,6 +57,8 @@ public class HelpActivity extends AppCompatActivity {
     EditText helpDescription;
     @BindView(R.id.detail_ok_btn)
     Button sendButton;
+    @BindView(R.id.app_info)
+    TextView appInfo;
 
     private Toolbar toolbar;
     private AdView mAdView;
@@ -174,8 +179,19 @@ public class HelpActivity extends AppCompatActivity {
 
         // Help Pager View
         initHelpImage();
-
         retroClient = RetroClient.getInstance(this).createBaseApi();
+
+        String txt = "- 개발자 : Labis Corp.(쫑미니, 쿨영후니, 에볼\n- 버전 : 1.0.0\n- 업데이트 날짜 : ‘18.06.22\n- 다운로드 크기 : 5.5MB\n- 개인정보처리방침 : http://evolhim.net";
+        appInfo.setText(txt);
+        Linkify.TransformFilter mTransform = new Linkify.TransformFilter() {
+            @Override
+            public String transformUrl(Matcher match, String url) {
+                return "";
+            }
+        };
+        Pattern pattern1 = Pattern.compile("http://evolhim.net");
+        Linkify.addLinks(appInfo, pattern1, "http://evolhim.net", null, mTransform);
+
     }
 
     private void scrollToRequest() {
