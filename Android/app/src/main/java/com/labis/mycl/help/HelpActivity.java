@@ -181,7 +181,7 @@ public class HelpActivity extends AppCompatActivity {
         initHelpImage();
         retroClient = RetroClient.getInstance(this).createBaseApi();
 
-        String txt = "- 개발자 : Labis Corp.(쫑미니, 쿨영후니, 에볼\n- 버전 : 1.0.0\n- 업데이트 날짜 : ‘18.06.22\n- 다운로드 크기 : 5.5MB\n- 개인정보처리방침 : http://evolhim.net";
+        String txt = "- 개발자 : Labis Corp.(쫑미니, 쿨영후니, 에볼)\n- 버전 : 1.0.0\n- 업데이트 날짜 : ‘18.06.22\n- 다운로드 크기 : 5.5MB\n- 개인정보처리방침 : http://evolhim.net";
         appInfo.setText(txt);
         Linkify.TransformFilter mTransform = new Linkify.TransformFilter() {
             @Override
