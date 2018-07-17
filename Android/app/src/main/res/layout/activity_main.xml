@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="220dp"
@@ -41,9 +41,9 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:background="@android:drawable/editbox_background_normal"
+                android:hint="비밀번호"
                 android:inputType="textPassword"
                 android:padding="6dp"
-                android:hint="비밀번호"
                 android:textColor="#000000"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -76,20 +76,49 @@
 
         </LinearLayout>
 
-        <!--<LinearLayout-->
-            <!--android:layout_width="227dp"-->
-            <!--android:layout_height="60dp"-->
-            <!--android:alpha="0.2"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:visibility="visible">-->
-            <!--<Button-->
-                <!--android:id="@+id/login_testbtn"-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/login_kakaobtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/kakao_account_login_btn_medium_wide"
+                android:scaleX=".7"
+                android:scaleY=".7" />
+
+            <!--<com.kakao.usermgmt.LoginButton-->
+                <!--android:id="@+id/btn_kakao_login"-->
+
                 <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="0.5"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:visibility="gone" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/login_kakaologoutbtn"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
                 <!--android:layout_gravity="center"-->
-                <!--android:text="TEST"/>-->
+                <!--android:text="(test) 카카오 로그아웃" />-->
+        </LinearLayout>
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="227dp"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:alpha="0.2"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:visibility="visible">-->
+        <!--<Button-->
+        <!--android:id="@+id/login_testbtn"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="0.5"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="TEST"/>-->
         <!--</LinearLayout>-->
 
     </LinearLayout>

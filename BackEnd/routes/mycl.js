@@ -57,6 +57,8 @@ router.post('/prefer', 					controller_prefer.postPrefer);
 router.post('/login', 					controller_login.postLogin);
 router.post('/register', 				controller_login.postRegister);
 router.post('/update', 					controller_login.postUpdate);
+router.post('/verifyToken', 			controller_login.postVerifyToken);
+
 
 // request
 router.post('/request_list', 			controller_request.postRequestList);

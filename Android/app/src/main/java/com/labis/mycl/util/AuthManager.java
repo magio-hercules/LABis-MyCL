@@ -80,10 +80,17 @@ public class AuthManager {
     }
 
     public void signIn(Activity activity, OnCompleteListener listener, String email, String password) {
-        Log.d(TAG, "signIn() email : " + email + ", password : " + anonymizePassword(password));
+        Log.d(TAG, "signInWithEmailAndPassword() email : " + email + ", password : " + anonymizePassword(password));
 
         mFirebaseAuth.signInWithEmailAndPassword(email, password)
                        .addOnCompleteListener(activity, listener);
+    }
+
+    public void signIn(Activity activity, OnCompleteListener listener, String customToken) {
+        Log.d(TAG, "signInWithCustomToken() customToken : " + customToken);
+
+        mFirebaseAuth.signInWithCustomToken(customToken)
+                .addOnCompleteListener(activity, listener);
     }
 
     public void signOut() {

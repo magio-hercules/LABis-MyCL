@@ -45,6 +45,8 @@ dependencies {
     implementation 'br.com.mauker.materialsearchview:materialsearchview:1.2.3'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     compile 'me.relex:circleindicator:1.2.2@aar'
+    compile group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
+    compile 'com.android.volley:volley:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -30,6 +30,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kakao.network.ErrorResult;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import com.labis.mycl.MainActivity;
 import com.labis.mycl.R;
 import com.labis.mycl.help.HelpActivity;
@@ -1043,10 +1046,30 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     @OnClick(R.id.drawer_btn_logout)
     void onClick_logout() {
         AuthManager authManager = AuthManager.getInstance();
+
+        // kakao logout
+        if (authManager.getmFirebaseUser().getUid().contains("kakao:")) {
+            UserManagement.getInstance().requestUnlink(new UnLinkResponseCallback() {
+                @Override public void onFailure(ErrorResult errorResult) {
+                    Log.e(TAG, "[KAKAO] requestUnlink onFailure : " + errorResult.toString());
+                }
+                @Override public void onSessionClosed(ErrorResult errorResult) {
+                    Log.e(TAG, "[KAKAO] requestUnlink onSessionClosed : " + errorResult.toString());
+                }
+                @Override public void onNotSignedUp() {
+                    Log.e(TAG, "[KAKAO] requestUnlink onNotSignedUp");
+                }
+                @Override public void onSuccess(Long userId) {
+                    Log.e(TAG, "[KAKAO] requestUnlink onSuccess");
+                }
+            });
+        }
+
         authManager.signOut();
         authManager.setFirebaseUser(null);
         myContentsRefresh = true;
         modeStatus = "MY";
+
         Intent i = new Intent(ContentsActivity.this, MainActivity.class);
         startActivity(i);
         finishAffinity();

@@ -70,6 +70,11 @@ public interface RetroBaseApiService {
     Call<Register> postUpdate(@Field("id") String id, @Field("age") String age, @Field("gender") String gender,
                               @Field("nickname") String nickname, @Field("phone") String phone, @Field("image") String image, @Field("uid") String uid);
 
+    @FormUrlEncoded
+    @POST("verifyToken")
+    Call<Register> postVerifyToken(@Field("token") String token);
+
+
     // request
     @FormUrlEncoded
     @POST("request_list")

@@ -1,15 +1,21 @@
 package com.labis.mycl;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -18,26 +24,58 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.kakao.auth.AccessTokenCallback;
+import com.kakao.auth.AuthType;
+import com.kakao.auth.ISessionCallback;
+import com.kakao.auth.Session;
+import com.kakao.auth.authorization.accesstoken.AccessToken;
+import com.kakao.network.ErrorResult;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.kakao.usermgmt.callback.MeResponseCallback;
+import com.kakao.usermgmt.callback.MeV2ResponseCallback;
+import com.kakao.usermgmt.callback.UnLinkResponseCallback;
+import com.kakao.usermgmt.response.MeV2Response;
+import com.kakao.usermgmt.response.model.UserAccount;
+import com.kakao.usermgmt.response.model.UserProfile;
+import com.kakao.util.exception.KakaoException;
 import com.labis.mycl.contents.ContentsActivity;
 import com.labis.mycl.login.RegisterActivity;
 import com.labis.mycl.model.Genre;
 import com.labis.mycl.model.LoginData;
+import com.labis.mycl.model.Register;
 import com.labis.mycl.model.User;
+import com.labis.mycl.rest.RetroBaseApiService;
 import com.labis.mycl.rest.RetroCallback;
 import com.labis.mycl.rest.RetroClient;
 import com.labis.mycl.util.AuthManager;
 
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "[MainActivity]";
@@ -57,6 +95,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.login_password)
     EditText edit_password;
 
+//    @BindView(R.id.btn_kakao_login)
+//    LoginButton button_kakao;
+
     // Animation
     Animation animFadein;
 
@@ -69,12 +110,17 @@ public class MainActivity extends AppCompatActivity {
 
     private long lastTimeBackPressed;
 
+    // kakao
+    Session session;
+    KakaoSessionCallback kakaoSessionCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        Context context = getApplicationContext();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadGenreData();
 
-        animFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        animFadein = AnimationUtils.loadAnimation(context, R.anim.fade_in);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
@@ -94,7 +140,23 @@ public class MainActivity extends AppCompatActivity {
 
 //            bAutoLogin = true;
         }
+
+        // for test : 카카오 해시키 획득
+        getHashKey(context);
+
+//        Session.initialize(this, INDIVIDUAL);
+        kakaoSessionCallback = new KakaoSessionCallback(context);
+        session = Session.getCurrentSession();
+        session.addCallback(kakaoSessionCallback);
+//        session.checkAndImplicitOpen(); // ???
+//        if (session.checkAndImplicitOpen()) {
+//            // 액세스토큰 유효하거나 리프레시 토큰으로 액세스 토큰 갱신을 시도할 수 있는 경우
+//        } else {
+//            // 무조건 재로그인을 시켜야 하는 경우
+//        }
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -104,7 +166,18 @@ public class MainActivity extends AppCompatActivity {
             authManager.removeAuthStateListener();
         }
 
+        session.removeCallback(kakaoSessionCallback);
+
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
     }
 
     private void loadGenreData() {
@@ -151,6 +224,34 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    // 프로젝트의 해시키를 반환
+
+    @Nullable
+    public static String getHashKey(Context context) {
+        final String TAG = "KeyHash";
+        String keyHash = null;
+
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                keyHash = new String(Base64.encode(md.digest(), 0));
+                Log.d(TAG, keyHash);
+            }
+        } catch (Exception e) {
+            Log.e("name not found", e.toString());
+        }
+
+        if (keyHash != null) {
+            return keyHash;
+        } else {
+            return null;
+        }
+    }
 
     private void initAuth() {
         Log.d(TAG, "initAuth()");
@@ -212,6 +313,33 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
         startActivity(i);
     }
+
+    @OnClick(R.id.login_kakaobtn)
+    void onClick_kakao(){
+//        button_kakao.performClick();
+//        session.open(AuthType.KAKAO_LOGIN_ALL, MainActivity.this);
+        session.open(AuthType.KAKAO_TALK, MainActivity.this);
+    }
+
+// for kakao login
+//    @OnClick(R.id.login_kakaologoutbtn)
+//    void onClick_kakao_logout(){
+//        UserManagement.getInstance().requestUnlink(new UnLinkResponseCallback() {
+//            @Override public void onFailure(ErrorResult errorResult) {
+//                Log.e(TAG, "onFailure : " + errorResult.toString());
+//            }
+//            @Override public void onSessionClosed(ErrorResult errorResult) {
+//                Log.e(TAG, "onSessionClosed : " + errorResult.toString());
+//            }
+//            @Override public void onNotSignedUp() {
+//                Log.e(TAG, "onNotSignedUp");
+//            }
+//            @Override public void onSuccess(Long userId) {
+//                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//    }
 
     public void showProgressDialog() {
         Log.d(TAG, "showProgressDialog");
@@ -312,6 +440,47 @@ public class MainActivity extends AppCompatActivity {
         authManager.signIn(this, completeListener, email, password);
     }
 
+    private void signIn(final String token) {
+        Log.d(TAG, "signIn() token: " + token);
+//        if (!validateForm()) {
+//            return;
+//        }
+
+        showProgressDialog();
+
+        OnCompleteListener<AuthResult> completeListener = new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                Log.d(TAG, "signIn() token OnCompleteListener()");
+
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "signIn() token:success");
+                    Log.d(TAG, "task.getResult().getUser() : " + task.getResult().getUser());
+                    Log.d(TAG, "authManager.getmFirebaseUser() : " + authManager.getmFirebaseUser());
+                    authManager.setFirebaseUser(task.getResult().getUser());
+                    Log.d(TAG, "authManager.getmFirebaseUser() : " + authManager.getmFirebaseUser());
+
+                    String email = task.getResult().getUser().getEmail();
+                    String uid = task.getResult().getUser().getUid();
+                    Log.d(TAG, "email : " + email);
+                    Log.d(TAG, "uid : " + uid);
+
+                    doLogin(email, null, uid);
+                } else {
+                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                    Toast.makeText(MainActivity.this, "접속 실패", Toast.LENGTH_SHORT).show();
+                    if (task.getException() != null) {
+                        Log.e(TAG, task.getException().toString());
+                    }
+                }
+
+                hideProgressDialog();
+            }
+        };
+
+        authManager.signIn(this, completeListener, token);
+    }
+
     private void doLogin(String email, String pw, String uid) {
         Log.i(TAG, "doLogin()");
         Log.i(TAG, "email: " + email +", pw: " + anonymizePassword(pw) + ", uid: " + uid);
@@ -357,5 +526,272 @@ public class MainActivity extends AppCompatActivity {
             sb.append('*');
         }
         return sb.toString();
+    }
+
+
+    /**
+     *
+     * @param kakaoAccessToken Access token retrieved after successful Kakao Login
+     * @return Task object that will call validation server and retrieve firebase token
+     */
+    private Task<String> getFirebaseJwt(final String kakaoAccessToken) {
+
+        Log.d(TAG, "[KAKAO] getFirebaseJwt");
+
+        final TaskCompletionSource<String> source = new TaskCompletionSource<>();
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = RetroBaseApiService.Base_URL + "verifyToken";
+        HashMap<String, String> validationObject = new HashMap<>();
+        validationObject.put("token", kakaoAccessToken);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(validationObject), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, "[KAKAO] onResponse");
+                try {
+                    String firebaseToken = response.getString("firebase_token");
+                    source.setResult(firebaseToken);
+                } catch (Exception e) {
+                    source.setException(e);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "[KAKAO] onErrorResponse");
+                Log.e(TAG, error.toString());
+                source.setException(error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Log.d(TAG, "[KAKAO] getParams");
+                Map<String, String> params = new HashMap<>();
+                params.put("token", kakaoAccessToken);
+                return params;
+            }
+        };
+
+        queue.add(request);
+        return source.getTask();
+    }
+
+
+    public class KakaoSessionCallback implements ISessionCallback {
+        Context context = null;
+
+        public KakaoSessionCallback(Context context) {
+            this.context = context;
+        }
+
+        // 로그인에 성공한 상태
+        @Override
+        public void onSessionOpened() {
+            Log.d(TAG, "[KAKAO] onSessionOpened");
+
+//            requestMe();
+            showProgressDialog();
+
+            if (true) {
+                Log.d(TAG, "[KAKAO] Successfully logged in to Kakao. Now creating or updating a Firebase User.");
+                String accessToken = Session.getCurrentSession().getTokenInfo().getAccessToken();
+
+                retroClient.postVerifyToken(accessToken, new RetroCallback<Register>() {
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.d(TAG, t.toString());
+                        Toast.makeText(MainActivity.this, "postVerifyToken 에러", Toast.LENGTH_SHORT).show();
+                        hideProgressDialog();
+                    }
+                    @Override
+                    public void onFailure(int code) {
+                        Log.d(TAG, "FAIL");
+                        Toast.makeText(MainActivity.this, "postVerifyToken 실패", Toast.LENGTH_SHORT).show();
+                        hideProgressDialog();
+                    }
+                    @Override
+                    public void onSuccess(int code, Register data) {
+                        Log.d(TAG, "SUCCESS");
+
+                        String firebaseToken = data.getId();
+                        Log.d(TAG, "[KAKAO] token : " + firebaseToken);
+
+                        FirebaseAuth auth = authManager.getFirebaseAuth();
+                        Log.d(TAG, "[KAKAO] auth.signInWithCustomToken");
+//                        auth.signInWithCustomToken(firebaseToken);
+
+                        signIn(firebaseToken);
+                    }
+                });
+            } else {
+                //            Toast.makeText(getApplicationContext(), "Successfully logged in to Kakao. Now creating or updating a Firebase User.", Toast.LENGTH_LONG).show();
+                Log.d(TAG, "[KAKAO] Successfully logged in to Kakao. Now creating or updating a Firebase User.");
+                String accessToken = Session.getCurrentSession().getTokenInfo().getAccessToken();
+                getFirebaseJwt(accessToken).continueWithTask(new Continuation<String, Task<AuthResult>>() {
+                    @Override
+                    public Task<AuthResult> then(@NonNull Task<String> task) {
+                        Log.d(TAG, "[KAKAO] then");
+                        String firebaseToken = task.getResult();
+                        FirebaseAuth auth = authManager.getFirebaseAuth();
+                        return auth.signInWithCustomToken(firebaseToken);
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "[KAKAO] onComplete");
+                        if (task.isSuccessful()) {
+//                        Toast.makeText(getApplicationContext(), "continueWithTask addOnCompleteListener", Toast.LENGTH_LONG).show();
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            Log.d(TAG, "task.getResult().getUser() : " + task.getResult().getUser());
+                            Log.d(TAG, "authManager.getmFirebaseUser() : " + authManager.getmFirebaseUser());
+                            authManager.setFirebaseUser(task.getResult().getUser());
+                            Log.d(TAG, "authManager.getmFirebaseUser() : " + authManager.getmFirebaseUser());
+
+                            String email = task.getResult().getUser().getEmail();
+                            String uid = task.getResult().getUser().getUid();
+                            Log.d(TAG, "email : " + email);
+                            Log.d(TAG, "uid : " + uid);
+
+                            doLogin(email, null, uid);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to create a Firebase user.", Toast.LENGTH_LONG).show();
+                            if (task.getException() != null) {
+                                Log.e(TAG, task.getException().toString());
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // 로그인에 실패한 상태
+        @Override
+        public void onSessionOpenFailed(KakaoException exception) {
+            Log.d(TAG, "[KAKAO] onSessionOpenFailed");
+            Log.e(TAG, "onSessionOpenFailed : " + exception.getMessage());
+        }
+
+        // 사용자 정보 요청
+        public void requestMe_org() {
+            // 사용자정보 요청 결과에 대한 Callback
+            UserManagement.getInstance().requestMe(new MeResponseCallback() {
+                // 세션 오픈 실패. 세션이 삭제된 경우,
+                @Override
+                public void onSessionClosed(ErrorResult errorResult) {
+                    Log.e(TAG, "requestMe onSessionClosed : " + errorResult.getErrorMessage());
+                }
+
+                // 회원이 아닌 경우,
+                @Override
+                public void onNotSignedUp() {
+                    Log.e(TAG, "requestMe onNotSignedUp");
+                }
+
+                // 사용자정보 요청에 성공한 경우,
+                @Override
+                public void onSuccess(UserProfile userProfile) {
+                    Log.e(TAG, "requestMe onSuccess");
+                    Log.e(TAG, "requestMe onSuccess");
+                    String nickname = userProfile.getNickname();
+                    String email = userProfile.getEmail();
+                    String profileImagePath = userProfile.getProfileImagePath();
+                    String thumnailPath = userProfile.getThumbnailImagePath();
+                    String UUID = userProfile.getUUID();
+                    long id = userProfile.getId();
+
+                    Log.e(TAG, "nickname : " + nickname + "");
+                    Log.e(TAG, "email : " + email + "");
+                    Log.e(TAG, "profileImagePath : " + profileImagePath  + "");
+                    Log.e(TAG, "thumnailPath : " + thumnailPath + "");
+                    Log.e(TAG, "UUID : " + UUID + "");
+                    Log.e(TAG, "id : " + id + "");
+                }
+
+                // 사용자 정보 요청 실패
+                @Override
+                public void onFailure(ErrorResult errorResult) {
+                    Log.e(TAG, "requestMe onFailure : " + errorResult.getErrorMessage());
+                }
+            });
+        }
+
+
+        private void handleScopeError(UserAccount account) {
+            List<String> neededScopes = new ArrayList<>();
+            if (account.needsScopeAccountEmail()) {
+                neededScopes.add("account_email");
+            }
+            if (account.needsScopeGender()) {
+                neededScopes.add("gender");
+            }
+//            Session.getCurrentSession().updateScopes(MainActivity.this, neededScopes, new
+//                    AccessTokenCallback() {
+//                        @Override
+//                        public void onAccessTokenReceived(AccessToken accessToken) {
+//                            // 유저에게 성공적으로 동의를 받음. 토큰을 재발급 받게 됨.
+//                        }
+//
+//                        @Override
+//                        public void onAccessTokenFailure(ErrorResult errorResult) {
+//                            // 동의 얻기 실패
+//                        }
+//                    });
+        }
+
+
+        private void requestMe() {
+            List<String> keys = new ArrayList<>();
+            keys.add("properties.nickname");
+            keys.add("properties.profile_image");
+            keys.add("kakao_account.email");
+
+            UserManagement.getInstance().me(keys, new MeV2ResponseCallback() {
+                @Override
+                public void onFailure(ErrorResult errorResult) {
+                    String message = "failed to get user info. msg=" + errorResult;
+                    Log.d(TAG, message);
+                }
+
+                @Override
+                public void onSessionClosed(ErrorResult errorResult) {
+//                    redirectLoginActivity();
+                    Log.d(TAG, "onSessionClosed");
+                }
+
+                @Override
+                public void onSuccess(MeV2Response response) {
+                    Log.d(TAG,"user id : " + response.getId());
+                    Log.d(TAG,"email: " + response.getKakaoAccount().getEmail());
+//                    Log.d(TAG,"profile image: " + response.getKakaoAccount().getProfileImagePath());
+//                    redirectMainActivity();
+                }
+
+//                @Override
+//                public void onNotSignedUp() {
+////                    showSignup();
+//                    Log.d(TAG, "onNotSignedUp");
+//                }
+            });
+        }
+
+
+        public void logout() {
+            Log.e(TAG, "Kakao requestLogout");
+
+            UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                @Override
+                public void onCompleteLogout() {
+                    Log.e(TAG, "requestLogout onCompleteLogout");
+
+                    Intent intent = new Intent(context, MainActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+
+
     }
 }

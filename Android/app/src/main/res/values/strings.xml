@@ -10,4 +10,5 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
 
+    <string name="kakao_app_key">d439542553ccc1f0f1bc1e7cd042e8f3</string>
 </resources>

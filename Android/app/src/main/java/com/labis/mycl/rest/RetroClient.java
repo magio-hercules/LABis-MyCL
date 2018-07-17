@@ -341,6 +341,24 @@ public class RetroClient {
         });
     }
 
+    public void postVerifyToken(String token, final RetroCallback callback) {
+        apiService.postVerifyToken(token).enqueue(new Callback<Register>() {
+            @Override
+            public void onResponse(Call<Register> call, Response<Register> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.code(), response.body());
+                } else {
+                    callback.onFailure(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Register> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
     public void updateContentsImage(String id, String url, final RetroCallback callback) {
         apiService.updateContentsImage(id, url).enqueue(new Callback<Register>() {
             @Override

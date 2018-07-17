@@ -3,11 +3,16 @@ var table = require('../db/db_table');
 var common = require('./common')();
 var auth = require('./auth')();
 var authAdmin = auth.init();
+const request = require('request-promise');
 
 var idToken = null;
 var currentUid = null;
 
 var bFirst = true;
+
+// Kakao API request url to retrieve user profile based on access token
+const requestMeUrl = 'https://kapi.kakao.com/v1/user/me?secure_resource=true';
+const accessTokenInfoUrl = 'https://kapi.kakao.com/v1/user/access_token_info';
 
 
 
@@ -129,6 +134,261 @@ exports.postCheckIdToken = function(req, res) {
 	}
 	
 };
+
+
+exports.postVerifyToken = function(req, res) {
+	console.log("[====] call postVerifyToken");
+
+	console.log("[INFO][TEST] req.body.id : " + req.body.id);
+	console.log("[INFO][TEST] req.body.uid : " + req.body.uid);
+	console.log("[INFO][TEST] req.body.token : " + req.body.token);
+
+	const token = req.body.token;
+	if (!token) {
+		return res.status(400)
+				  .send({error: 'There is no token.'})
+				  .send({message: 'Access token is a required parameter.'});
+	}
+
+	console.log(`Verifying Kakao token: ${token}`);
+
+	createFirebaseToken(token, req, res)
+	.then((retValue) => {
+	// .then((firebaseToken) => {
+		// console.log(`Returning firebase token to user: ${firebaseToken}`);
+		// res.send({firebase_token: firebaseToken});
+	
+		// // res.writeHead(200, {'Content-Type': 'application/json'});
+		// var response = {"result":"OK", "reason":"postVerifyToken Success", "id":retValue.uid};
+		var response = {"result":"OK", "reason":"postVerifyToken Success", "id":retValue.token};
+		console.log('[INFO][doRequest] response : ', response);
+		res.send(JSON.stringify(response));
+	}).catch((error) => res.status(401).send({message: error}));
+};
+
+  
+/**
+ * createFirebaseToken - returns Firebase token using Firebase Admin SDK
+ *
+ * @param  {String} kakaoAccessToken access token from Kakao Login API
+ * @return {Promise<String>}                  Firebase token in a promise
+ */
+function createFirebaseToken(kakaoAccessToken, req, res) {
+	console.log("[INFO] createFirebaseToken");
+	return validateToken(kakaoAccessToken).then((response) => {
+			console.log("[INFO] validateToken");
+			console.log("[INFO] body : " + JSON.stringify(response));
+			// const body = JSON.parse(response);
+			// const appId = body.appId;
+			// if (appId !== config.kakao.appId) {
+			// 	throw new Error('The given token does not belong to this application.');
+			// }
+			return requestMe(kakaoAccessToken);
+		}).then((response) => {
+			console.log("[INFO] validateToken.then");
+			const body = JSON.parse(response);
+			console.log(body);
+			const userId = body.id;
+			if (!userId) {
+				throw new Error('There was no user with the given access token.');
+			}
+			let nickname = null;
+			let profileImage = null;
+			if (body.properties) {
+				nickname = body.properties.nickname;
+				profileImage = body.properties.profile_image;
+			}
+
+			console.log('[INFO] createOrLinkUser before');
+			return createOrLinkUser(userId, body.kaccount_email,
+					body.kaccount_email_verified, nickname, profileImage);
+		}).then((userRecord) => {
+			console.log("[INFO] validateToken.then.then");
+			console.log("[====] call postVerifyToken-postRegister");
+
+			var query = mysql_query.postRegister();
+			var user = {
+				id: userRecord.email,
+				age: "",
+				gender: "",
+				nickname: userRecord.displayName,// userRecord.nickname,
+				phone: "",
+				image : userRecord.photoURL, //userRecord.profileImage,
+				uid : userRecord.uid
+			};
+			
+			// common.doRequest(req, res, query, user);
+			return common.doOnlyQuery(req, res, query, user)
+			.then((ret) => {
+				console.log("[INFO] userRecord : " + JSON.stringify(userRecord));
+				return userRecord;
+			});
+		}).then((userRecord) => {
+			console.log("[INFO] validateToken.then.then.then");
+			console.log("[INFO] userRecord : " + JSON.stringify(userRecord));
+
+			const userId = userRecord.uid;
+			console.log(`creating a custom firebase token based on uid ${userId}`);
+			
+			// return authAdmin.auth().createCustomToken(userId, {provider: 'KAKAO'});
+			// var firebaseToken = authAdmin.auth().createCustomToken(userId, {provider: 'KAKAO'});
+			
+			try {
+				console.log("[INFO][TEST] customToken 1");
+				return authAdmin.auth().createCustomToken(userId)
+						.then(function(firebaseToken) {
+							console.log("[INFO][TEST] createCustomToken then");
+							console.log("firebaseToken : " + firebaseToken);
+							var retValue = userRecord;
+							// retValue[0]['token'] = firebaseToken;
+							retValue['token'] = firebaseToken;
+							
+							console.log("retValue : " + JSON.stringify(retValue));
+							return retValue;
+						})
+						.catch(function(error) {
+							console.log("Error creating custom token:", error);
+						});
+				console.log("[INFO][TEST] customToken 2");
+			} catch (error) {
+				console.log("authAdmin.auth().createCustomToken(req.body.uid) : ", error);
+			}
+		});
+}
+
+
+/**
+ * requestMe - Returns user profile from Kakao API
+ *
+ * @param  {String} kakaoAccessToken Access token retrieved by Kakao Login API
+ * @return {Promise<Response>}      User profile response in a promise
+ */
+function requestMe(kakaoAccessToken) {
+	console.log('Requesting user profile from Kakao API server.');
+	return request({
+				method: 'GET',
+				headers: {'Authorization': 'Bearer ' + kakaoAccessToken},
+				url: requestMeUrl,
+			});
+}
+
+/**
+ * validateToken - Returns access token info from Kakao API,
+	* which checks if this token is issued by this application.
+	*
+	* @param {String} kakaoAccessToken Access token retrieved by Kakao Login API
+	* @return {Promise<Response>}      Access token info response
+	*/
+function validateToken(kakaoAccessToken) {
+	console.log('Validating access token from Kakao API server.');
+	return request({
+		method: 'GET',
+		headers: {'Authorization': 'Bearer ' + kakaoAccessToken},
+		url: accessTokenInfoUrl,
+	});
+}
+
+
+
+/**
+ * createOrLinkUser - Link firebase user with given email,
+ * or create one if none exists. If email is not given,
+ * create a new user since there is no other way to map users.
+ * If email is not verified, make the user re-authenticate with other means.
+ *
+ * @param  {String} kakaoUserId    user id per app
+ * @param  {String} email          user's email address
+ * @param  {Boolean} emailVerified whether this email is verified or not
+ * @param  {String} displayName    user
+ * @param  {String} photoURL       profile photo url
+ * @return {Promise<UserRecord>}   Firebase user record in a promise
+ */
+function createOrLinkUser(kakaoUserId, email, emailVerified, displayName, photoURL) {
+	console.log('[INFO] createOrLinkUser');
+	console.log('[INFO] kakaoUserId :' + kakaoUserId);
+	console.log('[INFO] email : ' + email);
+	console.log('[INFO] emailVerified : ' + emailVerified);
+	return getUser(kakaoUserId, email, emailVerified)
+			.catch((error) => {
+				if (error.code === 'auth/user-not-found') {
+					const params = {
+						uid: `kakao:${kakaoUserId}`,
+						displayName: displayName,
+					};
+					if (email) {
+						params['email'] = email;
+					}
+					if (photoURL) {
+						params['photoURL'] = photoURL;
+					}
+					console.log(`creating a firebase user with email ${email}`);
+					return authAdmin.auth().createUser(params);
+				}
+				throw error;
+			})
+			.then((userRecord) => linkUserWithKakao(kakaoUserId, userRecord));
+}
+  
+
+/**
+ * getUser - fetch firebase user with kakao UID first, then with email if
+ * no user found. If email is not verified, throw an error so that
+ * the user can re-authenticate.
+ *
+ * @param {String} kakaoUserId    user id per app
+ * @param {String} email          user's email address
+ * @param {Boolean} emailVerified whether this email is verified or not
+ * @return {Promise<admin.auth.UserRecord>}
+ */
+function getUser(kakaoUserId, email, emailVerified) {
+	console.log('[INFO] getUser');
+	console.log(`fetching a firebase user with uid kakao:${kakaoUserId}`);
+	return authAdmin.auth().getUser(`kakao:${kakaoUserId}`)
+	.catch((error) => {
+		console.log(`getUser error catch`);
+
+		if (error.code !== 'auth/user-not-found') {
+			console.log(`auth/user-not-found`);
+			throw error;
+		}
+		if (!email) {
+			console.log(`email is not exist`);
+			throw error; // cannot find existing accounts since there is no email.
+		}
+		console.log(`fetching a firebase user with email ${email}`);
+		return authAdmin.auth().getUserByEmail(email)
+		.then((userRecord) => {
+			if (!emailVerified) {
+			throw new Error('This user should authenticate first ' +
+				'with other providers');
+			}
+			return userRecord;
+		});
+	});
+}
+	
+
+/**
+ * linkUserWithKakao - Link current user record with kakao UID
+ * if not linked yet.
+ *
+ * @param {String} kakaoUserId
+ * @param {admin.auth.UserRecord} userRecord
+ * @return {Promise<UserRecord>}
+ */
+function linkUserWithKakao(kakaoUserId, userRecord) {
+	console.log("linkUserWithKakao");
+
+	console.log("kakaoUserId : " + kakaoUserId);
+	console.log("userRecord : " + JSON.stringify(userRecord));
+
+	if (userRecord.customClaims && userRecord.customClaims['kakaoUID'] === kakaoUserId) {
+		console.log(`currently linked with kakao UID ${kakaoUserId}...`);
+		return Promise.resolve(userRecord);
+	}
+	console.log(`linking user with kakao UID ${kakaoUserId}...`);
+	return authAdmin.auth().setCustomUserClaims(userRecord.uid, {kakaoUID: kakaoUserId}).then(() => userRecord);
+}
 
 
 function _callback_login(req, res, params, error, result) {
