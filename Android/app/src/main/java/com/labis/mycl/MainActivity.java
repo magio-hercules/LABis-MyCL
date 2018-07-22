@@ -616,6 +616,32 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "SUCCESS");
 
                         String firebaseToken = data.getId();
+                        if (firebaseToken == null) {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    Log.d(TAG, "[KAKAO] 로그인 실패 후 로그아웃");
+
+                                    UserManagement.getInstance().requestUnlink(new UnLinkResponseCallback() {
+                                        @Override public void onFailure(ErrorResult errorResult) {
+                                            Log.e(TAG, "onFailure : " + errorResult.toString());
+                                        }
+                                        @Override public void onSessionClosed(ErrorResult errorResult) {
+                                            Log.e(TAG, "onSessionClosed : " + errorResult.toString());
+                                        }
+                                        @Override public void onNotSignedUp() {
+                                            Log.e(TAG, "onNotSignedUp");
+                                        }
+                                        @Override public void onSuccess(Long userId) {
+                                            Log.d(TAG, "[KAKAO] firebaseToken is null");
+                                            Toast.makeText(MainActivity.this, "카카오계정(이메일) 체크가 필요합니다.", Toast.LENGTH_SHORT).show();
+                                            hideProgressDialog();
+                                        }
+                                    });
+                                }
+                            }, 100);
+                            return;
+                        }
                         Log.d(TAG, "[KAKAO] token : " + firebaseToken);
 
                         FirebaseAuth auth = authManager.getFirebaseAuth();

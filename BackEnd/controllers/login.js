@@ -192,6 +192,10 @@ function createFirebaseToken(kakaoAccessToken, req, res) {
 			if (!userId) {
 				throw new Error('There was no user with the given access token.');
 			}
+			if (body.kaccount_email == undefined || body.kaccount_email == null) {
+				console.log("[INFO] body.kaccount_email is null");
+				return body;
+			}
 			let nickname = null;
 			let profileImage = null;
 			if (body.properties) {
@@ -206,7 +210,13 @@ function createFirebaseToken(kakaoAccessToken, req, res) {
 			console.log("[INFO] validateToken.then.then");
 			console.log("[====] call postVerifyToken-postRegister");
 
+			if (userRecord.email == undefined || userRecord.email == null) {
+				console.log("[INFO] userRecord.email is null");
+				return userRecord;
+			}
+
 			var query = mysql_query.postRegister();
+			var params = [];
 			var user = {
 				id: userRecord.email,
 				age: "",
@@ -216,9 +226,17 @@ function createFirebaseToken(kakaoAccessToken, req, res) {
 				image : userRecord.photoURL, //userRecord.profileImage,
 				uid : userRecord.uid
 			};
-			
+			params.push(user);
+			var update = {
+				id: userRecord.email,
+				nickname: userRecord.displayName,
+				image : userRecord.photoURL,
+				uid : userRecord.uid
+			};
+			params.push(update);
+
 			// common.doRequest(req, res, query, user);
-			return common.doOnlyQuery(req, res, query, user)
+			return common.doOnlyQuery(req, res, query, params)
 			.then((ret) => {
 				console.log("[INFO] userRecord : " + JSON.stringify(userRecord));
 				return userRecord;
@@ -227,6 +245,12 @@ function createFirebaseToken(kakaoAccessToken, req, res) {
 			console.log("[INFO] validateToken.then.then.then");
 			console.log("[INFO] userRecord : " + JSON.stringify(userRecord));
 
+			if (userRecord.email == undefined || userRecord.email == null) {
+				console.log("[INFO] userRecord.email is null");
+				userRecord['token'] = null;
+				return userRecord;
+			} 
+			
 			const userId = userRecord.uid;
 			console.log(`creating a custom firebase token based on uid ${userId}`);
 			

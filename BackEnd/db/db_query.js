@@ -60,7 +60,7 @@ module.exports = function () {
         },
         postRegister: function () {
             // .../MyCL/register (id,age,gender,nickname,phone,image,uid)
-            return 'INSERT INTO User SET ?';
+            return 'INSERT INTO User SET ? ON DUPLICATE KEY UPDATE ?';
         },
         postUpdate: function () {
             // .../MyCL/update (id,age,gender,nickname,phone,image,uid)
