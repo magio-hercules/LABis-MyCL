@@ -11,13 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -111,10 +109,19 @@ public class HelpActivity extends AppCompatActivity {
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                LinearLayout layout = (LinearLayout)findViewById(R.id.layout_scroll_ad);
-                layout.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+//                LinearLayout layout = (LinearLayout)findViewById(R.id.layout_scroll_ad);
+//                layout.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+
+//                View v = mLayoutInflater.inflate(R.layout.reminder_item, parent, false);
+//                parent.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+//                ((ViewGroup) v).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+//                return v;
             }
         });
+
+        // disable Focus
+//        LinearLayout layout = (LinearLayout)findViewById(R.id.layout_scroll_ad);
+//        layout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         // Request Combo
         comboHelp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

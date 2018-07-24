@@ -37,11 +37,9 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.kakao.auth.AccessTokenCallback;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
-import com.kakao.auth.authorization.accesstoken.AccessToken;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
@@ -229,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Nullable
     public static String getHashKey(Context context) {
-        final String TAG = "KeyHash";
+        final String TAG = "[KAKAO] KeyHash";
         String keyHash = null;
 
         try {
