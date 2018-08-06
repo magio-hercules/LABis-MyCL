@@ -50,7 +50,7 @@ exports.postTotalContents = function(req, res) {
 	// 	query = _checkParams(query, params, req.body.user_id, table.Contents_list.publisher, true);
 	// }
 	// for sorting
-	query += " order by name asc, season asc";
+	query += " order by create_time desc, name asc, season asc";
 
 	bFirst = true;
 	common.doQuery(req, res, query, params);
