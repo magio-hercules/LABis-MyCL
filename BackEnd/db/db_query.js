@@ -66,6 +66,9 @@ module.exports = function () {
             // .../MyCL/update (id,age,gender,nickname,phone,image,uid)
             return 'UPDATE User SET ';
         },
+        updateLoginTime: function () {
+            return 'UPDATE User SET `login_time`=now() ';
+        },
 
         // request
         postRequestList: function () {

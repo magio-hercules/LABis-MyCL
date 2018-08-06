@@ -434,11 +434,20 @@ function _callback_login(req, res, params, error, result) {
 				console.log("[INFO][TEST] result[0].uid == req.body.uid : true");
 				// console.log('[DEBUG] idToken : ', idToken);
 
-				res.writeHead(200, {'Content-Type': 'application/json'});
+				console.log("[INFO] updateLoginTime");
+				var query = mysql_query.updateLoginTime();
+				var newParams = [];
+				query = _checkParams(query, newParams, result[0].id, table.User.id);
 				
-				result[0]['token'] = idToken;
-				var jsonData = JSON.stringify(result);
-				res.end(jsonData);
+				bFirst = true;
+				return common.doOnlyQuery(req, res, query, newParams)
+				.then((ret) => {
+					res.writeHead(200, {'Content-Type': 'application/json'});
+					
+					result[0]['token'] = idToken;
+					var jsonData = JSON.stringify(result);
+					res.end(jsonData);
+				});
 			} else {
 				res.send({
 					"code":204,
