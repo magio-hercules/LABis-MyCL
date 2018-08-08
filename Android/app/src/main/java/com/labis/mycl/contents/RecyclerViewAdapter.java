@@ -104,6 +104,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + eof);
             } else {
                 holder.mThirdDivMy.setVisibility(View.GONE);
+                holder.mThirdDivMyStamp.setVisibility(View.VISIBLE);
             }
 
         } else if(mActivity.modeStatus == "TOTAL") {
