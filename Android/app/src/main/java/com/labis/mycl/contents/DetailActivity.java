@@ -20,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -72,6 +73,12 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_chapter)
     TextView chapterView;
 
+    //EVOL
+    @BindView(R.id.detail_complete_div)
+    LinearLayout detailCompleteDiv;
+    @BindView(R.id.detail_switch_complete)
+    Switch detailComplete;
+
     @BindView(R.id.detail_title)
     TextView detailTitle;
 
@@ -106,10 +113,9 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_option_btn)
     Button optionBtn;
 
+    //즐겨찾기
     @BindView(R.id.detail_fav_div)
     LinearLayout detailFavoriteTotalDiv;
-    @BindView(R.id.detail_fav_image_layout)
-    LinearLayout detailFavoriteDiv;
     @BindView(R.id.detail_image_favorite)
     ImageView favoriteImageView;
 
@@ -139,6 +145,7 @@ public class DetailActivity extends AppCompatActivity {
     // Info Data
     private int chapterIndex;
     private int favoiteFlag;
+    private int completeFlag;
     private String feelingStr;
 
     private String curImageUrl;
@@ -191,6 +198,7 @@ public class DetailActivity extends AppCompatActivity {
 
         chapterIndex = orgContentInfo.chapter;
         favoiteFlag = orgContentInfo.favorite;
+        completeFlag = orgContentInfo.score;
         if(orgContentInfo.comment ==  null) orgContentInfo.comment ="";
         feelingStr = orgContentInfo.comment;
         genID = orgContentInfo.gen_id;
@@ -231,6 +239,16 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
         });
+
+        detailComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    completeFlag = 1;
+                } else {
+                    completeFlag = 0;
+                }
+            }
+        });
     }
 
     private void inflateContent(Content Item) {
@@ -248,6 +266,16 @@ public class DetailActivity extends AppCompatActivity {
             String eof = " 화";
             if(genID.equals("A00")) eof = " 권";
             chapterView.setText(String.valueOf(chapterIndex) + eof);
+
+            //완결 표시
+            detailCompleteDiv.setVisibility(View.VISIBLE);
+            if (completeFlag == 1) {
+                //completeImageView.setImageResource(R.mipmap.bookmark_complete_on);
+                detailComplete.setChecked(true);
+            } else {
+                //completeImageView.setImageResource(R.mipmap.bookmark_complete);
+                detailComplete.setChecked(false);
+            }
         }
 
         // 타이틀
@@ -373,6 +401,9 @@ public class DetailActivity extends AppCompatActivity {
         if(orgContentInfo.favorite != favoiteFlag ) {
             result = true;        // 즐겨찾기 정보
         }
+        if(orgContentInfo.score != completeFlag ) {
+            result = true;        // 완결 정보
+        }
         if(orgContentInfo.comment != feelingStr ) {
             result = true;        // 감상평
         }
@@ -386,7 +417,7 @@ public class DetailActivity extends AppCompatActivity {
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
 
-        retroClient.postUpdateMyContents(orgContentInfo.id, userID, chapterIndex, favoiteFlag, feelingStr, new RetroCallback() {
+        retroClient.postUpdateMyContents(orgContentInfo.id, userID, chapterIndex, favoiteFlag, completeFlag, feelingStr, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Toast.makeText(getApplicationContext(), "서버 접속 실패", Toast.LENGTH_SHORT).show();
@@ -472,6 +503,7 @@ public class DetailActivity extends AppCompatActivity {
             favoriteImageView.setImageResource(R.mipmap.bookmark_favorite_on);
         }
     }
+
 
     @OnClick(R.id.temp_image)
     void AppBarClick() {

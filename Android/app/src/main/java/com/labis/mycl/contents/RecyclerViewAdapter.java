@@ -98,13 +98,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             // Chapter Info
             String genID = mItems.get(position).gen_id;
             if(!isNoChapterGenre(genID)) {
-                holder.mThirdDivMy.setVisibility(View.VISIBLE);
-                String eof = "화";
-                if(genID.equals("A00")) eof = "권";
-                holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + eof);
+                // 완결 여부 0 :  미결 / 1 : 완결
+                if(mItems.get(position).score == 0) {
+                    holder.mThirdDivMy.setVisibility(View.VISIBLE);
+                    String eof = "화";
+                    if(genID.equals("A00")) eof = "권";
+                    holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + eof);
+                } else {
+                    holder.mThirdDivMyStamp.setVisibility(View.VISIBLE);
+                }
             } else {
                 holder.mThirdDivMy.setVisibility(View.GONE);
-                holder.mThirdDivMyStamp.setVisibility(View.VISIBLE);
             }
 
         } else if(mActivity.modeStatus == "TOTAL") {
@@ -178,14 +182,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         }
     }
 
-    private void updateChapter(final int position, int value) {
+    private void updateChapter(final int position, int chapter) {
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(mContext);
         progressDoalog.setMessage("잠시만 기다리세요....");
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
 
-        mActivity.retroClient.postUpdateMyContents(mItems.get(position).id, mActivity.userData.id, value, mItems.get(position).favorite, mItems.get(position).comment, new RetroCallback() {
+        mActivity.retroClient.postUpdateMyContents(mItems.get(position).id, mActivity.userData.id, chapter, mItems.get(position).favorite, mItems.get(position).score, mItems.get(position).comment, new RetroCallback() {
 
             @Override
             public void onError(Throwable t) {

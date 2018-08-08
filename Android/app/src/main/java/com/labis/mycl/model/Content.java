@@ -19,13 +19,13 @@ public class Content implements Serializable {
 
     // content_my table
     public String user_id;
-    public String score;
+    public int score;
     public String comment;
     public int chapter;
     public int favorite;
 
     public Content(String id, String gen_id, int season, String name, String name_org, int chapter_end, int theatrical, String series_id, String summary,
-                   String publisher, int auth, String image, String user_id, String score, String comment, int chapter, int favorite) {
+                   String publisher, int auth, String image, String user_id, int score, String comment, int chapter, int favorite) {
         this.id = id;
         this.gen_id = gen_id;
         this.season = season;

@@ -193,8 +193,8 @@ public class RetroClient {
         });
     }
 
-    public void postUpdateMyContents(String id, String userid, int chapter, int favorite, String comment, final RetroCallback callback) {
-        apiService.postUpdateMyContents(id, userid, chapter, favorite, comment).enqueue(new Callback<Register>() {
+    public void postUpdateMyContents(String id, String userid, int chapter, int favorite, int score, String comment, final RetroCallback callback) {
+        apiService.postUpdateMyContents(id, userid, chapter, favorite, score, comment).enqueue(new Callback<Register>() {
             @Override
             public void onResponse(Call<Register> call, Response<Register> response) {
                 if (response.isSuccessful()) {

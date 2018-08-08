@@ -170,7 +170,7 @@
                     android:id="@+id/detail_genre_div"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.6"
                     android:orientation="vertical"
                     android:padding="10dp">
                     <TextView
@@ -179,7 +179,6 @@
                         android:layout_height="24dp"
                         android:text="장르"
                         android:textSize="12sp" />
-
                     <TextView
                         android:id="@+id/detail_genre"
                         android:layout_width="match_parent"
@@ -193,7 +192,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/border"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.65"
                     android:orientation="vertical"
                     android:padding="10dp"
                     android:visibility="gone">
@@ -215,15 +214,42 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/detail_theater_div"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.6"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_marginLeft="-1dp"
+                    android:background="@drawable/border"
+                    android:visibility="gone">
+                    <TextView
+                        android:id="@+id/detail_text_theater"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:text="극장판"
+                        android:textSize="12sp" />
+                    <Switch
+                        android:id="@+id/detail_switch_theater"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:paddingBottom="4dp"
+                        android:clickable="false"
+                        android:switchMinWidth="60dp"
+                        android:track="@drawable/bg_switch_track" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/detail_fav_div"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.65"
                     android:background="@drawable/border"
                     android:layout_marginLeft="-1dp"
                     android:orientation="vertical"
-                    android:visibility="gone"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    android:visibility="gone">
                     <TextView
                         android:id="@+id/detail_text_fav"
                         android:layout_width="match_parent"
@@ -246,36 +272,38 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/detail_theater_div"
+                    android:id="@+id/detail_complete_div"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:orientation="vertical"
-                    android:padding="10dp"
-                    android:layout_marginLeft="-1dp"
+                    android:layout_weight="0.65"
                     android:background="@drawable/border"
-                    android:visibility="gone">
-
+                    android:layout_marginLeft="-1dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:padding="10dp">
                     <TextView
-                        android:id="@+id/detail_text_theater"
+                        android:id="@+id/detail_text_complete"
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
-                        android:text="극장판"
+                        android:text="완결"
                         android:textSize="12sp" />
-
-                    <Switch
-                        android:id="@+id/detail_switch_theater"
+                    <LinearLayout
+                        android:id="@+id/detail_complete_image_layout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="right"
-                        android:paddingBottom="4dp"
-                        android:clickable="false"
-                        android:switchMinWidth="60dp"
-                        android:track="@drawable/bg_switch_track" />
+                        android:gravity="center">
+                        <Switch
+                            android:id="@+id/detail_switch_complete"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="right"
+                            android:paddingBottom="4dp"
+                            android:switchMinWidth="50dp"
+                            android:track="@drawable/bg_switch_track" />
+                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/detail_summmary_div"
