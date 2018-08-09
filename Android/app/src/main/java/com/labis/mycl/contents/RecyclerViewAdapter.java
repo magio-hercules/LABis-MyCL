@@ -102,7 +102,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 if(mItems.get(position).score == 0) {
                     holder.mThirdDivMy.setVisibility(View.VISIBLE);
                     String eof = "화";
-                    if(genID.equals("A00")) eof = "권";
+                    if(genID.indexOf('A') != -1) eof = "권";
                     holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + eof);
                 } else {
                     holder.mThirdDivMyStamp.setVisibility(View.VISIBLE);
@@ -177,6 +177,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             Intent i = new Intent(mActivity, DetailActivity.class);
             i.putExtra("CONTENT", mItems.get(position));
             i.putExtra("MODE", mActivity.modeStatus);
+            i.putExtra("USER", mActivity.userData.id);
             mActivity.startActivityForResult(i, mActivity.PICK_EDIT_REQUEST);
             mActivity.overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
         }

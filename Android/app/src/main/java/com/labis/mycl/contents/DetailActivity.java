@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -264,7 +265,7 @@ public class DetailActivity extends AppCompatActivity {
         if(!isNoChapterGenre(Item.gen_id) && modeStatus.equals("MY")) {
             detailChapterDiv.setVisibility(View.VISIBLE);
             String eof = " 화";
-            if(genID.equals("A00")) eof = " 권";
+            if(genID.indexOf('A') != -1) eof = " 권";
             chapterView.setText(String.valueOf(chapterIndex) + eof);
 
             //완결 표시
@@ -417,6 +418,7 @@ public class DetailActivity extends AppCompatActivity {
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
 
+        Log.d(TAG,"EVOL = " + userID);
         retroClient.postUpdateMyContents(orgContentInfo.id, userID, chapterIndex, favoiteFlag, completeFlag, feelingStr, new RetroCallback() {
             @Override
             public void onError(Throwable t) {

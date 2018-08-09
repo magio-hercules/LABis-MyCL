@@ -157,7 +157,7 @@ public class HelpActivity extends AppCompatActivity {
                         helpDescription.setHint("사용중 불편함이 있으면 건의해 주세요.");
                         break;
                     case "탈퇴 요청":
-                        helpDescription.setHint("탈퇴 이유를 간단히 적어주세요.");
+                        helpDescription.setHint("탈퇴 이유를 간단히 적어주세요.\n\r\n\r(※ 카카오톡 계정 로그인시 탈퇴 신청후 앱을 직접 삭제하셔야 탈퇴 처리 완료 됩니다. 내콘텐츠는 카카오톡 계정 정보를 보유하지 않습니다.)");
                         break;
                     case "개발자에게":
                         helpDescription.setHint("개발자들에게 하고 싶은 말을 해주세요.");
