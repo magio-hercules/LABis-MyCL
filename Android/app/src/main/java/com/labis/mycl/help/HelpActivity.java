@@ -2,6 +2,8 @@ package com.labis.mycl.help;
 
 import android.app.ProgressDialog;
 import android.app.Service;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -55,8 +57,16 @@ public class HelpActivity extends AppCompatActivity {
     EditText helpDescription;
     @BindView(R.id.detail_ok_btn)
     Button sendButton;
-    @BindView(R.id.app_info)
-    TextView appInfo;
+
+
+    @BindView(R.id.app_developer)
+    TextView appDeveloper;
+    @BindView(R.id.app_version)
+    TextView appVersion;
+    @BindView(R.id.app_update)
+    TextView appUpdate;
+    @BindView(R.id.app_privacy)
+    TextView appPrivacy;
 
     private Toolbar toolbar;
     private AdView mAdView;
@@ -188,16 +198,25 @@ public class HelpActivity extends AppCompatActivity {
         initHelpImage();
         retroClient = RetroClient.getInstance(this).createBaseApi();
 
-        String txt = "- 개발자 : Labis Corp.(쫑미니, 쿨영후니, 에볼)\n- 버전 : 1.0.0\n- 업데이트 날짜 : ‘18.06.22\n- 다운로드 크기 : 5.5MB\n- 개인정보처리방침 : http://evolhim.net";
-        appInfo.setText(txt);
+        appDeveloper.setText("- 개발자 : Labis Corp.(쫑미니, 쿨영후니, 에볼)");
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+            appVersion.setText("- 버전 : " + version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            appVersion.setText("- 버전 : Unknown");
+        }
+        appUpdate.setText("- 업데이트 날짜 : 2018 / 08 / 09");
+        appPrivacy.setText("- 개인정보처리방침 : http://labis.co.kr/mycl");
         Linkify.TransformFilter mTransform = new Linkify.TransformFilter() {
             @Override
             public String transformUrl(Matcher match, String url) {
                 return "";
             }
         };
-        Pattern pattern1 = Pattern.compile("http://evolhim.net");
-        Linkify.addLinks(appInfo, pattern1, "http://evolhim.net", null, mTransform);
+        Pattern pattern1 = Pattern.compile("http://labis.co.kr/mycl");
+        Linkify.addLinks(appPrivacy, pattern1, "http://labis.co.kr/mycl", null, mTransform);
 
     }
 
