@@ -142,7 +142,7 @@
 
         <LinearLayout
             android:id="@+id/thirdDivMyListStamp"
-            android:layout_width="72dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_marginRight="6dp"
             android:layout_toRightOf="@+id/secondDiv"
