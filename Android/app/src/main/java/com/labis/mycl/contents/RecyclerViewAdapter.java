@@ -48,7 +48,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     // 필수 오버라이드 : 재활용되는 View 가 호출, Adapter 가 해당 position 에 해당하는 데이터를 결합
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
-
         if (mActivity.editContents.contains(mItems.get(position))) {
             holder.mContentItemDiv.setBackgroundColor(Color.parseColor("#F0F0F0"));
         } else {
@@ -100,14 +99,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             if(!isNoChapterGenre(genID)) {
                 // 완결 여부 0 :  미결 / 1 : 완결
                 if(mItems.get(position).score == 0) {
+                    holder.mThirdDivMyStamp.setVisibility(View.GONE);
                     holder.mThirdDivMy.setVisibility(View.VISIBLE);
                     String eof = "화";
                     if(genID.indexOf('A') != -1) eof = "권";
                     holder.mIndex.setText(String.valueOf(mItems.get(position).chapter) + eof);
                 } else {
+                    holder.mThirdDivMy.setVisibility(View.GONE);
                     holder.mThirdDivMyStamp.setVisibility(View.VISIBLE);
                 }
             } else {
+                holder.mThirdDivMyStamp.setVisibility(View.GONE);
                 holder.mThirdDivMy.setVisibility(View.GONE);
             }
 
