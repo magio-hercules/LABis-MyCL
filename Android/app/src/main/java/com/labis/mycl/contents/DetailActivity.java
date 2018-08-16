@@ -123,8 +123,8 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_scroll_view)
     ScrollView scrollView;
 
-    @BindView(R.id.adview_layout)
-    LinearLayout adviewLayout;
+    //@BindView(R.id.adview_layout)
+    //LinearLayout adviewLayout;
 
     private Handler mHandler = new Handler ();
     private SoftKeyboard softKeyboard;
@@ -222,13 +222,14 @@ public class DetailActivity extends AppCompatActivity {
         inflateContent(orgContentInfo);
 
         // for AD
-        AdRequest adRequest = new AdRequest.Builder().build();
+       /* AdRequest adRequest = new AdRequest.Builder().build();
 
         mAdView = findViewById(R.id.adView);
         mAdView.loadAd(adRequest);
 
         mAdViewPoster = findViewById(R.id.adView_poster);
         mAdViewPoster.loadAd(adRequest);
+        */
 
         detailFeeling.addTextChangedListener(new TextWatcher() {
             @Override
@@ -535,7 +536,7 @@ public class DetailActivity extends AppCompatActivity {
             detailZoom.setLayoutParams(layoutParams);
 
             orgImgView.setVisibility(View.VISIBLE);
-            adviewLayout.setVisibility(View.VISIBLE);
+            //adviewLayout.setVisibility(View.VISIBLE);
 
             if(posterLoadFlag && curImageUrl != null && curImageUrl.length() > 10) {
                 String imageUrl = curImageUrl.replace("/resize/", "/images/");
@@ -558,7 +559,7 @@ public class DetailActivity extends AppCompatActivity {
             detailZoom.setLayoutParams(layoutParams);
 
             orgImgView.setVisibility(View.GONE);
-            adviewLayout.setVisibility(View.GONE);
+            //adviewLayout.setVisibility(View.GONE);
         }
     }
 

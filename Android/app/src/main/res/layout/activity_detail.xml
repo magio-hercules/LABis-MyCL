@@ -47,12 +47,11 @@
                     android:src="@mipmap/zoom_in" />
             </FrameLayout>
         </LinearLayout>
-
+<!--
         <LinearLayout
             android:id="@+id/adview_layout"
             android:layout_width="match_parent"
             android:visibility="gone"
-            android:background="#4C4C4F"
             android:layout_height="60dp">
 
             <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -63,9 +62,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 ads:adSize="BANNER"
+                android:visibility="gone"
                 ads:adUnitId="ca-app-pub-7240040702770473/1610551688" />
         </LinearLayout>
-
+-->
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
@@ -364,6 +364,7 @@
                 android:layout_marginTop="-1dp"
                 android:background="@drawable/border"
                 android:orientation="vertical"
+                android:visibility="gone"
                 android:padding="10dp">
                 <TextView
                     android:id="@+id/textAd"

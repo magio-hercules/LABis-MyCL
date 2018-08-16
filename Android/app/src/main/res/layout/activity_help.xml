@@ -139,53 +139,7 @@
                         android:text="전송"
                         android:textSize="14sp" />
                 </LinearLayout>
-
-
             </LinearLayout>
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/description_title_height"
-                android:background="@drawable/border2"
-                android:padding="4dp"
-                android:text="후원하기"
-                android:fontFamily="@font/nanumsquare"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorPrimary"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:layout_marginTop="12dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_gravity="center"
-                android:background="@drawable/border"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border2"
-                    android:padding="4dp"
-                    android:text="※ 여러분의 후원으로 운영되고 있습니다. (^_^)"
-                    android:textColor="#777777"
-                    android:textSize="13sp" />
-
-                <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/help_ad"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    ads:adSize="MEDIUM_RECTANGLE"
-                    ads:adUnitId="ca-app-pub-7240040702770473/7408862173"></com.google.android.gms.ads.AdView>
-            </LinearLayout>
-
 
             <TextView
                 android:layout_width="match_parent"

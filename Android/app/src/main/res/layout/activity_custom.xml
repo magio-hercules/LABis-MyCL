@@ -262,6 +262,7 @@
                 android:layout_marginTop="-1dp"
                 android:background="@drawable/border"
                 android:orientation="vertical"
+                android:visibility="gone"
                 android:padding="10dp">
                 <TextView
                     android:id="@+id/textAd"

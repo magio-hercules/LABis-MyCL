@@ -69,7 +69,6 @@ public class HelpActivity extends AppCompatActivity {
     TextView appPrivacy;
 
     private Toolbar toolbar;
-    private AdView mAdView;
 
     public static User userData;
 
@@ -112,22 +111,6 @@ public class HelpActivity extends AppCompatActivity {
         final SpinnerAdapter sAdapter = ArrayAdapter.createFromResource(this, R.array.helplist, R.layout.spinner_item);
         comboHelp.setAdapter(sAdapter);
 
-        // for ad
-        mAdView = findViewById(R.id.help_ad);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-        mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-//                LinearLayout layout = (LinearLayout)findViewById(R.id.layout_scroll_ad);
-//                layout.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-
-//                View v = mLayoutInflater.inflate(R.layout.reminder_item, parent, false);
-//                parent.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-//                ((ViewGroup) v).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-//                return v;
-            }
-        });
 
         // disable Focus
 //        LinearLayout layout = (LinearLayout)findViewById(R.id.layout_scroll_ad);
