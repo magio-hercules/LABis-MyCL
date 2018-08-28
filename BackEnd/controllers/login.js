@@ -63,6 +63,7 @@ exports.postRegister = function(req, res) {
 	console.log("[====] call postRegister");
 
 	var query = mysql_query.postRegister();
+	var params = [];
 	var user = {
 		id: req.body.id,
 		age: req.body.age,
@@ -72,8 +73,16 @@ exports.postRegister = function(req, res) {
 		image : req.body.image,
 		uid : req.body.uid
 	};
-	
-	common.doRequest(req, res, query, user);
+	params.push(user);
+	var update = {
+		id: req.body.id,
+		nickname: req.body.nickname,
+		image : req.body.image,
+		uid : req.body.uid
+	};
+	params.push(update);
+
+	common.doRequest(req, res, query, params);
 };
 
 
