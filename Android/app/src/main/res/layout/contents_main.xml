@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_marginTop="?attr/actionBarSize">
 
         <LinearLayout
@@ -64,7 +64,7 @@
                 android:alpha="0.8"
                 android:fontFamily="@font/nanumsquare"
                 android:gravity="bottom|center_horizontal"
-                android:text="'내 콘텐츠를 채워주세요''"
+                android:text="'[모든 콘텐츠]로 이동 후 콘텐츠를 추가해 주세요''"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="italic"
                 android:textSize="13sp" />

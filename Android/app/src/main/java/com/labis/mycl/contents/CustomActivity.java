@@ -42,8 +42,11 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.rest.RetroCallback;
@@ -59,6 +62,8 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+//import com.google.android.gms.ads.AdView;
 
 public class CustomActivity extends AppCompatActivity {
 
@@ -124,7 +129,13 @@ public class CustomActivity extends AppCompatActivity {
 
     private ProgressDialog progressDoalog;
     private SoftKeyboard softKeyboard;
-    private AdView mAdView;
+
+    // Google AD
+//    private AdView mAdView;
+
+    // Facebook AD
+    private AdView adViewCustom;
+
 
     boolean editSummaryFocus = false;
 
@@ -253,10 +264,22 @@ public class CustomActivity extends AppCompatActivity {
             }
         });
 
-        // for AD
-        mAdView = findViewById(R.id.custom_adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        // Google AD
+//        mAdView = findViewById(R.id.custom_adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
+
+        // facebook custom AD
+        LinearLayout adConCustom = (LinearLayout) findViewById(R.id.ad_facebook_con_custom);
+        adViewCustom = new AdView(this, getString(R.string.facebook_custom), AdSize.BANNER_HEIGHT_50);
+        adViewCustom.setAdListener(new AdListener() {
+            @Override public void onError(Ad ad, AdError adError) { Log.d(TAG,"Facebook custom AD load error (" + adError.getErrorMessage() + ")"); }
+            @Override public void onAdLoaded(Ad ad) { Log.d(TAG,"Facebook custom AD loaded)"); }
+            @Override public void onAdClicked(Ad ad) { }
+            @Override public void onLoggingImpression(Ad ad) { }
+        });
+        adConCustom.addView(adViewCustom);
+        adViewCustom.loadAd();
     }
 
 

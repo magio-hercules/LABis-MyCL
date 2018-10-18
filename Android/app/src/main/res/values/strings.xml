@@ -11,4 +11,9 @@
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="kakao_app_key">d439542553ccc1f0f1bc1e7cd042e8f3</string>
+
+    <string name="facebook_detail">269615950426588_269625737092276</string>
+    <string name="facebook_poster">269615950426588_269616217093228</string>
+    <string name="facebook_custom">269615950426588_269890683732448</string>
+    <string name="facebook_help">269615950426588_269892410398942</string>
 </resources>

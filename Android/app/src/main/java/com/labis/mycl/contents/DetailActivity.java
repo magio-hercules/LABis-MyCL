@@ -32,8 +32,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.rest.RetroCallback;
@@ -44,6 +47,8 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+//import com.google.android.gms.ads.AdView;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -123,8 +128,8 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_scroll_view)
     ScrollView scrollView;
 
-    //@BindView(R.id.adview_layout)
-    //LinearLayout adviewLayout;
+    @BindView(R.id.adview_layout)
+    LinearLayout adviewLayout;
 
     private Handler mHandler = new Handler ();
     private SoftKeyboard softKeyboard;
@@ -134,8 +139,13 @@ public class DetailActivity extends AppCompatActivity {
     private int screenW = 0;
     private int screenH = 0;
 
-    private AdView mAdView;
-    private AdView mAdViewPoster;
+    // Google AD
+//    private AdView mAdView;
+//    private AdView mAdViewPoster;
+
+    // Facebook AD
+    private AdView adViewDetail;
+    private AdView adViewPoster;
 
     // Original Item & Flag
     Content orgContentInfo = null;
@@ -230,6 +240,31 @@ public class DetailActivity extends AppCompatActivity {
         mAdViewPoster = findViewById(R.id.adView_poster);
         mAdViewPoster.loadAd(adRequest);
         */
+
+        // Facebook detail AD
+        LinearLayout adConDetail = (LinearLayout) findViewById(R.id.ad_facebook_con_detail);
+        adViewDetail = new AdView(this, getString(R.string.facebook_detail), AdSize.BANNER_HEIGHT_50);
+        adViewDetail.setAdListener(new AdListener() {
+            @Override public void onError(Ad ad, AdError adError) { Log.d(TAG,"Facebook detail AD load error (" + adError.getErrorMessage() + ")"); }
+            @Override public void onAdLoaded(Ad ad) { Log.d(TAG,"Facebook detail AD loaded)"); }
+            @Override public void onAdClicked(Ad ad) { }
+            @Override public void onLoggingImpression(Ad ad) { }
+        });
+        adConDetail.addView(adViewDetail);
+        adViewDetail.loadAd();
+
+        // Facebook poster AD
+        LinearLayout adConPoster = (LinearLayout) findViewById(R.id.ad_facebook_con_poster);
+        adViewPoster = new AdView(this, getString(R.string.facebook_poster), AdSize.BANNER_HEIGHT_50);
+        adViewPoster.setAdListener(new AdListener() {
+            @Override public void onError(Ad ad, AdError adError) { Log.d(TAG,"Facebook poster AD load error (" + adError.getErrorMessage() + ")"); }
+            @Override public void onAdLoaded(Ad ad) { Log.d(TAG,"Facebook poster AD loaded)"); }
+            @Override public void onAdClicked(Ad ad) { }
+            @Override public void onLoggingImpression(Ad ad) { }
+        });
+        adConPoster.addView(adViewPoster);
+        adViewPoster.loadAd();
+
 
         detailFeeling.addTextChangedListener(new TextWatcher() {
             @Override
@@ -491,6 +526,13 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public void onDestroy()
     {
+        if (adViewDetail != null) {
+            adViewDetail.destroy();
+        }
+        if (adViewPoster != null) {
+            adViewPoster.destroy();
+        }
+
         super.onDestroy();
         overridePendingTransition(R.anim.no_move_activity, R.anim.rightout_activity);
         softKeyboard.unRegisterSoftKeyboardCallback();
@@ -536,7 +578,7 @@ public class DetailActivity extends AppCompatActivity {
             detailZoom.setLayoutParams(layoutParams);
 
             orgImgView.setVisibility(View.VISIBLE);
-            //adviewLayout.setVisibility(View.VISIBLE);
+            adviewLayout.setVisibility(View.VISIBLE);
 
             if(posterLoadFlag && curImageUrl != null && curImageUrl.length() > 10) {
                 String imageUrl = curImageUrl.replace("/resize/", "/images/");
@@ -559,7 +601,7 @@ public class DetailActivity extends AppCompatActivity {
             detailZoom.setLayoutParams(layoutParams);
 
             orgImgView.setVisibility(View.GONE);
-            //adviewLayout.setVisibility(View.GONE);
+            adviewLayout.setVisibility(View.GONE);
         }
     }
 

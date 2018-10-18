@@ -74,6 +74,45 @@
                 </RelativeLayout>
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/description_title_height"
+                android:background="@drawable/border2"
+                android:padding="4dp"
+                android:text="광고"
+                android:fontFamily="@font/nanumsquare"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_gravity="center"
+                android:background="@drawable/border"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <!--<com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"-->
+                    <!--android:id="@+id/help_ad"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentBottom="true"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--ads:adSize="MEDIUM_RECTANGLE"-->
+                    <!--ads:adUnitId="ca-app-pub-7240040702770473/7408862173"></com.google.android.gms.ads.AdView>-->
+                <LinearLayout
+                    android:id="@+id/ad_facebook_con_help"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/help_request_title"
