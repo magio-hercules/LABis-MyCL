@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_remove_ad"
+        android:title="광고 제거"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/action_total_contents"
         android:title="모든 콘텐츠 이동"
         app:showAsAction="never"/>

@@ -51,7 +51,7 @@
         <LinearLayout
             android:id="@+id/adview_layout"
             android:layout_width="match_parent"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_height="60dp">
 
             <!--<com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"-->
@@ -92,6 +92,46 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/detail_ad_zone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="66dp"
+                android:layout_marginTop="-1dp"
+                android:background="@drawable/border"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:padding="10dp">
+                <TextView
+                    android:id="@+id/textAd"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:text="광고"
+                    android:textSize="12sp" />
+                <!--<ImageView-->
+                <!--android:id="@+id/deatal_ad_image"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@mipmap/temp_ad"-->
+                <!--android:scaleType="centerCrop" />-->
+                <!--<com.google.android.gms.ads.AdView-->
+                <!--xmlns:ads="http://schemas.android.com/apk/res-auto"-->
+                <!--android:id="@+id/adView"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--ads:adSize="BANNER"-->
+                <!--ads:adUnitId="ca-app-pub-7240040702770473/7218942875">-->
+                <!--</com.google.android.gms.ads.AdView>-->
+                <LinearLayout
+                    android:id="@+id/ad_facebook_con_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/detail_chapter_div"
@@ -363,45 +403,7 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/detail_ad_zone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="66dp"
-                android:layout_marginTop="-1dp"
-                android:background="@drawable/border"
-                android:orientation="vertical"
-                android:visibility="visible"
-                android:padding="10dp">
-                <TextView
-                    android:id="@+id/textAd"
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:text="광고"
-                    android:textSize="12sp" />
-                <!--<ImageView-->
-                    <!--android:id="@+id/deatal_ad_image"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:background="@mipmap/temp_ad"-->
-                    <!--android:scaleType="centerCrop" />-->
-                <!--<com.google.android.gms.ads.AdView-->
-                    <!--xmlns:ads="http://schemas.android.com/apk/res-auto"-->
-                    <!--android:id="@+id/adView"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_centerHorizontal="true"-->
-                    <!--android:layout_alignParentBottom="true"-->
-                    <!--ads:adSize="BANNER"-->
-                    <!--ads:adUnitId="ca-app-pub-7240040702770473/7218942875">-->
-                <!--</com.google.android.gms.ads.AdView>-->
-                <LinearLayout
-                    android:id="@+id/ad_facebook_con_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:orientation="vertical"/>
-            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>

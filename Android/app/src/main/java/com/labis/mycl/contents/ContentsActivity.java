@@ -30,6 +30,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.Constants;
+import com.anjlab.android.iab.v3.SkuDetails;
+import com.anjlab.android.iab.v3.TransactionDetails;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
@@ -59,9 +63,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ContentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ContentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BillingProcessor.IBillingHandler {
 
     private static final String TAG = "ContentsActivity";
+
+    // Remove ADs
+    public boolean RemoveAD = false;
+    private BillingProcessor mBillingProcessor;
+    public String InAppProductID= "t1100";
 
     // -- Choi Uk / Global Variable Section -- ////////////////////////////////////////
     public RetroClient retroClient;
@@ -112,6 +121,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contents);
         ButterKnife.bind(this);
+
+        // - InApp & Remove AD
+        mBillingProcessor = new BillingProcessor(this, getResources().getString(R.string.licence_key), this);
+        mBillingProcessor.initialize();
+        RemoveAD = mBillingProcessor.isPurchased(InAppProductID);
 
         // -- ToolBar -- //
         toolbar = (Toolbar) findViewById(R.id.content_toolbar);
@@ -965,6 +979,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             }
             return;
         }
+
+        // 해당 부분이 있는 경우에는 그런 현상이 발생되지 않았음.
+        if (mBillingProcessor.handleActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
     }
 
     @Override
@@ -992,7 +1011,10 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_total_contents) {
+        if (id == R.id.action_remove_ad) {
+            purchaseProduct(InAppProductID);
+            return true;
+        } else if (id == R.id.action_total_contents) {
             loadTotalContent();
             return true;
         } else if (id == R.id.action_my_contents) {
@@ -1090,6 +1112,79 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         LoginData loginData = new LoginData(userData, null);
         i.putExtra("LoingData", loginData);
         startActivity(i);
+    }
+
+
+    ///-- InApp Purchase -- //
+
+
+    /** 구매하기 */
+    public void purchaseProduct(final String productId) {
+
+        ///Toast.makeText(this,"인앱결제 테스트", Toast.LENGTH_SHORT).show();
+
+
+        if(!mBillingProcessor.isPurchased(productId)){
+            // 구매하였으면 소비하여 없앤 후 다시 구매하게 하는 로직. 만약 1번 구매 후 계속 이어지게 할 것이면 아래 함수는 주석처리.
+            //mBillingProcessor.consumePurchase(productId);
+
+            mBillingProcessor.purchase(this, productId);
+        }
+    }
+
+    @Override
+    public void onBillingInitialized() {
+        /*
+         * - 아이템 이름만 가져오는 경우 SkuDetails.title.replaceAll("\\(.*\\)", "")
+         * - SkuDetails.priceText: 아이템 가격에 현지 화폐 단위를 붙인 String을 리턴한다. 예를들면 '1.99$'이런 식이다.
+         * - SkuDetails.priceLong: 가격을 long 으로 리턴한다. 1.99 이런식이다.
+         * - SkuDetails.productId: 제품ID(sku)를 가지고 온다. 이를 통해서 어떤 아이템을 구매했는지 판별 가능하다.
+
+        SkuDetails mProduct = mBillingProcessor.getPurchaseListingDetails(InAppProductID);
+        if(mProduct != null) {
+            String temp = mProduct.productId + " / " + mProduct.priceText + " / " + mProduct.priceValue + " / " + mProduct.priceLong;
+            Log.d(TAG, temp);
+            Toast.makeText(this, temp, Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d(TAG, "mProduct is null.");
+        }
+
+        // 연속 구매 테스트 TEST
+        //mBillingProcessor.consumePurchase(InAppProductID);
+        //RemoveAD = false;
+        */
+    }
+
+    @Override
+    public void onProductPurchased(String productId, TransactionDetails details) {
+        // 구매한 아이템 정보
+        String purchaseMessage = getResources().getString(R.string.purchase_app_thankyou);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(purchaseMessage)
+                .setCancelable(false)
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        RemoveAD = true;
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    public void onBillingError(int errorCode, Throwable error) {
+        if (errorCode != Constants.BILLING_RESPONSE_RESULT_USER_CANCELED) {
+            String errorMessage = "구매 에러 발생 " + " (Code " + errorCode + ")";
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onPurchaseHistoryRestored() {
+        /*
+         * Called when purchase history was restored and the list of all owned PRODUCT ID's
+         * was loaded from Google Play
+         */
     }
 
 }

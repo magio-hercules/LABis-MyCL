@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="server_client_id">120460472721-9vso15gflfj46ie69bdklvmakbeon9hu.apps.googleusercontent.com</string>
+    <string name="purchase_app_thankyou">정상적으로 구매 처리 되었습니다.\n감사합니다.</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -16,4 +17,8 @@
     <string name="facebook_poster">269615950426588_269616217093228</string>
     <string name="facebook_custom">269615950426588_269890683732448</string>
     <string name="facebook_help">269615950426588_269892410398942</string>
+
+    <string name="licence_key">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApDT7vFi8nEdGQij9yFtyHWihGyhuilGVuz0zW9q2oHJGD09Q9ogR/bLzkYl+rMzVjgKnT6Bf+0aQ8kXaux7tONgxCzWymuK+FLU9Zf/NGLqXcavj7YKeHqZhFKJv4RQNm3ViM18r2I8nRPjafPn854wN1RazR9Pbwlw/0fISUCnQz+EZvmtYZTZOwcHn7B7UMWfjB4rIYT3e3FmHsU2ZZMd5nfW2Avvh6h5uyLqcw1NMmuQyCQ1YRNZj7SuO7ViLUrYGj97/cKhISxvZ/mEzjdnFgEsO5HEtF84H9jCMtdn+1QA1C/oiiCq1wJsYnY4Eoba3MLM3wNJWjLvXYOLilQIDAQAB</string>
+
+
 </resources>
