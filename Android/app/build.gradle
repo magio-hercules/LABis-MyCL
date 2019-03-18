@@ -6,8 +6,8 @@ android {
         applicationId "com.labis.mycl"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 11
-        versionName "1.2.0"
+        versionCode 12
+        versionName "1.2.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
