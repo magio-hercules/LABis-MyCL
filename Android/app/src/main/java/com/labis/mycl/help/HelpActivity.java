@@ -31,6 +31,7 @@ import com.facebook.ads.AdListener;
 import com.facebook.ads.AdSize;
 import com.facebook.ads.AdView;
 import com.labis.mycl.R;
+import com.labis.mycl.contents.ContentsActivity;
 import com.labis.mycl.model.LoginData;
 import com.labis.mycl.model.User;
 import com.labis.mycl.rest.RetroCallback;
@@ -63,7 +64,6 @@ public class HelpActivity extends AppCompatActivity {
     @BindView(R.id.detail_ok_btn)
     Button sendButton;
 
-
     @BindView(R.id.app_developer)
     TextView appDeveloper;
     @BindView(R.id.app_version)
@@ -72,6 +72,9 @@ public class HelpActivity extends AppCompatActivity {
     TextView appUpdate;
     @BindView(R.id.app_privacy)
     TextView appPrivacy;
+
+    @BindView(R.id.help_ad_zone)
+    LinearLayout helpADzone;
 
     private Toolbar toolbar;
 
@@ -192,7 +195,7 @@ public class HelpActivity extends AppCompatActivity {
         initHelpImage();
         retroClient = RetroClient.getInstance(this).createBaseApi();
 
-        appDeveloper.setText("- 개발자 : Labis Corp.(쫑미니, 쿨영후니, 에볼)");
+        appDeveloper.setText("- 개발자 : LABIS. (쫑미니, 쿨영후니, 에볼)");
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
@@ -202,12 +205,8 @@ public class HelpActivity extends AppCompatActivity {
             appVersion.setText("- 버전 : Unknown");
         }
 
-        long now = System.currentTimeMillis();
-        Date date = new Date(now);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy / MM / dd");
 
-        String today = sdf.format(date);
-        appUpdate.setText("- 업데이트 날짜 : " + today);
+        appUpdate.setText("- 업데이트 날짜 : " + "2019 / 03 / 18");
         appPrivacy.setText("- 개인정보처리방침 : http://labis.co.kr/mycl");
         Linkify.TransformFilter mTransform = new Linkify.TransformFilter() {
             @Override
@@ -218,17 +217,23 @@ public class HelpActivity extends AppCompatActivity {
         Pattern pattern1 = Pattern.compile("http://labis.co.kr/mycl");
         Linkify.addLinks(appPrivacy, pattern1, "http://labis.co.kr/mycl", null, mTransform);
 
-        // Facebook detail AD
-        LinearLayout adConHelp = (LinearLayout) findViewById(R.id.ad_facebook_con_help);
-        adViewHelp = new AdView(this, getString(R.string.facebook_help), AdSize.BANNER_HEIGHT_90);
-        adViewHelp.setAdListener(new AdListener() {
-            @Override public void onError(Ad ad, AdError adError) { Log.d(TAG,"Facebook detail AD load error (" + adError.getErrorMessage() + ")"); }
-            @Override public void onAdLoaded(Ad ad) { Log.d(TAG,"Facebook detail AD loaded)"); }
-            @Override public void onAdClicked(Ad ad) { }
-            @Override public void onLoggingImpression(Ad ad) { }
-        });
-        adConHelp.addView(adViewHelp);
-        adViewHelp.loadAd();
+
+        if(ContentsActivity.RemoveAD) {
+            helpADzone.setVisibility(View.GONE);
+        } else {
+            // Facebook detail AD
+            LinearLayout adConHelp = (LinearLayout) findViewById(R.id.ad_facebook_con_help);
+            adViewHelp = new AdView(this, getString(R.string.facebook_help), AdSize.BANNER_HEIGHT_90);
+            adViewHelp.setAdListener(new AdListener() {
+                @Override public void onError(Ad ad, AdError adError) { Log.d(TAG,"Facebook detail AD load error (" + adError.getErrorMessage() + ")"); }
+                @Override public void onAdLoaded(Ad ad) { Log.d(TAG,"Facebook detail AD loaded)"); }
+                @Override public void onAdClicked(Ad ad) { }
+                @Override public void onLoggingImpression(Ad ad) { }
+            });
+            adConHelp.addView(adViewHelp);
+            adViewHelp.loadAd();
+        }
+
     }
 
     private void scrollToRequest() {

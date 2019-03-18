@@ -136,7 +136,6 @@ public class CustomActivity extends AppCompatActivity {
     // Facebook AD
     private AdView adViewCustom;
 
-
     boolean editSummaryFocus = false;
 
     @Override
@@ -269,17 +268,23 @@ public class CustomActivity extends AppCompatActivity {
 //        AdRequest adRequest = new AdRequest.Builder().build();
 //        mAdView.loadAd(adRequest);
 
-        // facebook custom AD
-        LinearLayout adConCustom = (LinearLayout) findViewById(R.id.ad_facebook_con_custom);
-        adViewCustom = new AdView(this, getString(R.string.facebook_custom), AdSize.BANNER_HEIGHT_50);
-        adViewCustom.setAdListener(new AdListener() {
-            @Override public void onError(Ad ad, AdError adError) { Log.d(TAG,"Facebook custom AD load error (" + adError.getErrorMessage() + ")"); }
-            @Override public void onAdLoaded(Ad ad) { Log.d(TAG,"Facebook custom AD loaded)"); }
-            @Override public void onAdClicked(Ad ad) { }
-            @Override public void onLoggingImpression(Ad ad) { }
-        });
-        adConCustom.addView(adViewCustom);
-        adViewCustom.loadAd();
+        if(ContentsActivity.RemoveAD) {
+            LinearLayout adConCustom = (LinearLayout) findViewById(R.id.custom_ad_zone);
+            adConCustom.setVisibility(View.GONE);
+        } else {
+            // facebook custom AD
+            LinearLayout adConCustom = (LinearLayout) findViewById(R.id.ad_facebook_con_custom);
+            adViewCustom = new AdView(this, getString(R.string.facebook_custom), AdSize.BANNER_HEIGHT_50);
+            adViewCustom.setAdListener(new AdListener() {
+                @Override public void onError(Ad ad, AdError adError) { Log.d(TAG,"Facebook custom AD load error (" + adError.getErrorMessage() + ")"); }
+                @Override public void onAdLoaded(Ad ad) { Log.d(TAG,"Facebook custom AD loaded)"); }
+                @Override public void onAdClicked(Ad ad) { }
+                @Override public void onLoggingImpression(Ad ad) { }
+            });
+            adConCustom.addView(adViewCustom);
+            adViewCustom.loadAd();
+        }
+
     }
 
 

@@ -6,8 +6,8 @@ android {
         applicationId "com.labis.mycl"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 7
-        versionName "1.1.4"
+        versionCode 11
+        versionName "1.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -21,36 +21,37 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:design:27.1.1'
-    testImplementation 'junit:junit:4.12'
     implementation 'com.google.firebase:firebase-auth:12.0.1'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.android.support:cardview-v7:27.1.1'
-    compile 'com.amazonaws:aws-android-sdk-core:2.2.+'
-    compile 'com.amazonaws:aws-android-sdk-s3:2.2.+'
-    compile 'com.amazonaws:aws-android-sdk-ddb:2.2.+'
-    compile 'com.google.firebase:firebase-core:12.0.1'
+    implementation 'com.amazonaws:aws-android-sdk-core:2.2.+'
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.2.+'
+    implementation 'com.amazonaws:aws-android-sdk-ddb:2.2.+'
+    implementation 'com.google.firebase:firebase-core:12.0.1'
     implementation 'com.google.firebase:firebase-ads:12.0.1'
-    compile 'com.google.android.gms:play-services-auth:12.0.1'
+    implementation 'com.google.android.gms:play-services-auth:12.0.1'
     implementation 'br.com.mauker.materialsearchview:materialsearchview:1.2.3'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
-    compile 'me.relex:circleindicator:1.2.2@aar'
-    compile group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
-    compile 'com.android.volley:volley:1.1.0'
-    compile 'com.android.support:recyclerview-v7:25.3.1' // Required Dependency by Audience Network SDK
-    compile 'com.facebook.android:audience-network-sdk:5.+'
-
+    implementation 'me.relex:circleindicator:1.2.2@aar'
+    implementation group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
+    implementation 'com.android.volley:volley:1.1.0'
+    implementation 'com.android.support:recyclerview-v7:25.3.1' // Required Dependency by Audience Network SDK
+    implementation 'com.facebook.android:audience-network-sdk:5.+'
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

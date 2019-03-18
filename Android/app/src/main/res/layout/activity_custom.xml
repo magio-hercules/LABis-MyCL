@@ -41,6 +41,33 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/custom_ad_zone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-1dp"
+                android:background="@drawable/border"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:padding="10dp">
+                <!--<com.google.android.gms.ads.AdView-->
+                <!--xmlns:ads="http://schemas.android.com/apk/res-auto"-->
+                <!--android:id="@+id/custom_adView"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--ads:adSize="BANNER"-->
+                <!--ads:adUnitId="ca-app-pub-7240040702770473/5576905758">-->
+                <!--</com.google.android.gms.ads.AdView>-->
+                <LinearLayout
+                    android:id="@+id/ad_facebook_con_custom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/HeaderDiv"
                 android:layout_width="match_parent"
                 android:layout_height="110dp"
@@ -225,6 +252,7 @@
                         android:track="@drawable/bg_switch_track" />
 
                 </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -234,6 +262,7 @@
                 android:layout_marginTop="-1dp"
                 android:background="@drawable/border"
                 android:orientation="vertical"
+                android:layout_marginBottom="44dp"
                 android:padding="10dp">
                 <TextView
                     android:id="@+id/textSummary"
@@ -254,39 +283,6 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/custom_ad_zone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="44dp"
-                android:layout_marginTop="-1dp"
-                android:background="@drawable/border"
-                android:orientation="vertical"
-                android:visibility="visible"
-                android:padding="10dp">
-                <TextView
-                    android:id="@+id/textAd"
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:text="광고"
-                    android:textSize="12sp" />
-                <!--<com.google.android.gms.ads.AdView-->
-                    <!--xmlns:ads="http://schemas.android.com/apk/res-auto"-->
-                    <!--android:id="@+id/custom_adView"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_centerHorizontal="true"-->
-                    <!--android:layout_alignParentBottom="true"-->
-                    <!--ads:adSize="BANNER"-->
-                    <!--ads:adUnitId="ca-app-pub-7240040702770473/5576905758">-->
-                <!--</com.google.android.gms.ads.AdView>-->
-                <LinearLayout
-                    android:id="@+id/ad_facebook_con_custom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:orientation="vertical"/>
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

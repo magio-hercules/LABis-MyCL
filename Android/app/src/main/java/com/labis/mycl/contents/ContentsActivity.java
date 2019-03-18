@@ -68,9 +68,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private static final String TAG = "ContentsActivity";
 
     // Remove ADs
-    public boolean RemoveAD = false;
+    public static boolean RemoveAD = false;
     private BillingProcessor mBillingProcessor;
-    public String InAppProductID= "t1100";
+    public String InAppProductID= "mycl1500";
 
     // -- Choi Uk / Global Variable Section -- ////////////////////////////////////////
     public RetroClient retroClient;
@@ -125,7 +125,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         // - InApp & Remove AD
         mBillingProcessor = new BillingProcessor(this, getResources().getString(R.string.licence_key), this);
         mBillingProcessor.initialize();
-        RemoveAD = mBillingProcessor.isPurchased(InAppProductID);
+        //RemoveAD = mBillingProcessor.isPurchased(InAppProductID);
+        RemoveAD = true;
 
         // -- ToolBar -- //
         toolbar = (Toolbar) findViewById(R.id.content_toolbar);
@@ -1004,6 +1005,12 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             item = contentsMainMenu.findItem(R.id.action_s3_url);
             item.setVisible(true);
         }
+
+        if(RemoveAD) {
+            MenuItem aditem = contentsMainMenu.findItem(R.id.action_remove_ad);
+            aditem.setVisible(false);
+        }
+
         return true;
     }
 

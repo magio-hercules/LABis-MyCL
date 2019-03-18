@@ -128,7 +128,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_scroll_view)
     ScrollView scrollView;
 
-    @BindView(R.id.adview_layout)
+    @BindView(R.id.poster_ad_zone)
     LinearLayout adviewLayout;
 
     private Handler mHandler = new Handler ();
@@ -241,30 +241,36 @@ public class DetailActivity extends AppCompatActivity {
         mAdViewPoster.loadAd(adRequest);
         */
 
-        // Facebook detail AD
-        LinearLayout adConDetail = (LinearLayout) findViewById(R.id.ad_facebook_con_detail);
-        adViewDetail = new AdView(this, getString(R.string.facebook_detail), AdSize.BANNER_HEIGHT_50);
-        adViewDetail.setAdListener(new AdListener() {
-            @Override public void onError(Ad ad, AdError adError) { Log.d(TAG,"Facebook detail AD load error (" + adError.getErrorMessage() + ")"); }
-            @Override public void onAdLoaded(Ad ad) { Log.d(TAG,"Facebook detail AD loaded)"); }
-            @Override public void onAdClicked(Ad ad) { }
-            @Override public void onLoggingImpression(Ad ad) { }
-        });
-        adConDetail.addView(adViewDetail);
-        adViewDetail.loadAd();
+        if(ContentsActivity.RemoveAD) {
+            LinearLayout adConDetail = (LinearLayout) findViewById(R.id.detail_ad_zone);
+            LinearLayout adConPoster = (LinearLayout) findViewById(R.id.poster_ad_zone);
+            adConDetail.setVisibility(View.GONE);
+            adConPoster.setVisibility(View.GONE);
+        } else {
+            // Facebook detail AD
+            LinearLayout adConDetail = (LinearLayout) findViewById(R.id.ad_facebook_con_detail);
+            adViewDetail = new AdView(this, getString(R.string.facebook_detail), AdSize.BANNER_HEIGHT_50);
+            adViewDetail.setAdListener(new AdListener() {
+                @Override public void onError(Ad ad, AdError adError) { Log.d(TAG,"Facebook detail AD load error (" + adError.getErrorMessage() + ")"); }
+                @Override public void onAdLoaded(Ad ad) { Log.d(TAG,"Facebook detail AD loaded)"); }
+                @Override public void onAdClicked(Ad ad) { }
+                @Override public void onLoggingImpression(Ad ad) { }
+            });
+            adConDetail.addView(adViewDetail);
+            adViewDetail.loadAd();
 
-        // Facebook poster AD
-        LinearLayout adConPoster = (LinearLayout) findViewById(R.id.ad_facebook_con_poster);
-        adViewPoster = new AdView(this, getString(R.string.facebook_poster), AdSize.BANNER_HEIGHT_50);
-        adViewPoster.setAdListener(new AdListener() {
-            @Override public void onError(Ad ad, AdError adError) { Log.d(TAG,"Facebook poster AD load error (" + adError.getErrorMessage() + ")"); }
-            @Override public void onAdLoaded(Ad ad) { Log.d(TAG,"Facebook poster AD loaded)"); }
-            @Override public void onAdClicked(Ad ad) { }
-            @Override public void onLoggingImpression(Ad ad) { }
-        });
-        adConPoster.addView(adViewPoster);
-        adViewPoster.loadAd();
-
+            // Facebook poster AD
+            LinearLayout adConPoster = (LinearLayout) findViewById(R.id.ad_facebook_con_poster);
+            adViewPoster = new AdView(this, getString(R.string.facebook_poster), AdSize.BANNER_HEIGHT_50);
+            adViewPoster.setAdListener(new AdListener() {
+                @Override public void onError(Ad ad, AdError adError) { Log.d(TAG,"Facebook poster AD load error (" + adError.getErrorMessage() + ")"); }
+                @Override public void onAdLoaded(Ad ad) { Log.d(TAG,"Facebook poster AD loaded)"); }
+                @Override public void onAdClicked(Ad ad) { }
+                @Override public void onLoggingImpression(Ad ad) { }
+            });
+            adConPoster.addView(adViewPoster);
+            adViewPoster.loadAd();
+        }
 
         detailFeeling.addTextChangedListener(new TextWatcher() {
             @Override

@@ -49,9 +49,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/adview_layout"
+            android:id="@+id/poster_ad_zone"
             android:layout_width="match_parent"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_height="60dp">
 
             <!--<com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"-->
@@ -97,18 +97,11 @@
                 android:id="@+id/detail_ad_zone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="66dp"
-                android:layout_marginTop="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:background="@drawable/border"
                 android:orientation="vertical"
                 android:visibility="visible"
                 android:padding="10dp">
-                <TextView
-                    android:id="@+id/textAd"
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:text="광고"
-                    android:textSize="12sp" />
                 <!--<ImageView-->
                 <!--android:id="@+id/deatal_ad_image"-->
                 <!--android:layout_width="match_parent"-->
@@ -383,6 +376,7 @@
                 android:visibility="gone"
                 android:layout_height="200dp"
                 android:layout_marginTop="-1dp"
+                android:layout_marginBottom="56dp"
                 android:background="@drawable/border"
                 android:orientation="vertical"
                 android:padding="10dp">
