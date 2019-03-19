@@ -493,7 +493,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public void loadMyContents() {
         progressDoalog.show();
         if (myContentsRefresh) {
-            Log.d(TAG, "EVOL REQUEST #2");
             retroClient.postMyContents(userData.id, new RetroCallback() {
                 @Override
                 public void onError(Throwable t) {
@@ -594,7 +593,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Log.d(TAG, "onNavigationItemSelected");
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -643,7 +641,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             selectedGenreId = genreId;
             item.setChecked(true);
 
-            Log.d(TAG, "title : " + selectedSubTitle + ", genreId : " + genreId);
             if (modeStatus.equals("MY")) {
                 filterJenreMyContents(selectedSubTitle, userData.id, genreId);
             } else if (modeStatus.equals("TOTAL")) {
@@ -676,8 +673,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void resetDrawerCheckedItem() {
-        Log.d(TAG, "resetDrawerCheckedItem()");
-
         isSearchMode = false;
         selectedGenreId = null;
         selectedSubTitle = null;
@@ -699,8 +694,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     // -- Filter , Search Section -- ////////////////////////////////////////
     private void searchContents(String query) {
-        Log.d(TAG, "searchContents");
-        Log.d(TAG, "query : " + query);
         resetDrawerCheckedItem();
         ArrayList<Content> searchContents = new ArrayList();
         for(Content item : ContentsList) {
@@ -719,11 +712,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void filterJenreMyContents(final String title, String userId, String gen_id) {
-        Log.d(TAG, "filterJenreMyContents");
-        Log.d(TAG, "doFilter() title : " + title);
-        Log.d(TAG, "doFilter() user_id : " + userId);
-        Log.d(TAG, "doFilter() gen_id : " + gen_id);
-
         ArrayList<Content> filterContents = new ArrayList();
         if(gen_id.equals("FAV")) {
             for(Content item : ContentsList) {
@@ -757,10 +745,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void filterJenreTotalContentsList(final String title, String gen_id) {
-        Log.d(TAG, "filterJenreContentsList");
-        Log.d(TAG, "doFilter() title : " + title);
-        Log.d(TAG, "doFilter() gen_id : " + gen_id);
-
         ArrayList<Content> filterContents = new ArrayList();
         for(Content item : ContentsList) {
             if(item.gen_id.equals(gen_id)) {
@@ -896,7 +880,6 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (modeStatus.equals("TOTAL")) {
-            Log.d(TAG, "EVOL REQUEST #1-3");
             loadMyContents();
         } else if (modeStatus.equals("MY")) {
             if (System.currentTimeMillis() - lastTimeBackPressed < 1500) {
@@ -1129,12 +1112,14 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         ///Toast.makeText(this,"인앱결제 테스트", Toast.LENGTH_SHORT).show();
 
-
         if(!mBillingProcessor.isPurchased(productId)){
             // 구매하였으면 소비하여 없앤 후 다시 구매하게 하는 로직. 만약 1번 구매 후 계속 이어지게 할 것이면 아래 함수는 주석처리.
             //mBillingProcessor.consumePurchase(productId);
-
             mBillingProcessor.purchase(this, productId);
+        } else {
+            RemoveAD = true;
+            Toast.makeText(this,"이미 결제가 완료 되었습니다", Toast.LENGTH_SHORT).show();
+            invalidateOptionsMenu();
         }
     }
 
@@ -1171,6 +1156,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         RemoveAD = true;
+                        invalidateOptionsMenu();
                     }
                 });
         AlertDialog alert = builder.create();
