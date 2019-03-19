@@ -125,8 +125,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         // - InApp & Remove AD
         mBillingProcessor = new BillingProcessor(this, getResources().getString(R.string.licence_key), this);
         mBillingProcessor.initialize();
-        //RemoveAD = mBillingProcessor.isPurchased(InAppProductID);
-        RemoveAD = true;
+        RemoveAD = mBillingProcessor.isPurchased(InAppProductID);
 
         // -- ToolBar -- //
         toolbar = (Toolbar) findViewById(R.id.content_toolbar);
