@@ -2,21 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_remove_ad"
-        android:title="광고 제거"
-        app:showAsAction="never"/>
-    <item
         android:id="@+id/action_total_contents"
-        android:title="모든 콘텐츠 이동"
+        android:title="모든 콘텐츠로 이동"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_my_contents"
-        android:title="내 콘텐츠 이동"
+        android:title="내 콘텐츠로 이동"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_edit_contents"
+        android:title="내 콘텐츠에서 삭제"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_custom_contents"
-        android:title="개인 콘텐츠 추가"
+        android:title="사용자가 직접 생성"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_search_contents"
@@ -24,12 +24,13 @@
         android:icon="@mipmap/ic_search"
         app:showAsAction="always" />
 
-    <item android:id="@+id/action_edit_contents"
-        android:title="콘텐츠 삭제"
-        app:showAsAction="never"/>
-
     <item android:id="@+id/action_help"
         android:title="문의 및 도움말"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_remove_ad"
+        android:title="광고 제거"
         app:showAsAction="never"/>
 
     <item

@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     private AuthManager authManager;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser currentUser;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     private boolean bAutoLogin;
 
@@ -123,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         retroClient = RetroClient.getInstance(this).createBaseApi();
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         bAutoLogin = false;
 
