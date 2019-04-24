@@ -1026,6 +1026,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             // 검색 기능 활성화
             searchView.openSearch();
             return true;
+        } else if (id == R.id.action_transfer_contents) {
+            if(modeStatus == "MY") {
+                loadTotalContent();
+            } else {
+                loadMyContents();
+            }
+            return true;
         } else if (id == R.id.action_edit_contents) {
             // 추가 삭제
             if(modeStatus == "MY") {

@@ -24,6 +24,11 @@
         android:icon="@mipmap/ic_search"
         app:showAsAction="always" />
 
+    <item android:id="@+id/action_transfer_contents"
+        android:title="이동"
+        android:icon="@mipmap/ic_data_transfer"
+        app:showAsAction="always" />
+
     <item android:id="@+id/action_help"
         android:title="문의 및 도움말"
         app:showAsAction="never"/>

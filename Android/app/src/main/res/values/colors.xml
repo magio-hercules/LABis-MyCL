@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#31445E</color>
+    <color name="colorPrimary">#26527A</color>
     <color name="colorPrimaryDark">#212832</color>
     <color name="colorAccent">#212832</color>
     <color name="pointColor">#D5D5D5</color>
-    <color name="actionBar">#CC3E64</color>
+    <color name="actionBar">#9E134B</color>
     <color name="recyclerView">#EEEEEE</color>
     <color name="colorOptionBtn">#C9758B</color>
+    <color name="itemTextMainColor">#31445E</color>
 </resources>
