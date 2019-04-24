@@ -36,12 +36,6 @@
         android:orientation="vertical"
         android:layout_marginTop="?attr/actionBarSize">
 
-        <com.facebook.ads.NativeAdLayout
-            android:id="@+id/native_banner_ad_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/myContentsView"
             android:layout_width="match_parent"

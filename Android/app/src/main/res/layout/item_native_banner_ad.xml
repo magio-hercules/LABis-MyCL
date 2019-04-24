@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<com.facebook.ads.NativeAdLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/native_banner_ad_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="9dp"
     android:layout_marginRight="9dp"
     android:clickable="true"
     android:focusable="true"
+    android:layout_alignParentBottom="true"
     android:background="@color/white">
 
     <LinearLayout
@@ -21,10 +22,10 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/content_genre_text"
+                android:id="@+id/native_content_genre_text"
                 android:layout_width="15dp"
                 android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
+                android:background="@color/white"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="광고"
                 android:textColor="#FFFFFFFF"
@@ -107,4 +108,4 @@
             android:visibility="gone" />
 
     </LinearLayout>
-</LinearLayout>
+</com.facebook.ads.NativeAdLayout>

@@ -13,8 +13,18 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdIconView;
+import com.facebook.ads.AdOptionsView;
+import com.facebook.ads.NativeAdListener;
+import com.facebook.ads.NativeBannerAd;
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.rest.RetroCallback;
@@ -22,8 +32,11 @@ import com.labis.mycl.util.PicassoTransformations;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final String TAG = "RecyclerViewAdapter";
 
     public ArrayList<Content> mItems;
     Context mContext;
@@ -35,19 +48,125 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         mItems = itemList;
     }
 
-
     // 필수 오버라이드 : View 생성
     @Override
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
 
-        return new RecyclerViewHolder(v);
+        View view;
+        RecyclerView.ViewHolder viewHolder;
+        if(viewType == 1){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+            viewHolder =  new RecyclerViewHolder(view);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_native_banner_ad, parent, false);
+            viewHolder = new RecyclerNativeAdViewHolder(view);
+        }
+
+        return viewHolder;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        // 2 : Native AD Return (9th Item List)
+        if(position > 0 && position % 8 == 0) {
+            return 2;
+        }
+
+        // 1 : Normal content List
+        return 1;
     }
 
     // 필수 오버라이드 : 재활용되는 View 가 호출, Adapter 가 해당 position 에 해당하는 데이터를 결합
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        switch (holder.getItemViewType()) {
+            case 1:
+                // 일반 리스트
+                RecyclerViewHolder h1 = (RecyclerViewHolder)holder;
+                onBindRecyclerViewHolder(h1, position);
+                break;
+            case 2:
+                // 네이티브 광고 리스트
+                RecyclerNativeAdViewHolder h2 = (RecyclerNativeAdViewHolder)holder;
+                onBindRecyclerNativeAdViewHolder(h2, position);
+                break;
+        }
+    }
+
+    // 네이티브 광고 바인딩
+    private void onBindRecyclerNativeAdViewHolder(final RecyclerNativeAdViewHolder holder, final int position) {
+        final NativeBannerAd nativeBannerAd = new NativeBannerAd(mContext, mContext.getString(R.string.facebook_native_contents_all));
+        nativeBannerAd.setAdListener(new NativeAdListener() {
+            @Override
+            public void onMediaDownloaded(Ad ad) {
+                // Native ad finished downloading all assets
+                Log.e(TAG, "Native ad finished downloading all assets.");
+            }
+
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                // Native ad failed to load
+                Log.e(TAG, "Native ad failed to load: " + adError.getErrorMessage());
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Native ad is loaded and ready to be displayed
+                Log.d(TAG, "Native ad is loaded and ready to be displayed!");
+
+                // Race condition, load() called again before last ad was displayed
+                if (nativeBannerAd == null || nativeBannerAd != ad) {
+                    return;
+                }
+                // Inflate Native Banner Ad into Container
+                inflateAd(holder, nativeBannerAd);
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Native ad clicked
+                Log.d(TAG, "Native ad clicked!");
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Native ad impression
+                Log.d(TAG, "Native ad impression logged!");
+            }
+        });
+        // load the ad
+        nativeBannerAd.loadAd();
+    }
+
+    private void inflateAd(RecyclerNativeAdViewHolder holder, NativeBannerAd nativeBannerAd) {
+        // Unregister last ad
+        nativeBannerAd.unregisterView();
+
+        // Set the Text.
+        holder.nativeAdCallToAction.setText(nativeBannerAd.getAdCallToAction());
+        holder.nativeAdCallToAction.setVisibility(nativeBannerAd.hasCallToAction() ? View.VISIBLE : View.INVISIBLE);
+        holder.nativeAdTitle.setText(nativeBannerAd.getAdvertiserName());
+        holder.nativeAdSocialContext.setText(nativeBannerAd.getAdSocialContext());
+        holder.sponsoredLabel.setText(nativeBannerAd.getSponsoredTranslation());
+
+        // Register the Title and CTA button to listen for clicks.
+        List<View> clickableViews = new ArrayList<>();
+        clickableViews.add(holder.nativeAdTitle);
+        clickableViews.add(holder.nativeAdCallToAction);
+        nativeBannerAd.registerViewForInteraction(holder.nativeAdLayout, holder.nativeAdIconView, clickableViews);
+
+        if(mActivity.modeStatus == "MY") {
+            holder.mGen.setBackground(mActivity.getResources().getDrawable(R.color.colorPrimary));
+        } else {
+            holder.mGen.setBackground(mActivity.getResources().getDrawable(R.color.actionBar));
+        }
+    }
+
+
+
+    // 일반 아이템 바인딩
+    private void onBindRecyclerViewHolder(RecyclerViewHolder holder, final int position) {
         if (mActivity.editContents.contains(mItems.get(position))) {
             holder.mContentItemDiv.setBackgroundColor(Color.parseColor("#F0F0F0"));
         } else {
@@ -125,7 +244,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         }
 
-       holder.mTitleDiv.setOnClickListener(new View.OnClickListener() {
+        holder.mTitleDiv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enterDetailPage(position);
