@@ -46,7 +46,7 @@
                 android:text="앱 사용방법"
                 android:fontFamily="@font/nanumsquare"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/itemTextMainColor"
                 android:textSize="13sp"
                 android:textStyle="bold" />
             <LinearLayout
@@ -128,7 +128,7 @@
                 android:text="문의 및 요청"
                 android:fontFamily="@font/nanumsquare"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/itemTextMainColor"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:layout_marginTop="12dp"/>
@@ -183,6 +183,22 @@
                         android:text="전송"
                         android:textSize="14sp" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border">
+                    <TextView
+                        android:id="@+id/exit_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="6dp"
+                        android:lineSpacingExtra="15dip"
+                        android:text="※ 서비스 탈퇴 안내\n'내콘텐츠'는 로그인 인증을 위해 이메일 주소만 사용중입니다. 6개월 이상 로그인 이력이 없으면 자동 탈퇴(삭제) 처리 됩니다. 탈퇴를 희망하시면 폰에서 앱만 삭제해 주세요(ㅠㅠ). 아울러 서비스를 이용하시려면 6개월에 최소 1회 로그인 하셔야 합니다. 이용해 주셔서 감사합니다.\n더 나은 서비스가 되도록 노력하겠습니다."
+                        android:textColor="#777777"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <TextView
@@ -193,7 +209,7 @@
                 android:text="앱 정보"
                 android:fontFamily="@font/nanumsquare"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/itemTextMainColor"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:layout_marginTop="12dp"/>
