@@ -13,6 +13,19 @@ public class User implements Parcelable {
     public final String image;
     public final String token;
 
+    public User() {
+        this.id = "";
+        this.pw = "";
+        this.age = "";
+        this.gender = "";
+        this.nickname = "";
+        this.phone = "";
+        this.image = "";
+        this.token = "";
+
+        new User(id, pw, age, gender, nickname, phone, image, token);
+    }
+
     public User(String id, String pw, String age, String gender, String nickname,String phone, String image, String token) {
         this.id = id;
         this.pw = pw;

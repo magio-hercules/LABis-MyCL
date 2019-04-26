@@ -91,7 +91,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     public static String modeStatus = "MY";
     public boolean myContentsRefresh = true;
     // Login Data Variable
-    public static User userData;
+    public static User userData = null;
     public static HashMap<String, String> genreMap = new HashMap<String, String>();
     // UI Variable
     TextView mNickName;
@@ -124,6 +124,9 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private String selectedGenreId;
     private String selectedSubTitle;
 
+    // for Guest Login
+    private boolean bGuestMode = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,21 +145,33 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         // -- LoginData ( User , ArrayList<Gente> ) -- //
         LoginData logingData = (LoginData) getIntent().getExtras().getParcelable("LoingData");
-        userData = logingData.getUser();
-        ArrayList<Genre> genreData = logingData.getGenreList();
-        if (genreData != null) {
-            for (int i = 0; i < genreData.size(); i++) {
-                genreMap.put(genreData.get(i).id, genreData.get(i).name);
+        if (logingData != null) {
+            userData = logingData.getUser();
+            ArrayList<Genre> genreData = logingData.getGenreList();
+            if (genreData != null) {
+                for (int i = 0; i < genreData.size(); i++) {
+                    genreMap.put(genreData.get(i).id, genreData.get(i).name);
+                }
             }
+            mProfileImage = (ImageView) findViewById(R.id.profile_image);
+            mNickName = (TextView) findViewById(R.id.nick_name);
+            mLoginEmail = (TextView) findViewById(R.id.login_email);
+            if(userData != null && userData.image != null && userData.image.length() > 10) {
+                Picasso.get().load(userData.image).transform(new CircleTransform()).into(mProfileImage);
+            }
+            mNickName.setText(userData.nickname);
+            mLoginEmail.setText(userData.id);
         }
-        mProfileImage = (ImageView) findViewById(R.id.profile_image);
-        mNickName = (TextView) findViewById(R.id.nick_name);
-        mLoginEmail = (TextView) findViewById(R.id.login_email);
-        if(userData.image != null && userData.image.length() > 10) {
-            Picasso.get().load(userData.image).transform(new CircleTransform()).into(mProfileImage);
+
+        // for Guest Login
+        String loginMode = getIntent().getStringExtra("LoginMode");
+        if (loginMode != null && loginMode.equals("GUEST")) {
+            modeStatus = "TOTAL";
+
+            bGuestMode = true;
+            btnLogout.setText("로그인");
+            mNickName.setText("게스트");
         }
-        mNickName.setText(userData.nickname);
-        mLoginEmail.setText(userData.id);
 
         //-- ProgressDialog Setting --//
         progressDoalog = new ProgressDialog(this);
@@ -414,8 +429,13 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         myContentsBackup.clear();
         myContentsBackup.addAll(ContentsList);
 
+        String userId = "";
+        if (userData != null) {
+            userId = userData.id;
+        }
+
         progressDoalog.show();
-        retroClient.postTotalContents(userData.id, new RetroCallback() {
+        retroClient.postTotalContents(userId, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, t.toString());
@@ -991,7 +1011,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
         MenuItem item = contentsMainMenu.findItem(R.id.action_my_contents);
         item.setVisible(false);
-        if (userData.id.equals("labis@labis.com")) {
+        if (userData != null && userData.id.equals("labis@labis.com")) {
             item = contentsMainMenu.findItem(R.id.action_s3_url);
             item.setVisible(true);
         }
@@ -1015,9 +1035,19 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             loadTotalContent();
             return true;
         } else if (id == R.id.action_my_contents) {
+            if (bGuestMode) {
+                doLogin();
+                return false;
+            }
+
             loadMyContents();
             return true;
         } else if (id == R.id.action_custom_contents) {
+            if (bGuestMode) {
+                doLogin();
+                return false;
+            }
+
             Intent i = new Intent(getApplicationContext(), CustomActivity.class);
             startActivityForResult(i,PICK_EDIT_REQUEST);
             overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
@@ -1027,6 +1057,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             searchView.openSearch();
             return true;
         } else if (id == R.id.action_transfer_contents) {
+            if (bGuestMode) {
+                doLogin();
+                return false;
+            }
+
             if(modeStatus == "MY") {
                 loadTotalContent();
             } else {
@@ -1034,6 +1069,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             }
             return true;
         } else if (id == R.id.action_edit_contents) {
+            if (bGuestMode) {
+                doLogin();
+                return false;
+            }
+
             // 추가 삭제
             if(modeStatus == "MY") {
                 if (mActionMode == null) {
@@ -1071,6 +1111,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
     @OnClick(R.id.drawer_btn_logout)
     void onClick_logout() {
+        if (bGuestMode) {
+            doLogin();
+            return;
+        }
+
         AuthManager authManager = AuthManager.getInstance();
 
         // kakao logout
@@ -1112,12 +1157,37 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void doRegister() {
+        if (bGuestMode) {
+            doLogin();
+            return;
+        }
         Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
         LoginData loginData = new LoginData(userData, null);
         i.putExtra("LoingData", loginData);
         startActivity(i);
     }
 
+    private void doLogin() {
+        AlertDialog alertDialog = new AlertDialog.Builder(ContentsActivity.this)
+                .setMessage("회원 정보가 필요한 메뉴입니다.\n로그인 하시겠습니까?")
+                .setPositiveButton("예",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent i = new Intent(ContentsActivity.this, MainActivity.class);
+                                startActivity(i);
+                                finishAffinity();
+                            }
+                        })
+                .setNegativeButton("아니요",
+                        new android.content.DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i(TAG, "Click NO");
+                            }
+                        }).create();
+        alertDialog.show();
+    }
 
     ///-- InApp Purchase -- //
 

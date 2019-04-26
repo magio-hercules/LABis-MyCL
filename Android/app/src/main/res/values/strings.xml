@@ -5,6 +5,8 @@
     <string name="server_client_id">120460472721-9vso15gflfj46ie69bdklvmakbeon9hu.apps.googleusercontent.com</string>
     <string name="purchase_app_thankyou">정상적으로 구매 처리 되었습니다.\n감사합니다.</string>
 
+    <string name="guest_login">체험하기</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>

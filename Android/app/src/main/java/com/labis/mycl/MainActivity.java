@@ -343,6 +343,22 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //    }
 
+    @OnClick(R.id.login_guest_btn)
+    void onClick_guestLogin(){
+        if (authManager != null) {
+            authManager.removeAuthStateListener();
+        }
+
+        User newUser = new User();
+        LoginData loginData = new LoginData(newUser, genreData);
+        Intent i = new Intent(getApplicationContext(), ContentsActivity.class);
+        i.putExtra("LoingData", loginData);
+        i.putExtra("LoginMode", "GUEST");
+        startActivity(i);
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        finish();
+    }
+
     public void showProgressDialog() {
         Log.d(TAG, "showProgressDialog");
         if (mProgressDialog == null) {
