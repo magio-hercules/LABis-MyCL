@@ -37,6 +37,7 @@ import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.AdSize;
 import com.facebook.ads.AdView;
+import com.labis.mycl.MainActivity;
 import com.labis.mycl.R;
 import com.labis.mycl.model.Content;
 import com.labis.mycl.rest.RetroCallback;
@@ -152,6 +153,7 @@ public class DetailActivity extends AppCompatActivity {
     private String userID = null;
     private String modeStatus = "";
     private String genID ="";
+    private boolean guestMode = false;
 
     // Info Data
     private int chapterIndex;
@@ -206,6 +208,7 @@ public class DetailActivity extends AppCompatActivity {
         orgContentInfo = (Content) intent.getSerializableExtra("CONTENT");
         modeStatus = intent.getStringExtra("MODE");
         userID =  intent.getStringExtra("USER");
+        guestMode = intent.getBooleanExtra("GUESTMODE", false);
 
         chapterIndex = orgContentInfo.chapter;
         favoiteFlag = orgContentInfo.favorite;
@@ -523,10 +526,36 @@ public class DetailActivity extends AppCompatActivity {
                             }).create();
             alertDialog.show();
         } else if(modeStatus.equals("TOTAL")) { //추가
-            Intent returnIntent = new Intent();
-            setResult(Activity.RESULT_FIRST_USER, returnIntent);
-            finish();
+            if (guestMode) {
+                doLogin();
+            } else {
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_FIRST_USER, returnIntent);
+                finish();
+            }
         }
+    }
+
+    public void doLogin() {
+        AlertDialog alertDialog = new AlertDialog.Builder(DetailActivity.this)
+                .setMessage("회원 정보가 필요한 메뉴입니다.\n로그인 하시겠습니까?")
+                .setPositiveButton("예",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent i = new Intent(DetailActivity.this, MainActivity.class);
+                                startActivity(i);
+                                finishAffinity();
+                            }
+                        })
+                .setNegativeButton("아니요",
+                        new android.content.DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i(TAG, "Click NO");
+                            }
+                        }).create();
+        alertDialog.show();
     }
 
     @Override

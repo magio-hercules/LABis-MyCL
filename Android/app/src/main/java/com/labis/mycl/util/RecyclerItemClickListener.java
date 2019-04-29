@@ -70,11 +70,19 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                 // Swipe
                 if (Math.abs(deltaX) > MIN_DISTANCE && deltaY < Y_TOUCH_HEIGHT) {
                     if (mActivity.isMultiSelect == false) {
+
+                        // 게스트 로그인 알람
+                        if (mActivity.bGuestMode) {
+                            mActivity.doLogin();
+                            return false;
+                        }
+
                         if (mActivity.modeStatus == "MY") {
                             mActivity.loadTotalContent();
                         } else if (mActivity.modeStatus == "TOTAL") {
                             mActivity.loadMyContents();
                         }
+
                     }
                     return true;
                 }

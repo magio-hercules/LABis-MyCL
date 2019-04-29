@@ -299,6 +299,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             i.putExtra("CONTENT", mItems.get(position));
             i.putExtra("MODE", mActivity.modeStatus);
             i.putExtra("USER", mActivity.userData.id);
+            i.putExtra("GUESTMODE", mActivity.bGuestMode);
             mActivity.startActivityForResult(i, mActivity.PICK_EDIT_REQUEST);
             mActivity.overridePendingTransition(R.anim.rightin_activity, R.anim.no_move_activity);
         }

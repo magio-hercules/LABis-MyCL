@@ -2,3 +2,4 @@ BackEnd/node_modules
 *.ser
 Android/.idea
 Android/.idea/caches
+Android/gradle/wrapper/gradle-wrapper.properties

@@ -125,7 +125,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
     private String selectedSubTitle;
 
     // for Guest Login
-    private boolean bGuestMode = false;
+    public boolean bGuestMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -851,7 +851,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
 
                 case R.id.action_add_contents:
                     if (editContents.size() > 0) {
-                        addToMyContents();
+                        if(bGuestMode) {
+                            doLogin();
+                        } else {
+                            addToMyContents();
+                        }
                     } else {
                         Toast.makeText(getApplicationContext(), "추가 항목 선택", Toast.LENGTH_SHORT).show();
                     }
@@ -908,7 +912,11 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (modeStatus.equals("TOTAL")) {
-            loadMyContents();
+            if(bGuestMode) {
+                super.onBackPressed();
+            } else {
+                loadMyContents();
+            }
         } else if (modeStatus.equals("MY")) {
             if (System.currentTimeMillis() - lastTimeBackPressed < 1500) {
                 finishAffinity();
@@ -1167,7 +1175,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
         startActivity(i);
     }
 
-    private void doLogin() {
+    public void doLogin() {
         AlertDialog alertDialog = new AlertDialog.Builder(ContentsActivity.this)
                 .setMessage("회원 정보가 필요한 메뉴입니다.\n로그인 하시겠습니까?")
                 .setPositiveButton("예",
