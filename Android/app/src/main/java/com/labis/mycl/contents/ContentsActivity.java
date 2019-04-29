@@ -171,6 +171,7 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             bGuestMode = true;
             btnLogout.setText("로그인");
             mNickName.setText("게스트");
+            getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
         }
 
         //-- ProgressDialog Setting --//
