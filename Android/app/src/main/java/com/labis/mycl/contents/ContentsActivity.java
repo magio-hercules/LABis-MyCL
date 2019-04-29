@@ -19,7 +19,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,20 +27,12 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.Constants;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdIconView;
-import com.facebook.ads.AdOptionsView;
-import com.facebook.ads.NativeAdLayout;
-import com.facebook.ads.NativeAdListener;
-import com.facebook.ads.NativeBannerAd;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
@@ -172,6 +163,8 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             btnLogout.setText("로그인");
             mNickName.setText("게스트");
             getSupportActionBar().setBackgroundDrawable((getResources().getDrawable(R.color.actionBar)));
+        } else {
+            modeStatus = "MY";
         }
 
         //-- ProgressDialog Setting --//
@@ -1125,34 +1118,50 @@ public class ContentsActivity extends AppCompatActivity implements NavigationVie
             return;
         }
 
-        AuthManager authManager = AuthManager.getInstance();
+        AlertDialog alertDialog = new AlertDialog.Builder(ContentsActivity.this)
+            .setMessage("로그아웃 하시겠습니까?")
+            .setPositiveButton("예",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        AuthManager authManager = AuthManager.getInstance();
 
-        // kakao logout
-        if (authManager.getmFirebaseUser().getUid().contains("kakao:")) {
-            UserManagement.getInstance().requestUnlink(new UnLinkResponseCallback() {
-                @Override public void onFailure(ErrorResult errorResult) {
-                    Log.e(TAG, "[KAKAO] requestUnlink onFailure : " + errorResult.toString());
-                }
-                @Override public void onSessionClosed(ErrorResult errorResult) {
-                    Log.e(TAG, "[KAKAO] requestUnlink onSessionClosed : " + errorResult.toString());
-                }
-                @Override public void onNotSignedUp() {
-                    Log.e(TAG, "[KAKAO] requestUnlink onNotSignedUp");
-                }
-                @Override public void onSuccess(Long userId) {
-                    Log.e(TAG, "[KAKAO] requestUnlink onSuccess");
-                }
-            });
-        }
+                        // kakao logout
+                        if (authManager.getmFirebaseUser().getUid().contains("kakao:")) {
+                            UserManagement.getInstance().requestUnlink(new UnLinkResponseCallback() {
+                                @Override public void onFailure(ErrorResult errorResult) {
+                                    Log.e(TAG, "[KAKAO] requestUnlink onFailure : " + errorResult.toString());
+                                }
+                                @Override public void onSessionClosed(ErrorResult errorResult) {
+                                    Log.e(TAG, "[KAKAO] requestUnlink onSessionClosed : " + errorResult.toString());
+                                }
+                                @Override public void onNotSignedUp() {
+                                    Log.e(TAG, "[KAKAO] requestUnlink onNotSignedUp");
+                                }
+                                @Override public void onSuccess(Long userId) {
+                                    Log.e(TAG, "[KAKAO] requestUnlink onSuccess");
+                                }
+                            });
+                        }
 
-        authManager.signOut();
-        authManager.setFirebaseUser(null);
-        myContentsRefresh = true;
-        modeStatus = "MY";
+                        authManager.signOut();
+                        authManager.setFirebaseUser(null);
+                        myContentsRefresh = true;
+                        modeStatus = "MY";
 
-        Intent i = new Intent(ContentsActivity.this, MainActivity.class);
-        startActivity(i);
-        finishAffinity();
+                        Intent i = new Intent(ContentsActivity.this, MainActivity.class);
+                        startActivity(i);
+                        finishAffinity();
+                    }
+                })
+            .setNegativeButton("아니요",
+                new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(TAG, "Click NO");
+                    }
+                }).create();
+        alertDialog.show();
     }
 
     @OnClick(R.id.drawer_btn_edit)
