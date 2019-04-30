@@ -68,6 +68,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
+
+        // AD, In-App Purchase (Remove All ADS)
+        if(mActivity.RemoveAD) {
+            return 1;
+        }
+
         // 2 : Native AD Return (9th Item List)
         if(position > 0 && position % 8 == 0) {
             return 2;
