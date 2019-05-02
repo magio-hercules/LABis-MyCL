@@ -243,16 +243,6 @@
                     android:textColor="#777777"
                     android:textSize="13sp" />
                 <TextView
-                    android:id="@+id/app_update"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:lineSpacingExtra="15dip"
-                    android:paddingLeft="4dp"
-                    android:text="- 업데이트 날짜 : "
-                    android:textColor="#777777"
-                    android:textSize="13sp" />
-                <TextView
                     android:id="@+id/app_privacy"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

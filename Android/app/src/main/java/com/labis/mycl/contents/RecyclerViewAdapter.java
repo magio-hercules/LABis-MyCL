@@ -23,6 +23,7 @@ import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdIconView;
 import com.facebook.ads.AdOptionsView;
+import com.facebook.ads.AdSettings;
 import com.facebook.ads.NativeAdListener;
 import com.facebook.ads.NativeBannerAd;
 import com.labis.mycl.R;
@@ -68,14 +69,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-
         // AD, In-App Purchase (Remove All ADS)
         if(mActivity.RemoveAD) {
             return 1;
         }
 
         // 2 : Native AD Return (9th Item List)
-        if(position > 0 && position % 8 == 0) {
+        if(position > 0 && position % 9 == 0) {
             return 2;
         }
 
@@ -103,6 +103,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     // 네이티브 광고 바인딩
     private void onBindRecyclerNativeAdViewHolder(final RecyclerNativeAdViewHolder holder, final int position) {
         final NativeBannerAd nativeBannerAd = new NativeBannerAd(mContext, mContext.getString(R.string.facebook_native_contents_all));
+
+        inflateDefaultAD(holder, nativeBannerAd);
+
         nativeBannerAd.setAdListener(new NativeAdListener() {
             @Override
             public void onMediaDownloaded(Ad ad) {
@@ -141,13 +144,39 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 Log.d(TAG, "Native ad impression logged!");
             }
         });
+
         // load the ad
         nativeBannerAd.loadAd();
+    }
+
+    private void inflateDefaultAD(RecyclerNativeAdViewHolder holder, NativeBannerAd nativeBannerAd) {
+        // Set the Text.
+        holder.nativeAdCallToAction.setVisibility(View.INVISIBLE);
+        holder.nativeAdTitle.setText("Facebook Advertiser");
+        holder.nativeAdSocialContext.setText("Get it on Google Play");
+        holder.sponsoredLabel.setText("Sponsored");
+
+        // Register the Title and CTA button to listen for clicks.
+        List<View> clickableViews = new ArrayList<>();
+        clickableViews.add(holder.nativeAdTitle);
+        clickableViews.add(holder.nativeAdCallToAction);
+        nativeBannerAd.registerViewForInteraction(holder.nativeAdLayout, holder.nativeAdIconView, clickableViews);
+
+        if(mActivity.modeStatus == "MY") {
+            holder.mGen.setBackground(mActivity.getResources().getDrawable(R.color.colorPrimary));
+        } else {
+            holder.mGen.setBackground(mActivity.getResources().getDrawable(R.color.actionBar));
+        }
     }
 
     private void inflateAd(RecyclerNativeAdViewHolder holder, NativeBannerAd nativeBannerAd) {
         // Unregister last ad
         nativeBannerAd.unregisterView();
+
+        // Add the AdChoices icon
+        AdOptionsView adOptionsView = new AdOptionsView(mContext, nativeBannerAd, holder.nativeAdLayout);
+        holder.adChoicesContainer.removeAllViews();
+        holder.adChoicesContainer.addView(adOptionsView, 0);
 
         // Set the Text.
         holder.nativeAdCallToAction.setText(nativeBannerAd.getAdCallToAction());

@@ -68,8 +68,6 @@ public class HelpActivity extends AppCompatActivity {
     TextView appDeveloper;
     @BindView(R.id.app_version)
     TextView appVersion;
-    @BindView(R.id.app_update)
-    TextView appUpdate;
     @BindView(R.id.app_privacy)
     TextView appPrivacy;
 
@@ -206,7 +204,6 @@ public class HelpActivity extends AppCompatActivity {
         }
 
 
-        appUpdate.setText("- 업데이트 날짜 : " + "2019 / 03 / 18");
         appPrivacy.setText("- 개인정보처리방침 : http://labis.co.kr/mycl");
         Linkify.TransformFilter mTransform = new Linkify.TransformFilter() {
             @Override

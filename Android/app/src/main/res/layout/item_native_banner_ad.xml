@@ -45,7 +45,7 @@
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@drawable/dotted">
+                android:background="@drawable/bg_default_ads">
                 <com.facebook.ads.AdIconView
                     android:id="@+id/native_icon_view"
                     android:layout_width="match_parent"
@@ -71,7 +71,7 @@
                     android:id="@+id/ad_choices_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="2dp" />
+                    android:paddingRight="2dp"/>
 
                 <TextView
                     android:id="@+id/native_ad_sponsored_label"
